@@ -1,0 +1,26 @@
+{
+  "name": "strapi-plugin-import-export-content",
+  "version": "0.0.0",
+  "description": "This is a plugin for import and export content of collection types.",
+  "strapi": {
+    "name": "Import / Export Content",
+    "icon": "sync-alt",
+    "description": "Import and Export your Content"
+  },
+  "dependencies": {},
+  "author": {
+    "name": "Edison Peñuela",
+    "email": "edisonpe961206@hotmail.com"
+  },
+  "maintainers": [
+    {
+      "name": "Edison Peñuela",
+      "email": "edisonpe961206@hotmail.com"
+    }
+  ],
+  "engines": {
+    "node": ">=10.16.0 <=14.x.x",
+    "npm": ">=6.0.0"
+  },
+  "license": "MIT"
+}
