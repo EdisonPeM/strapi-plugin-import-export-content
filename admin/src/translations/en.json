@@ -1,3 +1,4 @@
 {
+  "import.file.type.error": "File Type is not accepted",
   "plugin.name": "Import / Export Content"
 }

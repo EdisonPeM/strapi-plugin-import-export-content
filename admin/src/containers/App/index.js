@@ -6,23 +6,42 @@
  */
 
 import React from "react";
-import { Switch, Route } from "react-router-dom";
-import { NotFound } from "strapi-helper-plugin";
+import { Redirect, Route, Switch } from "react-router-dom";
+import Layout from "../../components/Layout";
 // Utils
 import pluginId from "../../pluginId";
-// Containers
-import HomePage from "../HomePage";
+// Pages
+import ImportPage from "../ImportPage";
+import ExportPage from "../ExportPage";
 
-const pathTo = (uri = "") => `/plugins/${pluginId}${uri}`;
+import useContentTypes from "../../hooks/useContentTypes";
+
+const pathTo = (uri = "") => `/plugins/${pluginId}/${uri}`;
+const navLinks = [
+  {
+    name: "Import Data",
+    to: pathTo("import"),
+  },
+  {
+    name: "Export Data",
+    to: pathTo("export"),
+  },
+];
+
 const App = () => {
+  const userContentTypes = useContentTypes();
+  console.log(userContentTypes);
+
   return (
-    <div>
+    <Layout navLinks={navLinks}>
       <Switch>
-        <Route path={pathTo("/")} component={HomePage} exact />
-        <Route path={pathTo("users")} component={HomePage} />
-        <Route component={NotFound} />
+        <Route path={pathTo("import")} component={ImportPage} />
+        <Route path={pathTo("export")} component={ExportPage} />
+        <Route>
+          <Redirect to={pathTo("import")} />
+        </Route>
       </Switch>
-    </div>
+    </Layout>
   );
 };
 
