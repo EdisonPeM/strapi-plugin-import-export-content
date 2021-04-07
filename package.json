@@ -7,7 +7,12 @@
     "icon": "sync-alt",
     "description": "Import and Export your Content"
   },
-  "dependencies": {},
+  "dependencies": {
+    "content-type-parser": "^1.0.2",
+    "csv-parse": "^4.15.3",
+    "get-urls": "^10.0.0",
+    "lodash": "^4.17.21"
+  },
   "author": {
     "name": "Edison Peñuela",
     "email": "edisonpe961206@hotmail.com"
