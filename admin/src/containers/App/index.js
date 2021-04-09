@@ -28,21 +28,25 @@ const navLinks = [
   },
 ];
 
-const App = () => {
+function App() {
   const userContentTypes = useContentTypes();
-  console.log(userContentTypes);
 
   return (
     <Layout navLinks={navLinks}>
       <Switch>
-        <Route path={pathTo("import")} component={ImportPage} />
-        <Route path={pathTo("export")} component={ExportPage} />
+        <Route path={pathTo("import")}>
+          <ImportPage contentTypes={userContentTypes} />
+        </Route>
+        <Route path={pathTo("export")}>
+          <ExportPage contentTypes={userContentTypes} />
+        </Route>
         <Route>
+          {/* Default Route Retur to Import Page */}
           <Redirect to={pathTo("import")} />
         </Route>
       </Switch>
     </Layout>
   );
-};
+}
 
 export default App;

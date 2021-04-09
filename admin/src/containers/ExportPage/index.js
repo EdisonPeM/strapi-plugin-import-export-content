@@ -5,10 +5,10 @@
  */
 
 import React, { memo } from "react";
-// import PropTypes from "prop-types";
+import PropTypes from "prop-types";
 import { Block } from "../../components/common";
 
-function ImportPage() {
+function ImportPage({ contentTypes }) {
   return (
     <Block
       title="Export"
@@ -19,5 +19,13 @@ function ImportPage() {
     </Block>
   );
 }
+
+ImportPage.defaultProps = {
+  contentTypes: [],
+};
+
+ImportPage.propTypes = {
+  contentTypes: PropTypes.array,
+};
 
 export default memo(ImportPage);
