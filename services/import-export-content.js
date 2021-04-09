@@ -15,6 +15,6 @@ module.exports = {
     const { sourceType, items } = getItemsFromData({ data, type });
     const itemCount = items.length;
     const fieldsInfo = analyze(items);
-    return { itemCount, sourceType, fieldsInfo };
+    return { itemCount, sourceType, fieldsInfo, parsedData: items };
   },
 };

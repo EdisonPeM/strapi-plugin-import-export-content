@@ -28,8 +28,6 @@ function analyze(items) {
     });
   });
 
-  fieldNames.forEach((key) => console.log(key));
-
   const fieldsInfo = Object.keys(fieldsFormats).map((fieldName) => {
     const fieldFormats = fieldsFormats[fieldName];
     const fieldInfo = { fieldName, count: fieldFormats.length };
