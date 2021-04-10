@@ -2,12 +2,12 @@ import styled from "styled-components";
 
 const TableWrapper = styled.div`
   width: 100%;
-  overflow-x: auto;
+  overflow: auto;
   background: white;
   margin-top: 1rem;
   border-radius: 4px;
   border: 1px solid #e3e9f3;
-  max-height: 250px;
+  max-height: 300px;
 
   table {
     width: 100%;
@@ -30,9 +30,7 @@ const TableWrapper = styled.div`
     }
 
     td:last-child {
-      opacity: 0.5;
       border-left: 1px solid #ccc;
-      cursor: pointer;
       max-width: 50px;
       padding: 0;
 
@@ -42,10 +40,12 @@ const TableWrapper = styled.div`
         padding: 15px;
         background: transparent;
         font-size: 1.2rem;
-      }
+        opacity: 0.5;
+        cursor: pointer;
 
-      &:hover {
-        opacity: 1;
+        &:hover {
+          opacity: 1;
+        }
       }
     }
 
@@ -59,13 +59,14 @@ const TableWrapper = styled.div`
           background-color: #efefef;
         }
       }
-    }
 
-    td {
-      max-width: 15ch;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      td {
+        cursor: auto;
+        max-width: 15ch;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
     }
   }
 `;

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, memo } from "react";
 import PropTypes from "prop-types";
 // import { } from "strapi-helper-plugin";
 
@@ -85,4 +85,4 @@ UploadFileForm.propTypes = {
   onSubmit: PropTypes.func.isRequired,
 };
 
-export default UploadFileForm;
+export default memo(UploadFileForm);

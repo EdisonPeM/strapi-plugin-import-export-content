@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, memo } from "react";
 import PropTypes from "prop-types";
 
 import { Label, Select, Textarea, Button } from "@buffetjs/core";
@@ -59,4 +59,4 @@ RawInputForm.propTypes = {
   onSubmit: PropTypes.func,
 };
 
-export default RawInputForm;
+export default memo(RawInputForm);

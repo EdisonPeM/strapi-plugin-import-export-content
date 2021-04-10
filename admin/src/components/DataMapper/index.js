@@ -1,19 +1,58 @@
-import React, { useState } from "react";
+import React, { useState, useMemo, memo } from "react";
 import PropTypes from "prop-types";
 
-import { Button } from "@buffetjs/core";
 import { Row } from "../common";
 import { TableWrapper } from "./styles";
+import { Button } from "@buffetjs/core";
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
+import DataHeader from "./DataHeader";
+import DataBody from "./DataBody";
+
+const filterIgnoreFields = (fieldName) =>
+  ![
+    "id",
+    "created_at",
+    "created_by",
+    "updated_at",
+    "updated_by",
+    "published_at",
+  ].includes(fieldName);
+
+// TODO: Support Relations
+const filterIgnoreTypes = (type) => !["relation", "dynamiczone"].includes(type);
 
 function DataMapper({ data, mapper, onSuccess, onCancel }) {
   const { fieldsInfo, parsedData } = data;
+  const { uid, attributes } = mapper;
+
+  // Manipulation over maping columns
+  const [mappedFields, setMappedFields] = useState(
+    fieldsInfo.reduce((mappedFields, { fieldName }) => {
+      mappedFields[fieldName] = attributes[fieldName] ? fieldName : "none";
+      return mappedFields;
+    }, {})
+  );
+
+  const selectDestinationField = (source) => ({ target: { value } }) => {
+    setMappedFields({ ...mappedFields, [source]: value });
+  };
+
+  const destinationOptions = useMemo(
+    () =>
+      [{ label: "None", value: "none" }].concat(
+        Object.keys(attributes)
+          .filter(filterIgnoreFields)
+          .filter((field) => filterIgnoreTypes(attributes[field].type))
+          .map((field) => ({
+            label: field,
+            value: field,
+          }))
+      ),
+    [attributes]
+  );
+
+  // Manipulation over Rows
   const [importItems, setImportItems] = useState(parsedData);
-
-  console.log(mapper);
-
   const deleteItem = (item) => () => {
     const importItemsFiltered = importItems.filter(
       (importItems) => importItems !== item
@@ -21,52 +60,32 @@ function DataMapper({ data, mapper, onSuccess, onCancel }) {
     setImportItems(importItemsFiltered);
   };
 
-  const handleUploadItems = () => onSuccess(importItems);
+  // UploadData
+  const handleUploadItems = () =>
+    onSuccess({ uid, fields: mappedFields, importItems });
+
   return (
     <div className="pt-3 col-12">
       <Row>
         <h2>Map the Import Data to Destination Field</h2>
         <TableWrapper>
           <table>
-            <thead>
-              <tr>
-                {fieldsInfo.map(({ fieldName }) => (
-                  <th key={fieldName}>{fieldName}</th>
-                ))}
-                <th>Del</th>
-              </tr>
-            </thead>
-            <tbody>
-              {importItems.map((row, i) => (
-                <tr key={i}>
-                  {fieldsInfo.map(({ fieldName }, j) => {
-                    const cell = row[fieldName];
-
-                    if (cell === undefined || cell === null)
-                      return <td key={j}>-</td>;
-
-                    if (typeof cell === "object")
-                      return <td key={j}>{JSON.stringify(cell)}</td>;
-
-                    return <td key={j}>{`${cell}`}</td>;
-                  })}
-                  <td>
-                    <button onClick={deleteItem(row)}>
-                      <FontAwesomeIcon icon={faTrashAlt} />
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
+            <DataHeader
+              headers={fieldsInfo.map(({ fieldName }) => fieldName)}
+              headersOptions={destinationOptions}
+              headersValues={mappedFields}
+              onSelectHeader={selectDestinationField}
+            />
+            <DataBody
+              rows={importItems}
+              headers={fieldsInfo.map(({ fieldName }) => fieldName)}
+              onDeleteItem={deleteItem}
+            />
           </table>
         </TableWrapper>
       </Row>
       <Row>
-        {
-          <p>
-            Count of Items to Import: <strong>{importItems.length}</strong>
-          </p>
-        }
+        Count of Items to Import: <strong>{importItems.length}</strong>
       </Row>
       <Row>
         <Button label="Import Data" onClick={handleUploadItems} />
@@ -95,4 +114,4 @@ DataMapper.propTypes = {
   onCancel: PropTypes.func,
 };
 
-export default DataMapper;
+export default memo(DataMapper);

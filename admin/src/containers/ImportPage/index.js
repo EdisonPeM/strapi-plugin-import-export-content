@@ -1,10 +1,10 @@
 /*
  *
- * HomePage
+ * ImportPage
  *
  */
 
-import React, { memo, useState } from "react";
+import React, { memo, useState, useMemo } from "react";
 import PropTypes from "prop-types";
 import UploadFileForm from "../../components/UploadFileForm";
 import RawInputForm from "../../components/RawInputForm";
@@ -27,30 +27,49 @@ function ImportPage({ contentTypes }) {
   const [analysis, setAnalysis] = useState(null);
   const [mapper, setMapper] = useState(null);
 
+  // Source Options Handler
   const handleSelectSouceImports = ({ target: { value } }) => {
     setSourceImports(value);
   };
 
+  // Destination Options
+  const destinationOptions = useMemo(
+    () =>
+      [{ label: "Select Import Destination", value: "" }].concat(
+        contentTypes.map(({ uid, info, apiID }) => ({
+          label: info.label || apiID,
+          value: uid,
+        }))
+      ),
+    [contentTypes]
+  );
+
+  // Destination Options Handler
   const handleSelectImportDestination = ({ target: { value } }) => {
     setImportDest(value);
   };
 
+  // Send Data to analyze
   const analizeImports = async (body) => {
-    // if (importDest === "")
-    //   return strapi.notification.toggle({
-    //     type: "warning",
-    //     message: "import.destination.empty",
-    //   });
+    // Prevent Empty Destination
+    if (importDest === "")
+      return strapi.notification.toggle({
+        type: "warning",
+        message: "import.destination.empty",
+      });
 
+    // Send Request
     try {
       const response = await request(`/${pluginId}/pre-analyze`, {
         method: "POST",
         body,
       });
 
+      // Set Content Type Data to map
       setMapper(contentTypes.find(({ uid }) => uid === importDest));
       setAnalysis(response);
 
+      // Notifications
       strapi.notification.toggle({
         type: "success",
         message: "import.analyze.success",
@@ -64,20 +83,24 @@ function ImportPage({ contentTypes }) {
     }
   };
 
-  const uploadData = (dataToUpload) => {
-    console.log(dataToUpload);
-    if (dataToUpload.length === 0) {
+  // Upload Data
+  const uploadData = ({ uid, fields, importItems }) => {
+    // Prevent Upload Empty Data;
+    if (importItems.length === 0) {
       strapi.notification.toggle({
         type: "warning",
         message: "import.items.empty",
       });
     }
 
-    setMapper(null);
-    setAnalysis(null);
+    console.log(uid, fields, importItems);
+
+    // Finish with the import
+    endImport();
   };
 
-  const cancelUpload = () => {
+  // Reset analysis and mapper
+  const endImport = () => {
     setMapper(null);
     setAnalysis(null);
   };
@@ -104,14 +127,7 @@ function ImportPage({ contentTypes }) {
               <Label htmlFor="importDest">Import Destination</Label>
               <Select
                 name="importDest"
-                options={[
-                  { label: "Select Import Destination", value: "" },
-                ].concat(
-                  contentTypes.map(({ uid, info, apiID }) => ({
-                    label: info.label || apiID,
-                    value: uid,
-                  }))
-                )}
+                options={destinationOptions}
                 value={importDest}
                 onChange={handleSelectImportDestination}
               />
@@ -128,7 +144,7 @@ function ImportPage({ contentTypes }) {
           data={analysis}
           mapper={mapper}
           onSuccess={uploadData}
-          onCancel={cancelUpload}
+          onCancel={endImport}
         />
       )}
     </Block>
