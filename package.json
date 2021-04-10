@@ -1,6 +1,6 @@
 {
   "name": "strapi-plugin-import-export-content",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "This is a plugin for import and export content of collection types.",
   "strapi": {
     "name": "Import / Export Content",
@@ -16,19 +16,29 @@
     "get-urls": "^10.0.0",
     "lodash": "^4.17.21"
   },
-  "author": {
-    "name": "Edison Peñuela",
-    "email": "edisonpe961206@hotmail.com"
-  },
+  "author": "Edison Peñuela <edisonpe961206@hotmail.com>",
   "maintainers": [
-    {
-      "name": "Edison Peñuela",
-      "email": "edisonpe961206@hotmail.com"
-    }
+    "Edison Peñuela <edisonpe961206@hotmail.com>"
   ],
   "engines": {
     "node": ">=10.16.0 <=14.x.x",
     "npm": ">=6.0.0"
   },
-  "license": "MIT"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EdisonPeM/strapi-plugin-import-export-content.git"
+  },
+  "keywords": [
+    "strapi",
+    "plugin",
+    "strapi",
+    "import",
+    "content",
+    "export",
+    "content"
+  ],
+  "bugs": {
+    "url": "https://github.com/EdisonPeM/strapi-plugin-import-export-content/issues"
+  },
+  "homepage": "https://github.com/EdisonPeM/strapi-plugin-import-export-content#readme"
 }
