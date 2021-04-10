@@ -8,6 +8,12 @@ function getService(service = PLUGIN_ID) {
   return SERVICES[service];
 }
 
+const PERMISSIONS = {
+  read: "plugins::content-manager.explorer.read",
+  create: "plugins::content-manager.explorer.create",
+  update: "plugins::content-manager.explorer.update",
+};
+
 /**
  * import-export-content.js controller
  *
@@ -29,6 +35,11 @@ module.exports = {
   },
 
   preAnalyzeContent: async (ctx) => {
+    const { data, type } = ctx.request.body;
+    if (!data || !type) {
+      return ctx.throw(400, "Required parameters missing");
+    }
+
     try {
       const service = getService();
       const data = await service.preAnalyzeContent(ctx);
@@ -40,19 +51,34 @@ module.exports = {
   },
 
   importItems: async (ctx) => {
-    // const { user } = ctx.state;
-
-    const data = ctx.request.body;
-    const { target, fields, items } = data;
+    const { target, fields, items } = ctx.request.body;
     if (!target || !fields || !items) {
       return ctx.throw(400, "Required parameters missing");
     }
 
-    // const importService = getService("contentexportimport");
-    // await importService.importData(ctx);
+    const { userAbility } = ctx.state;
+    if (
+      userAbility.cannot(PERMISSIONS.create, target.uid) &&
+      userAbility.cannot(PERMISSIONS.update, target.uid)
+    ) {
+      return ctx.throw(403, "Forbidden");
+    }
 
-    ctx.send({
-      message: "ok",
-    });
+    try {
+      const service = getService();
+      const results = await service.importItems(ctx);
+      const succesfully = results.every((res) => res);
+      ctx.send({
+        succesfully,
+        message: succesfully
+          ? "All Data Imported"
+          : results.some((res) => res)
+          ? "Some Items Imported"
+          : "No Items Imported",
+      });
+    } catch (error) {
+      console.error(error);
+      ctx.throw(406, `could not parse: ${error}`);
+    }
   },
 };

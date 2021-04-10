@@ -26,4 +26,16 @@ function getItemsFromData({ type, data }) {
   }
 }
 
-module.exports = { getItemsFromData };
+function parseItemsToModel(items, fields) {
+  const mappedItems = items.map((item) =>
+    Object.keys(item).reduce((mappedItem, key) => {
+      const mappedKey = fields[key];
+      if (mappedKey !== "none") mappedItem[mappedKey] = item[key];
+      return mappedItem;
+    }, {})
+  );
+
+  return mappedItems;
+}
+
+module.exports = { getItemsFromData, parseItemsToModel };

@@ -10,15 +10,15 @@ import DataHeader from "./DataHeader";
 import DataBody from "./DataBody";
 
 // FORMATS
-import {
-  Bool as BoolIcon,
-  Json as JsonIcon,
-  Text as TextIcon,
-  NumberIcon,
-  Email as EmailIcon,
-  Calendar as DateIcon,
-  RichText as RichTextIcon,
-} from "@buffetjs/icons";
+// import {
+//   Bool as BoolIcon,
+//   Json as JsonIcon,
+//   Text as TextIcon,
+//   NumberIcon,
+//   Email as EmailIcon,
+//   Calendar as DateIcon,
+//   RichText as RichTextIcon,
+// } from "@buffetjs/icons";
 
 const filterIgnoreFields = (fieldName) =>
   ![
@@ -35,7 +35,7 @@ const filterIgnoreTypes = (type) => !["relation", "dynamiczone"].includes(type);
 
 function DataMapper({ data, mapper, onSuccess, onCancel }) {
   const { fieldsInfo, parsedData } = data;
-  const { uid, attributes } = mapper;
+  const { kind, attributes } = mapper;
 
   const filteredAttributes = useMemo(
     () =>
@@ -74,7 +74,7 @@ function DataMapper({ data, mapper, onSuccess, onCancel }) {
 
   // UploadData
   const handleUploadItems = () =>
-    onSuccess({ target: uid, fields: mappedFields, items: importItems });
+    onSuccess({ fields: mappedFields, items: importItems });
 
   return (
     <div className="pt-3 col-12">
@@ -90,6 +90,7 @@ function DataMapper({ data, mapper, onSuccess, onCancel }) {
               onSelectHeader={selectDestinationField}
             />
             <DataBody
+              onlyFistRow={kind === "singleType"}
               rows={importItems}
               headers={fieldsInfo.map(({ fieldName }) => fieldName)}
               onDeleteItem={deleteItem}
@@ -98,7 +99,8 @@ function DataMapper({ data, mapper, onSuccess, onCancel }) {
         </TableWrapper>
       </Row>
       <Row>
-        Count of Items to Import: <strong>{importItems.length}</strong>
+        Count of Items to Import:{" "}
+        <strong>{kind === "singleType" ? 1 : importItems.length}</strong>
       </Row>
       <Row>
         <Button label="Import Data" onClick={handleUploadItems} />

@@ -46,6 +46,12 @@ const TableWrapper = styled.div`
     }
 
     tbody {
+      &.fist-row-selected {
+        tr:not(:first-child) {
+          color: #999;
+        }
+      }
+
       tr {
         &:nth-child(even) {
           background-color: #fafafa;

@@ -84,30 +84,30 @@ function ImportPage({ contentTypes }) {
   };
 
   // Upload Data
-  const uploadData = async ({ target, fields, items }) => {
+  const uploadData = async ({ fields, items }) => {
+    const { uid, kind } = mapper;
+    const target = { uid, kind };
+
     // Finish with the import
     endImport();
 
     // Prevent Upload Empty Data;
     if (items.length === 0) {
-      strapi.notification.toggle({
+      return strapi.notification.toggle({
         type: "warning",
         message: "import.items.empty",
       });
     }
 
     try {
-      // Send Request
-      const response = await request(`/${pluginId}/import`, {
+      const { succesfully, message } = await request(`/${pluginId}/import`, {
         method: "POST",
         body: { target, fields, items },
       });
 
-      console.log(response);
-
       strapi.notification.toggle({
-        type: "success",
-        message: `import.items.succesfully`,
+        type: succesfully ? "success" : "warning",
+        message,
       });
     } catch (error) {
       strapi.notification.toggle({
@@ -119,8 +119,9 @@ function ImportPage({ contentTypes }) {
 
   // Reset analysis and mapper
   const endImport = () => {
-    setMapper(null);
     setAnalysis(null);
+    setImportDest("");
+    setMapper(null);
   };
 
   return (

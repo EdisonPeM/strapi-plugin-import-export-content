@@ -4,9 +4,9 @@ import PropTypes from "prop-types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 
-function DataBody({ rows, headers, onDeleteItem }) {
+function DataBody({ rows, headers, onDeleteItem, onlyFistRow }) {
   return (
-    <tbody>
+    <tbody className={onlyFistRow ? "fist-row-selected" : ""}>
       {rows.map((row, i) => (
         <tr key={i}>
           {headers.map((header, j) => {
@@ -34,12 +34,14 @@ DataBody.defaultProps = {
   rows: [],
   headers: [],
   onDeleteItem: () => {},
+  onlyFistRow: false,
 };
 
 DataBody.propTypes = {
   rows: PropTypes.array,
   headers: PropTypes.array,
   onDeleteItem: PropTypes.func,
+  onlyFistRow: PropTypes.bool,
 };
 
 export default memo(DataBody);
