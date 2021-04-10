@@ -1,5 +1,6 @@
 import React, { useState, useMemo, memo } from "react";
 import PropTypes from "prop-types";
+import { Prompt } from "react-router-dom";
 
 import { Row } from "../common";
 import { TableWrapper } from "./styles";
@@ -7,6 +8,17 @@ import { Button } from "@buffetjs/core";
 
 import DataHeader from "./DataHeader";
 import DataBody from "./DataBody";
+
+// FORMATS
+import {
+  Bool as BoolIcon,
+  Json as JsonIcon,
+  Text as TextIcon,
+  NumberIcon,
+  Email as EmailIcon,
+  Calendar as DateIcon,
+  RichText as RichTextIcon,
+} from "@buffetjs/icons";
 
 const filterIgnoreFields = (fieldName) =>
   ![
@@ -25,10 +37,20 @@ function DataMapper({ data, mapper, onSuccess, onCancel }) {
   const { fieldsInfo, parsedData } = data;
   const { uid, attributes } = mapper;
 
+  const filteredAttributes = useMemo(
+    () =>
+      Object.keys(attributes)
+        .filter(filterIgnoreFields)
+        .filter((field) => filterIgnoreTypes(attributes[field].type)),
+    [attributes]
+  );
+
   // Manipulation over maping columns
   const [mappedFields, setMappedFields] = useState(
     fieldsInfo.reduce((mappedFields, { fieldName }) => {
-      mappedFields[fieldName] = attributes[fieldName] ? fieldName : "none";
+      mappedFields[fieldName] = filteredAttributes.includes(fieldName)
+        ? fieldName
+        : "none";
       return mappedFields;
     }, {})
   );
@@ -37,18 +59,8 @@ function DataMapper({ data, mapper, onSuccess, onCancel }) {
     setMappedFields({ ...mappedFields, [source]: value });
   };
 
-  const destinationOptions = useMemo(
-    () =>
-      [{ label: "None", value: "none" }].concat(
-        Object.keys(attributes)
-          .filter(filterIgnoreFields)
-          .filter((field) => filterIgnoreTypes(attributes[field].type))
-          .map((field) => ({
-            label: field,
-            value: field,
-          }))
-      ),
-    [attributes]
+  const destinationOptions = [{ label: "None", value: "none" }].concat(
+    filteredAttributes.map((field) => ({ label: field, value: field }))
   );
 
   // Manipulation over Rows
@@ -62,10 +74,11 @@ function DataMapper({ data, mapper, onSuccess, onCancel }) {
 
   // UploadData
   const handleUploadItems = () =>
-    onSuccess({ uid, fields: mappedFields, importItems });
+    onSuccess({ target: uid, fields: mappedFields, items: importItems });
 
   return (
     <div className="pt-3 col-12">
+      <Prompt message="import.mapper.unsaved" />
       <Row>
         <h2>Map the Import Data to Destination Field</h2>
         <TableWrapper>

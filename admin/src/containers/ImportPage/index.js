@@ -84,19 +84,37 @@ function ImportPage({ contentTypes }) {
   };
 
   // Upload Data
-  const uploadData = ({ uid, fields, importItems }) => {
+  const uploadData = async ({ target, fields, items }) => {
+    // Finish with the import
+    endImport();
+
     // Prevent Upload Empty Data;
-    if (importItems.length === 0) {
+    if (items.length === 0) {
       strapi.notification.toggle({
         type: "warning",
         message: "import.items.empty",
       });
     }
 
-    console.log(uid, fields, importItems);
+    try {
+      // Send Request
+      const response = await request(`/${pluginId}/import`, {
+        method: "POST",
+        body: { target, fields, items },
+      });
 
-    // Finish with the import
-    endImport();
+      console.log(response);
+
+      strapi.notification.toggle({
+        type: "success",
+        message: `import.items.succesfully`,
+      });
+    } catch (error) {
+      strapi.notification.toggle({
+        type: "warning",
+        message: `import.items.error`,
+      });
+    }
   };
 
   // Reset analysis and mapper

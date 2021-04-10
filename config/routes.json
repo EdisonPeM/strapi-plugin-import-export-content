@@ -19,7 +19,7 @@
     {
       "method": "POST",
       "path": "/import",
-      "handler": "import-export-content.importContent",
+      "handler": "import-export-content.importItems",
       "config": {
         "policies": []
       }

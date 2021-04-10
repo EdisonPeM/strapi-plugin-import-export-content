@@ -39,12 +39,12 @@ module.exports = {
     }
   },
 
-  importContent: async (ctx) => {
+  importItems: async (ctx) => {
     // const { user } = ctx.state;
 
     const data = ctx.request.body;
-    const { targetModel, source, kind } = data;
-    if (!targetModel || !source || !kind) {
+    const { target, fields, items } = data;
+    if (!target || !fields || !items) {
       return ctx.throw(400, "Required parameters missing");
     }
 

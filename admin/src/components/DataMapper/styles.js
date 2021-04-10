@@ -13,15 +13,11 @@ const TableWrapper = styled.div`
     width: 100%;
     text-align: center;
 
-    th,
-    td {
-      padding: 15px;
-    }
-
     th {
       min-width: 15ch;
       background-color: #f3f3f4;
       font-weight: bold;
+      padding: 10px;
     }
 
     th:last-child {
@@ -61,6 +57,7 @@ const TableWrapper = styled.div`
       }
 
       td {
+        padding: 15px;
         cursor: auto;
         max-width: 15ch;
         white-space: nowrap;

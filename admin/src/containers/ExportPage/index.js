@@ -15,7 +15,7 @@ function ImportPage({ contentTypes }) {
       description="Configure the Import Source & Destination"
       style={{ marginBottom: 12 }}
     >
-      <h1>Happy Coding</h1>
+      <h1>Work in Progress</h1>
     </Block>
   );
 }

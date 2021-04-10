@@ -1,6 +1,12 @@
 {
-  "import.file.type.error": "El tipo de archivo no es valido",
-  "import.page.title": "Importar Datos",
-  "import.analyze.success": "Import Analyze Success (es)",
+  "import.mapper.unsaved": "",
+  "import.destination.empty": "",
+  "import.analyze.success": "",
+  "import.analyze.error": "",
+  "import.items.empty": "",
+  "import.items.succesfully": "",
+  "import.items.error": "",
+  "import.file.content.error": "",
+  "import.file.type.error": "",
   "plugin.name": "Importar / Exportar Contenido"
 }
