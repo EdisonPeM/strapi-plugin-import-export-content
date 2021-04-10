@@ -7,6 +7,30 @@
       "config": {
         "policies": []
       }
+    },
+    {
+      "method": "POST",
+      "path": "/pre-analyze",
+      "handler": "import-export-content.preAnalyzeContent",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/import",
+      "handler": "import-export-content.importItems",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/export",
+      "handler": "import-export-content.exportItems",
+      "config": {
+        "policies": []
+      }
     }
   ]
 }

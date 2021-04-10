@@ -1,3 +1,14 @@
 {
+  "import.mapper.unsaved": "",
+  "import.destination.empty": "",
+  "import.analyze.success": "",
+  "import.analyze.error": "",
+  "import.items.empty": "",
+  "import.items.succesfully": "",
+  "import.items.error": "",
+  "import.file.content.error": "",
+  "import.file.type.error": "",
+  "export.source.empty": "",
+  "export.items.error": "",
   "plugin.name": "Import / Export Content"
 }
