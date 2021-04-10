@@ -81,4 +81,28 @@ module.exports = {
       ctx.throw(406, `could not parse: ${error}`);
     }
   },
+
+  exportItems: async (ctx) => {
+    const { target, type } = ctx.request.body;
+    if (!target || !type) {
+      return ctx.throw(400, "Required parameters missing");
+    }
+
+    const { userAbility } = ctx.state;
+    if (userAbility.cannot(PERMISSIONS.read, target.uid)) {
+      return ctx.throw(403, "Forbidden");
+    }
+
+    try {
+      const service = getService();
+      const results = await service.exportItems(ctx);
+      ctx.send({
+        message: "ok",
+        data: `${results}`,
+      });
+    } catch (error) {
+      console.error(error);
+      ctx.throw(406, `could not parse: ${error}`);
+    }
+  },
 };

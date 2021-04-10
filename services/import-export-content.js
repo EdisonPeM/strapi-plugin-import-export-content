@@ -12,6 +12,8 @@ const {
   importToCollectionType,
   importToSingleType,
 } = require("./utils/importer");
+const { getAll } = require("./utils/exporter");
+const { getContentFromItems } = require("./utils/parseData");
 
 module.exports = {
   preAnalyzeContent: (ctx) => {
@@ -36,5 +38,16 @@ module.exports = {
     } else {
       throw new Error("Tipe is not supported");
     }
+  },
+
+  exportItems: async (ctx) => {
+    const { target, type } = ctx.request.body;
+    const exportItems = await getAll(target.uid);
+
+    if (target.kind === "singleType") {
+      return getContentFromItems(exportItems[0], type);
+    }
+
+    return getContentFromItems(exportItems, type);
   },
 };

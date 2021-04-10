@@ -1,8 +1,13 @@
 function formatFileContent({ content, mimeType }) {
   switch (mimeType) {
     case "application/json":
-      const jsonData = JSON.parse(content);
-      return JSON.stringify(jsonData, null, 2);
+      try {
+        const jsonData = JSON.parse(content);
+        return JSON.stringify(jsonData, null, 2);
+      } catch (error) {
+        return "";
+      }
+
     case "text/csv":
     default:
       return content;

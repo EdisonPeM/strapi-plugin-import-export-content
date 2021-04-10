@@ -100,13 +100,13 @@ function ImportPage({ contentTypes }) {
     }
 
     try {
-      const { succesfully, message } = await request(`/${pluginId}/import`, {
+      const { message } = await request(`/${pluginId}/import`, {
         method: "POST",
         body: { target, fields, items },
       });
 
       strapi.notification.toggle({
-        type: succesfully ? "success" : "warning",
+        type: "info",
         message,
       });
     } catch (error) {

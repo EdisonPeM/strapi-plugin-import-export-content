@@ -2,6 +2,7 @@
 
 const CsvParser = require("csv-parse/lib/sync");
 const contentTypeParser = require("content-type-parser");
+const { getFieldNameSet } = require("./analyzer");
 
 function getItemsFromData({ type, data }) {
   switch (type) {
@@ -38,4 +39,33 @@ function parseItemsToModel(items, fields) {
   return mappedItems;
 }
 
-module.exports = { getItemsFromData, parseItemsToModel };
+function getContentFromItems(items, type) {
+  switch (type) {
+    case "text/csv":
+    case "application/vnd.ms-excel": {
+      const mappedItems = Array.isArray(items) ? items : [items];
+      const headers = Array.from(getFieldNameSet(mappedItems));
+
+      const data = mappedItems
+        .map((item) =>
+          headers
+            .map((header) => {
+              const element = item[header];
+              if (element === null || element == undefined) return "";
+              if (typeof element === "object") return JSON.stringify(element);
+              return element;
+            })
+            .join()
+        )
+        .join("\n");
+
+      return headers.join().concat(`\n${data}`);
+    }
+
+    case "application/json":
+    default:
+      return JSON.stringify(items);
+  }
+}
+
+module.exports = { getItemsFromData, parseItemsToModel, getContentFromItems };
