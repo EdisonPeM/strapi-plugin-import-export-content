@@ -43,11 +43,13 @@ function ImportPage({ contentTypes }) {
   const handleSelectSourceExports = ({ target: { value } }) => {
     setSourceExports(value);
     setTarget(contentTypes.find(({ uid }) => uid === value));
+    setContentToExport("");
   };
 
   // Source Options Handler
   const handleSelectExportFormat = ({ target: { value } }) => {
     setExportFormat(value);
+    setContentToExport("");
   };
 
   // Request to Get Available Content

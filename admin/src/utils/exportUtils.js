@@ -1,3 +1,4 @@
+import DataViewer from "../components/DataViewer";
 import FORMATS from "../constants/formats";
 
 function downloadFile(name, content, type) {
@@ -6,9 +7,10 @@ function downloadFile(name, content, type) {
   const file = new Blob([content], { type });
   const fileURL = window.URL.createObjectURL(file);
 
+  const dateTime = new Date().toLocaleDateString();
   const el = document.createElement("a");
   el.href = fileURL;
-  el.download = `${name}${format.ext}` || "file.txt";
+  el.download = `${name}_${dateTime}${format.ext}` || "file.txt";
   el.click();
 }
 

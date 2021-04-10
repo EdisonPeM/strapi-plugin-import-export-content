@@ -1,3 +1,4 @@
+const PERMISSIONS = require("../../constants/permissions");
 const ignoreFields = [
   "id",
   "created_at",
@@ -7,14 +8,30 @@ const ignoreFields = [
   "published_at",
 ];
 
-async function getAll(uid) {
-  const items = await strapi.query(uid).find({});
-  return items.map((item) => {
-    ignoreFields.forEach((field) => {
-      delete item[field];
-    });
-    return item;
+function cleanFields(item) {
+  if (item === null || item === undefined) return;
+  Object.keys(item).forEach((itemKey) => {
+    if (ignoreFields.includes(itemKey)) return delete item[itemKey];
+    if (typeof item[itemKey] === "object") return cleanFields(item[itemKey]);
   });
+
+  return item;
+}
+
+async function getAll(uid, ctx) {
+  const { userAbility } = ctx.state;
+  const permissionsManager = strapi.admin.services.permission.createPermissionsManager(
+    { ability: userAbility, model: uid }
+  );
+
+  // Filter content by permissions
+  const query = permissionsManager.queryFrom("", PERMISSIONS.read);
+  const items = await strapi.entityService.find(
+    { params: query },
+    { model: uid }
+  );
+
+  return items.map(cleanFields);
 }
 
 module.exports = {

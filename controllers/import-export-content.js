@@ -8,11 +8,7 @@ function getService(service = PLUGIN_ID) {
   return SERVICES[service];
 }
 
-const PERMISSIONS = {
-  read: "plugins::content-manager.explorer.read",
-  create: "plugins::content-manager.explorer.create",
-  update: "plugins::content-manager.explorer.update",
-};
+const PERMISSIONS = require("../constants/permissions");
 
 /**
  * import-export-content.js controller
@@ -61,7 +57,7 @@ module.exports = {
       userAbility.cannot(PERMISSIONS.create, target.uid) &&
       userAbility.cannot(PERMISSIONS.update, target.uid)
     ) {
-      return ctx.throw(403, "Forbidden");
+      return ctx.forbidden();
     }
 
     try {
@@ -90,7 +86,7 @@ module.exports = {
 
     const { userAbility } = ctx.state;
     if (userAbility.cannot(PERMISSIONS.read, target.uid)) {
-      return ctx.throw(403, "Forbidden");
+      return ctx.forbidden();
     }
 
     try {
