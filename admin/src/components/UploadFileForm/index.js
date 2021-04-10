@@ -1,6 +1,5 @@
 import React, { useState, memo } from "react";
 import PropTypes from "prop-types";
-// import { } from "strapi-helper-plugin";
 
 import DropFileZone from "../DropFileZone";
 import DataViewer from "../DataViewer";
