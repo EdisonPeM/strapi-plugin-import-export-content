@@ -1,4 +1,3 @@
-import DataViewer from "../components/DataViewer";
 import FORMATS from "../constants/formats";
 
 function downloadFile(name, content, type) {
