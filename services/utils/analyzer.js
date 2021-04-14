@@ -23,8 +23,10 @@ function analyze(items) {
   items.forEach((item) => {
     fieldNames.forEach((fieldName) => {
       const fieldData = item[fieldName];
-      const fieldFormat = detectFieldFormat(fieldData);
-      if (fieldFormat !== undefined) fieldsFormats[fieldName].push(fieldFormat);
+      if (fieldData !== null && fieldData !== undefined && fieldData !== "") {
+        const fieldFormat = detectFieldFormat(fieldData);
+        fieldsFormats[fieldName].push(fieldFormat);
+      }
     });
   });
 

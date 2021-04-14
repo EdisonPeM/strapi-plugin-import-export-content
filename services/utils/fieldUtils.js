@@ -1,6 +1,5 @@
 "use strict";
 
-const getUrls = require("get-urls");
 const { urlIsMedia, stringIsEmail } = require("./formatValidator");
 
 const detectFieldFormat = (data) => {
@@ -10,6 +9,7 @@ const detectFieldFormat = (data) => {
     case "boolean":
       return "boolean";
     case "object":
+      if (Array.isArray(data)) return "array";
       return "object";
     case "string":
       return detectStringFieldFormat(data);
@@ -22,16 +22,16 @@ const detectStringFieldFormat = (data) => {
   return "string";
 };
 
-const getMediaUrlsFromFieldData = (fieldData) => {
-  switch (typeof fieldData) {
-    case "string":
-      return Array.from(getUrls(fieldData)).filter(urlIsMedia);
-    case "object":
-      return urlIsMedia(fieldData.url) ? [fieldData.url] : [];
-  }
-};
+// const getMediaUrlsFromFieldData = (fieldData) => {
+//   switch (typeof fieldData) {
+//     case "string":
+//       return Array.from(getUrls(fieldData)).filter(urlIsMedia);
+//     case "object":
+//       return urlIsMedia(fieldData.url) ? [fieldData.url] : [];
+//   }
+// };
+
 module.exports = {
   detectStringFieldFormat,
   detectFieldFormat,
-  getMediaUrlsFromFieldData,
 };

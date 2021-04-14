@@ -11,9 +11,8 @@
     "test": "echo \"No test specified\""
   },
   "dependencies": {
-    "content-type-parser": "^1.0.2",
     "csv-parse": "^4.15.3",
-    "get-urls": "^10.0.0",
+    "csv-string": "^4.0.1",
     "lodash": "^4.17.21"
   },
   "author": "Edison Peñuela <edisonpe961206@hotmail.com>",

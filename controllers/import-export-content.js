@@ -24,10 +24,7 @@ module.exports = {
    */
 
   index: async (ctx) => {
-    // Send 200 `ok`
-    ctx.send({
-      message: "ok",
-    });
+    ctx.send({ message: "ok" }); // Send 200 `ok`
   },
 
   preAnalyzeContent: async (ctx) => {
@@ -39,7 +36,7 @@ module.exports = {
     try {
       const service = getService();
       const data = await service.preAnalyzeContent(ctx);
-      ctx.send(data);
+      ctx.send({ data, message: "ok" });
     } catch (error) {
       console.error(error);
       ctx.throw(406, `could not parse: ${error}`);
@@ -91,11 +88,8 @@ module.exports = {
 
     try {
       const service = getService();
-      const results = await service.exportItems(ctx);
-      ctx.send({
-        message: "ok",
-        data: `${results}`,
-      });
+      const data = await service.exportItems(ctx);
+      ctx.send({ data, message: "ok" });
     } catch (error) {
       console.error(error);
       ctx.throw(406, `could not parse: ${error}`);

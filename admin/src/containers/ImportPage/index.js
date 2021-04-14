@@ -60,14 +60,14 @@ function ImportPage({ contentTypes }) {
 
     // Send Request
     try {
-      const response = await request(`/${pluginId}/pre-analyze`, {
+      const { data } = await request(`/${pluginId}/pre-analyze`, {
         method: "POST",
         body,
       });
 
       // Set Content Type Data to map
       setMapper(contentTypes.find(({ uid }) => uid === importDest));
-      setAnalysis(response);
+      setAnalysis(data);
 
       // Notifications
       strapi.notification.toggle({

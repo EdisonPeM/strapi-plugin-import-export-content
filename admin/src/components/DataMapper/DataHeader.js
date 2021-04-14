@@ -2,8 +2,42 @@ import React, { memo } from "react";
 import PropTypes from "prop-types";
 import { Label, Select } from "@buffetjs/core";
 
+// FORMATS
+import {
+  Bool as BoolIcon,
+  Json as JsonIcon,
+  Text as TextIcon,
+  NumberIcon,
+  pending as HourIcon,
+  Enumeration as ListIcon,
+  media as MediaIcon,
+  Email as EmailIcon,
+  Calendar as DateIcon,
+  RichText as RichTextIcon,
+} from "@buffetjs/icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faLink } from "@fortawesome/free-solid-svg-icons/faLink";
+
+const ICONS = {
+  string: <TextIcon fill="#69BA05" />,
+
+  // Sub Types of String
+  email: <EmailIcon fill="#69BA05" />,
+  text: <RichTextIcon fill="#69BA05" />,
+  date: <DateIcon fill="#69BA05" />,
+  hour: <HourIcon fill="#69BA05" />,
+  url: <FontAwesomeIcon icon={faLink} color="#69BA05" />,
+  media: <MediaIcon fill="#69BA05" />,
+
+  // Others
+  boolean: <BoolIcon fill="#69BA05" />,
+  number: <NumberIcon fill="#69BA05" />,
+  object: <JsonIcon fill="#69BA05" />,
+  array: <ListIcon fill="#69BA05" />,
+};
+
 function DataHeader({
-  headers,
+  headersInfo,
   headersOptions,
   headersValues,
   onSelectHeader,
@@ -11,20 +45,26 @@ function DataHeader({
   return (
     <thead>
       <tr>
-        {headers.map((header) => (
-          <th key={header}>{header}</th>
+        {headersInfo.map(({ fieldName, format }) => (
+          <th key={fieldName}>
+            <span className="mr-3">{fieldName}</span>
+            <span>{ICONS[format]}</span>
+          </th>
         ))}
         <th></th>
       </tr>
       <tr>
-        {headers.map((header) => (
-          <th key={header}>
-            <Label htmlFor={`map-${header}`}>
+        {headersInfo.map(({ fieldName }) => (
+          <th key={fieldName}>
+            <Label htmlFor={`map-${fieldName}`}>
               <Select
-                name={`map-${header}`}
+                name={`map-${fieldName}`}
                 options={headersOptions}
-                value={headersValues[header]}
-                onChange={onSelectHeader(header)}
+                value={headersValues[fieldName]}
+                onChange={onSelectHeader(fieldName)}
+                className={
+                  headersValues[fieldName] === "none" ? "unselected" : ""
+                }
               />
             </Label>
           </th>

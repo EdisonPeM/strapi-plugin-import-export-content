@@ -2,7 +2,7 @@ import React, { memo } from "react";
 import PropTypes from "prop-types";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
+import { faTrashAlt } from "@fortawesome/free-solid-svg-icons/faTrashAlt";
 
 function DataBody({ rows, headers, onDeleteItem, onlyFistRow }) {
   return (
@@ -13,11 +13,14 @@ function DataBody({ rows, headers, onDeleteItem, onlyFistRow }) {
             const cell = row[header];
 
             if (cell === undefined || cell === null) return <td key={j}>-</td>;
-
             if (typeof cell === "object")
-              return <td key={j}>{JSON.stringify(cell)}</td>;
+              return (
+                <td key={j} title={JSON.stringify(cell, null, 2)}>
+                  {JSON.stringify(cell)}
+                </td>
+              );
 
-            return <td key={j}>{`${cell}`}</td>;
+            return <td key={j} title={`${cell}`}>{`${cell}`}</td>;
           })}
           <td>
             <button onClick={onDeleteItem(row)}>

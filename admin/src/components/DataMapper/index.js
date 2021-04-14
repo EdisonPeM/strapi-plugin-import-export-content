@@ -9,17 +9,6 @@ import { Button } from "@buffetjs/core";
 import DataHeader from "./DataHeader";
 import DataBody from "./DataBody";
 
-// FORMATS
-// import {
-//   Bool as BoolIcon,
-//   Json as JsonIcon,
-//   Text as TextIcon,
-//   NumberIcon,
-//   Email as EmailIcon,
-//   Calendar as DateIcon,
-//   RichText as RichTextIcon,
-// } from "@buffetjs/icons";
-
 const filterIgnoreFields = (fieldName) =>
   ![
     "id",
@@ -35,7 +24,10 @@ const filterIgnoreTypes = (type) => !["relation", "dynamiczone"].includes(type);
 
 function DataMapper({ data, mapper, onSuccess, onCancel }) {
   const { fieldsInfo, parsedData } = data;
-  const { kind, attributes } = mapper;
+  const { kind, attributes, options } = mapper;
+
+  const [uploadAsDraft, setUploadAsDraft] = useState(false);
+  const toggleUploadAsDraft = () => setUploadAsDraft(!uploadAsDraft);
 
   const filteredAttributes = useMemo(
     () =>
@@ -84,7 +76,7 @@ function DataMapper({ data, mapper, onSuccess, onCancel }) {
         <TableWrapper>
           <table>
             <DataHeader
-              headers={fieldsInfo.map(({ fieldName }) => fieldName)}
+              headersInfo={fieldsInfo}
               headersOptions={destinationOptions}
               headersValues={mappedFields}
               onSelectHeader={selectDestinationField}
@@ -99,9 +91,22 @@ function DataMapper({ data, mapper, onSuccess, onCancel }) {
         </TableWrapper>
       </Row>
       <Row>
-        Count of Items to Import:{" "}
+        <span className="mr-3">Count of Items to Import:</span>
         <strong>{kind === "singleType" ? 1 : importItems.length}</strong>
       </Row>
+      {options.draftAndPublish && (
+        <Row>
+          <label htmlfor="uploadAsDraft">
+            <input
+              name="uploadAsDraft"
+              type="checkbox"
+              value={uploadAsDraft}
+              onChange={toggleUploadAsDraft}
+            />
+            <span className="ml-3">Upload as Draft</span>
+          </label>
+        </Row>
+      )}
       <Row>
         <Button label="Import Data" onClick={handleUploadItems} />
         <Button
