@@ -96,7 +96,7 @@ function DataMapper({ data, mapper, onSuccess, onCancel }) {
       </Row>
       {options.draftAndPublish && (
         <Row>
-          <label htmlfor="uploadAsDraft">
+          <label htmlFor="uploadAsDraft">
             <input
               name="uploadAsDraft"
               type="checkbox"

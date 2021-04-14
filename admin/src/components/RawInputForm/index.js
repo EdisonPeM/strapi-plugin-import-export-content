@@ -13,6 +13,13 @@ function RawInputForm({ onSubmit }) {
   const handleRawTextArea = ({ target: { value } }) => setRawText(value);
   const handleFormatSelect = ({ target: { value } }) => setRawFormat(value);
 
+  const handleTabOnTextArea = (ev) => {
+    if ((ev.keyCode === 9 || ev.key === "Tab") && !ev.shiftKey) {
+      ev.preventDefault();
+      setRawText(`${rawText}  `);
+    }
+  };
+
   const handleSubmit = (ev) => {
     ev.preventDefault();
     onSubmit({
@@ -42,6 +49,7 @@ function RawInputForm({ onSubmit }) {
           textStyle={{ fontFamily: "monospace" }}
           value={rawText}
           onChange={handleRawTextArea}
+          onKeyDown={handleTabOnTextArea}
         />
       </Row>
       <Row>

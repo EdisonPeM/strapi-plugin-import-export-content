@@ -8,7 +8,7 @@ import {
   Json as JsonIcon,
   Text as TextIcon,
   NumberIcon,
-  pending as HourIcon,
+  Pending as HourIcon,
   Enumeration as ListIcon,
   media as MediaIcon,
   Email as EmailIcon,
@@ -16,7 +16,7 @@ import {
   RichText as RichTextIcon,
 } from "@buffetjs/icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faLink } from "@fortawesome/free-solid-svg-icons/faLink";
+import { faLink } from "@fortawesome/free-solid-svg-icons";
 
 const ICONS = {
   string: <TextIcon fill="#69BA05" />,
