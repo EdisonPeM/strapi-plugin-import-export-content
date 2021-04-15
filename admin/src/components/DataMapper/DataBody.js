@@ -4,13 +4,14 @@ import PropTypes from "prop-types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashAlt } from "@fortawesome/free-solid-svg-icons/faTrashAlt";
 
-function DataBody({ rows, headers, onDeleteItem, onlyFistRow }) {
+import MediaPreview from "../MediaPreview";
+function DataBody({ rows, headersInfo, onDeleteItem, onlyFistRow }) {
   return (
     <tbody className={onlyFistRow ? "fist-row-selected" : ""}>
       {rows.map((row, i) => (
         <tr key={i}>
-          {headers.map((header, j) => {
-            const cell = row[header];
+          {headersInfo.map((header, j) => {
+            const cell = row[header.fieldName];
 
             if (cell === undefined || cell === null) return <td key={j}>-</td>;
             if (typeof cell === "object")
@@ -19,6 +20,18 @@ function DataBody({ rows, headers, onDeleteItem, onlyFistRow }) {
                   {JSON.stringify(cell)}
                 </td>
               );
+
+            if (header.format === "media") {
+              return (
+                <td key={j} title={cell}>
+                  <div className="media justify-content-center">
+                    <div className="border p-1">
+                      <MediaPreview url={cell} height={25} />
+                    </div>
+                  </div>
+                </td>
+              );
+            }
 
             return <td key={j} title={`${cell}`}>{`${cell}`}</td>;
           })}

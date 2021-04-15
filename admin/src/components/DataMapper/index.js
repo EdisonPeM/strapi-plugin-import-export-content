@@ -84,7 +84,7 @@ function DataMapper({ data, mapper, onSuccess, onCancel }) {
             <DataBody
               onlyFistRow={kind === "singleType"}
               rows={importItems}
-              headers={fieldsInfo.map(({ fieldName }) => fieldName)}
+              headersInfo={fieldsInfo}
               onDeleteItem={deleteItem}
             />
           </table>

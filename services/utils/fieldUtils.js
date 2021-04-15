@@ -1,9 +1,11 @@
 "use strict";
 
+const { isNumber, isBoolean, isObject } = require("./formatUtils");
 const {
   stringIsEmail,
   stringIsDate,
   stringIsHour,
+  stringIsSlug,
   stringIsUrl,
   urlIsMedia,
 } = require("./formatValidator");
