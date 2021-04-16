@@ -1,6 +1,5 @@
 "use strict";
 
-const _ = require("lodash");
 const { detectFieldFormat } = require("./fieldUtils");
 
 function getFieldNameSet(items) {
@@ -18,7 +17,11 @@ function getFieldNameSet(items) {
 function analyze(items) {
   const fieldNames = getFieldNameSet(items);
   const fieldsFormats = {};
-  fieldNames.forEach((fieldName) => (fieldsFormats[fieldName] = []));
+  const subFormats = {};
+  fieldNames.forEach((fieldName) => {
+    fieldsFormats[fieldName] = [];
+    subFormats[fieldName] = [];
+  });
 
   items.forEach((item) => {
     fieldNames.forEach((fieldName) => {
@@ -31,26 +34,17 @@ function analyze(items) {
   });
 
   const fieldsInfo = Object.keys(fieldsFormats).map((fieldName) => {
-    const fieldFormats = fieldsFormats[fieldName];
-    const fieldInfo = { fieldName, count: fieldFormats.length };
+    const fieldFormats = fieldsFormats[fieldName].map((value) =>
+      value === "text" ? "string" : value
+    );
+    const uniqueFormats = new Set(fieldFormats);
+    const format = uniqueFormats.size > 1 ? "mixed" : [...uniqueFormats][0];
 
-    try {
-      fieldInfo.format = _.chain(fieldFormats)
-        .countBy((f) => f)
-        .map((value, key) => ({
-          count: value,
-          type: key,
-        }))
-        .sortBy("count")
-        .reverse()
-        .head()
-        .get("type")
-        .value();
-    } catch (e) {
-      console.log(e);
-    }
-
-    return fieldInfo;
+    return {
+      fieldName,
+      count: fieldFormats.length,
+      format,
+    };
   });
 
   return fieldsInfo;

@@ -16,7 +16,9 @@ function DataHeader({
         {headersInfo.map(({ fieldName, format }) => (
           <th key={fieldName}>
             <span className="mr-3">{fieldName}</span>
-            <FormatIcon format={format} />
+            <span title={`${format} format`}>
+              <FormatIcon format={format} />
+            </span>
           </th>
         ))}
         <th></th>
@@ -44,14 +46,14 @@ function DataHeader({
 }
 
 DataHeader.defaultProps = {
-  headers: [],
+  headersInfo: [],
   headersOptions: [],
   headersValues: {},
   onSelectHeader: () => {},
 };
 
 DataHeader.propTypes = {
-  headers: PropTypes.array,
+  headersInfo: PropTypes.array,
   headersOptions: PropTypes.array,
   headersValues: PropTypes.object,
   onSelectHeader: PropTypes.func,

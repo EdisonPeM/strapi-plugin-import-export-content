@@ -1,31 +1,8 @@
 import React from "react";
-
-function getFormat(url) {
-  const parsed = new URL(url);
-  const format = parsed.pathname.split(".").pop().toLowerCase();
-  switch (format) {
-    case "png":
-    case "gif":
-    case "jpg":
-    case "jpeg":
-    case "svg":
-      return { type: "image", format };;
-    case "mp3":
-    case "wav":
-    case "ogg":
-      return { type: "video", format };
-    case "mp4":
-    case "ogg":
-    case "webm":
-    case "avi":
-      return { type: "video", format };
-    default:
-      break;
-  }
-}
+import { getMediaFormat } from "../../utils/mediaFormat";
 
 function MediaPreview({ url, ...oterProps }) {
-  const { type, format } = getFormat(url);
+  const { type, format } = getMediaFormat(url);
 
   switch (type) {
     case "image":
@@ -44,6 +21,7 @@ function MediaPreview({ url, ...oterProps }) {
           <source src={url} type={`audio/${format}`} />
         </audio>
       );
+
     default:
       return null;
   }

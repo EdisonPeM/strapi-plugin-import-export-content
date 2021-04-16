@@ -1,5 +1,7 @@
 import React, { useState, memo } from "react";
 import PropTypes from "prop-types";
+import Editor from "react-simple-code-editor";
+import { EditorWrapper } from "./styles";
 
 import { Label, Select, Textarea, Button } from "@buffetjs/core";
 import { Row } from "../../components/common";
@@ -10,7 +12,7 @@ function RawInputForm({ onSubmit }) {
   const [rawText, setRawText] = useState("");
   const [rawFormat, setRawFormat] = useState(FORMATS[0].mimeType || "");
 
-  const handleRawTextArea = ({ target: { value } }) => setRawText(value);
+  // const handleRawTextArea = ({ target: { value } }) => setRawText(value);
   const handleFormatSelect = ({ target: { value } }) => setRawFormat(value);
 
   const handleTabOnTextArea = (ev) => {
@@ -43,14 +45,15 @@ function RawInputForm({ onSubmit }) {
         />
       </Row>
       <Row>
-        <Textarea
-          name="rawTextArea"
-          className="col-12"
-          textStyle={{ fontFamily: "monospace" }}
-          value={rawText}
-          onChange={handleRawTextArea}
-          onKeyDown={handleTabOnTextArea}
-        />
+        <EditorWrapper>
+          <Editor
+            className="editor"
+            value={rawText}
+            onValueChange={(value) => setRawText(value)}
+            highlight={(text) => text}
+            padding={10}
+          />
+        </EditorWrapper>
       </Row>
       <Row>
         <Button type="submit" label={"Analyze"} />

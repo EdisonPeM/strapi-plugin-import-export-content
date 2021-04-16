@@ -14,7 +14,7 @@ import {
   RichText as RichTextIcon,
 } from "@buffetjs/icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faLink } from "@fortawesome/free-solid-svg-icons";
+import { faLink, faRandom } from "@fortawesome/free-solid-svg-icons";
 
 const ICONS = {
   string: TextIcon,
@@ -31,7 +31,12 @@ const ICONS = {
   boolean: BoolIcon,
   number: NumberIcon,
   object: JsonIcon,
+
+  // temp Array
   array: ListIcon,
+
+  // mixed formats
+  mixed: ({ fill }) => <FontAwesomeIcon icon={faRandom} color={fill} />,
 };
 
 function FormatIcon({ format }) {

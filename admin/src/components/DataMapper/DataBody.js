@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashAlt } from "@fortawesome/free-solid-svg-icons/faTrashAlt";
 
 import MediaPreview from "../MediaPreview";
+import { isUrlMedia } from "../../utils/mediaFormat";
 function DataBody({ rows, headersInfo, onDeleteItem, onlyFistRow }) {
   return (
     <tbody className={onlyFistRow ? "fist-row-selected" : ""}>
@@ -14,6 +15,34 @@ function DataBody({ rows, headersInfo, onDeleteItem, onlyFistRow }) {
             const cell = row[header.fieldName];
 
             if (cell === undefined || cell === null) return <td key={j}>-</td>;
+            if (Array.isArray(cell)) {
+              return (
+                <td key={j} title={JSON.stringify(cell, null, 2)}>
+                  [
+                  {cell.map((cellItem, k) => {
+                    if (typeof cellItem === "object")
+                      return (
+                        <div key={k} className="m-2">{`${JSON.stringify(
+                          cellItem
+                        )}`}</div>
+                      );
+
+                    if (typeof cellItem === "string" && isUrlMedia(cellItem))
+                      return (
+                        <span key={k} className="border p-1 m-2">
+                          <MediaPreview url={cellItem} height={25} />
+                        </span>
+                      );
+
+                    return (
+                      <span key={k} className="m-2">{`${cellItem},`}</span>
+                    );
+                  })}
+                  ]
+                </td>
+              );
+            }
+
             if (typeof cell === "object")
               return (
                 <td key={j} title={JSON.stringify(cell, null, 2)}>
@@ -48,14 +77,14 @@ function DataBody({ rows, headersInfo, onDeleteItem, onlyFistRow }) {
 
 DataBody.defaultProps = {
   rows: [],
-  headers: [],
+  headersInfo: [],
   onDeleteItem: () => {},
   onlyFistRow: false,
 };
 
 DataBody.propTypes = {
   rows: PropTypes.array,
-  headers: PropTypes.array,
+  headersInfo: PropTypes.array,
   onDeleteItem: PropTypes.func,
   onlyFistRow: PropTypes.bool,
 };
