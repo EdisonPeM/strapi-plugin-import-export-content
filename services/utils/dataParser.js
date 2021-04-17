@@ -87,10 +87,15 @@ function getContentFromItems(items, type) {
 
 function mapItemToModel(item, fields) {
   const mappedItem = {};
+
   Object.keys(item).forEach((key) => {
-    const mappedKey = fields[key];
-    if (mappedKey && mappedKey !== "none") mappedItem[mappedKey] = item[key];
+    const { targetField, format, targetFormat } = fields[key];
+    if (targetField && targetField !== "none") {
+      // try to Cast Formats
+      mappedItem[targetField] = item[key];
+    }
   });
+
   return mappedItem;
 }
 

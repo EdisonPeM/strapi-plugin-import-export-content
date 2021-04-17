@@ -1,26 +1,21 @@
 import React, { useState, memo } from "react";
 import PropTypes from "prop-types";
+
 import Editor from "react-simple-code-editor";
 import { EditorWrapper } from "./styles";
 
-import { Label, Select, Textarea, Button } from "@buffetjs/core";
+import { Label, Select, Button } from "@buffetjs/core";
 import { Row } from "../../components/common";
 
 import FORMATS from "../../constants/formats";
+const fortmatsOptions = FORMATS.map(({ name, mimeType }) => ({
+  label: name,
+  value: mimeType,
+}));
 
 function RawInputForm({ onSubmit }) {
   const [rawText, setRawText] = useState("");
   const [rawFormat, setRawFormat] = useState(FORMATS[0].mimeType || "");
-
-  // const handleRawTextArea = ({ target: { value } }) => setRawText(value);
-  const handleFormatSelect = ({ target: { value } }) => setRawFormat(value);
-
-  const handleTabOnTextArea = (ev) => {
-    if ((ev.keyCode === 9 || ev.key === "Tab") && !ev.shiftKey) {
-      ev.preventDefault();
-      setRawText(`${rawText}  `);
-    }
-  };
 
   const handleSubmit = (ev) => {
     ev.preventDefault();
@@ -36,12 +31,9 @@ function RawInputForm({ onSubmit }) {
         <Label message="Data Format" htmlFor="dataFormats" />
         <Select
           name="dataFormats"
-          options={FORMATS.map(({ name, mimeType }) => ({
-            label: name,
-            value: mimeType,
-          }))}
+          options={fortmatsOptions}
           value={rawFormat}
-          onChange={handleFormatSelect}
+          onChange={({ target: { value } }) => setRawFormat(value)}
         />
       </Row>
       <Row>
@@ -56,7 +48,7 @@ function RawInputForm({ onSubmit }) {
         </EditorWrapper>
       </Row>
       <Row>
-        <Button type="submit" label={"Analyze"} />
+        <Button type="submit" label={"Analyze"} disabled={rawText === ""} />
       </Row>
     </form>
   );

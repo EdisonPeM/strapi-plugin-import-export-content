@@ -6,19 +6,19 @@ import { faTrashAlt } from "@fortawesome/free-solid-svg-icons/faTrashAlt";
 
 import MediaPreview from "../MediaPreview";
 import { isUrlMedia } from "../../utils/mediaFormat";
-function DataBody({ rows, headersInfo, onDeleteItem, onlyFistRow }) {
+
+function TableBody({ rows, headers, onDeleteItem, onlyFistRow }) {
   return (
     <tbody className={onlyFistRow ? "fist-row-selected" : ""}>
       {rows.map((row, i) => (
         <tr key={i}>
-          {headersInfo.map((header, j) => {
-            const cell = row[header.fieldName];
+          {headers.map(({ name }, j) => {
+            const cell = row[name];
 
             if (cell === undefined || cell === null) return <td key={j}>-</td>;
             if (Array.isArray(cell)) {
               return (
                 <td key={j} title={JSON.stringify(cell, null, 2)}>
-                  [
                   {cell.map((cellItem, k) => {
                     if (typeof cellItem === "object")
                       return (
@@ -38,7 +38,6 @@ function DataBody({ rows, headersInfo, onDeleteItem, onlyFistRow }) {
                       <span key={k} className="m-2">{`${cellItem},`}</span>
                     );
                   })}
-                  ]
                 </td>
               );
             }
@@ -50,7 +49,7 @@ function DataBody({ rows, headersInfo, onDeleteItem, onlyFistRow }) {
                 </td>
               );
 
-            if (header.format === "media") {
+            if (typeof cellItem === "string" && isUrlMedia(cellItem))
               return (
                 <td key={j} title={cell}>
                   <div className="media justify-content-center">
@@ -60,7 +59,6 @@ function DataBody({ rows, headersInfo, onDeleteItem, onlyFistRow }) {
                   </div>
                 </td>
               );
-            }
 
             return <td key={j} title={`${cell}`}>{`${cell}`}</td>;
           })}
@@ -75,18 +73,18 @@ function DataBody({ rows, headersInfo, onDeleteItem, onlyFistRow }) {
   );
 }
 
-DataBody.defaultProps = {
+TableBody.defaultProps = {
   rows: [],
-  headersInfo: [],
+  headers: [],
   onDeleteItem: () => {},
   onlyFistRow: false,
 };
 
-DataBody.propTypes = {
+TableBody.propTypes = {
   rows: PropTypes.array,
-  headersInfo: PropTypes.array,
+  headers: PropTypes.array,
   onDeleteItem: PropTypes.func,
   onlyFistRow: PropTypes.bool,
 };
 
-export default memo(DataBody);
+export default memo(TableBody);

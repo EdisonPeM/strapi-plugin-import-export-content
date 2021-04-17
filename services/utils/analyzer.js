@@ -33,15 +33,15 @@ function analyze(items) {
     });
   });
 
-  const fieldsInfo = Object.keys(fieldsFormats).map((fieldName) => {
+  const fieldsInfo = {};
+  Object.keys(fieldsFormats).map((fieldName) => {
     const fieldFormats = fieldsFormats[fieldName].map((value) =>
       value === "text" ? "string" : value
     );
     const uniqueFormats = new Set(fieldFormats);
     const format = uniqueFormats.size > 1 ? "mixed" : [...uniqueFormats][0];
 
-    return {
-      fieldName,
+    fieldsInfo[fieldName] = {
       count: fieldFormats.length,
       format,
     };

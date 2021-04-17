@@ -28,10 +28,10 @@ module.exports = {
 
   importItems: async (ctx) => {
     const { user } = ctx.state;
-    const { target, fields, items } = ctx.request.body;
-    const mappedItems = items.map((item) => mapItemToModel(item, fields));
+    const { target, fields, items, asDraft } = ctx.request.body;
+    const { uid, kind } = target;
 
-    const { kind, uid } = target;
+    const mappedItems = items.map((item) => mapItemToModel(item, fields));
 
     if (kind === "collectionType") {
       return Promise.all(
@@ -40,6 +40,7 @@ module.exports = {
             ...item,
             created_by: user.id,
             updated_by: user.id,
+            published_at: asDraft ? null : Date.now(),
           })
         )
       );
@@ -48,6 +49,7 @@ module.exports = {
         ...mappedItems[0],
         created_by: user.id,
         updated_by: user.id,
+        published_at: asDraft ? null : Date.now(),
       });
     } else {
       throw new Error("Tipe is not supported");

@@ -45,6 +45,7 @@ module.exports = {
 
   importItems: async (ctx) => {
     const { target, fields, items } = ctx.request.body;
+
     if (!target || !fields || !items) {
       return ctx.throw(400, "Required parameters missing");
     }
@@ -77,6 +78,7 @@ module.exports = {
 
   exportItems: async (ctx) => {
     const { target, type } = ctx.request.body;
+
     if (!target || !type) {
       return ctx.throw(400, "Required parameters missing");
     }
