@@ -31,7 +31,7 @@ module.exports = {
     const { target, fields, items, asDraft } = ctx.request.body;
     const { uid, kind } = target;
 
-    const mappedItems = items.map((item) => mapItemToModel(item, fields));
+    const mappedItems = items.map((item) => mapItemToModel(item, fields, ctx));
 
     if (kind === "collectionType") {
       return Promise.all(

@@ -2,26 +2,34 @@ import styled from "styled-components";
 
 const EditorWrapper = styled.div`
   width: 100%;
-  height: 19.1rem;
+  min-height: 200px;
+  height: 200px;
 
   border: 1px solid #e3e9f3;
-  border-radius: 2px;
+  border-radius: 4px;
 
   overflow: auto;
+  resize: vertical;
 
   .editor {
-    font-family: "Fira code", "Fira Mono", monospace;
-    font-size: 14;
-    font-weight: 400;
-    line-height: 18px;
+    // color: #333740;
+    // background-color: #ffffff;
 
-    color: #333740;
-    background-color: #ffffff;
+    background: #1e1e1e;
+    color: #fafafa;
 
     min-height: 100%;
 
     textarea:focus {
       outline: none;
+    }
+
+    pre {
+      color: inherit;
+
+      &::first-line {
+        color: #f8c555;
+      }
     }
   }
 `;

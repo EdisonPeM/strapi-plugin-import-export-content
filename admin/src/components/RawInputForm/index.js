@@ -1,13 +1,15 @@
 import React, { useState, memo } from "react";
 import PropTypes from "prop-types";
 
-import Editor from "react-simple-code-editor";
 import { EditorWrapper } from "./styles";
+import Editor from "react-simple-code-editor";
 
 import { Label, Select, Button } from "@buffetjs/core";
 import { Row } from "../../components/common";
 
 import FORMATS from "../../constants/formats";
+import highlight from "../../utils/highlight";
+
 const fortmatsOptions = FORMATS.map(({ name, mimeType }) => ({
   label: name,
   value: mimeType,
@@ -42,7 +44,7 @@ function RawInputForm({ onSubmit }) {
             className="editor"
             value={rawText}
             onValueChange={(value) => setRawText(value)}
-            highlight={(text) => text}
+            highlight={(code) => highlight(code, rawFormat)}
             padding={10}
           />
         </EditorWrapper>

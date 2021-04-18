@@ -85,8 +85,14 @@ function getContentFromItems(items, type) {
   }
 }
 
-function mapItemToModel(item, fields) {
+function mapItemToModel(item, fields, ctx) {
   const mappedItem = {};
+
+  const { target } = ctx.request.body;
+  const { userAbility } = ctx.state;
+  const permissionsManager = strapi.admin.services.permission.createPermissionsManager(
+    { ability: userAbility, model: target.uid }
+  );
 
   Object.keys(item).forEach((key) => {
     const { targetField, format, targetFormat } = fields[key];
@@ -95,6 +101,15 @@ function mapItemToModel(item, fields) {
       mappedItem[targetField] = item[key];
     }
   });
+
+  const itemSanitizado = permissionsManager.sanitize(mappedItem, {
+    subject: mappedItem,
+    action: "plugins::content-manager.explorer.create",
+    isOutput: false,
+  });
+
+  console.log(itemSanitizado);
+  console.log(mappedItem);
 
   return mappedItem;
 }

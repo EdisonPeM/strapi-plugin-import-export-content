@@ -3,7 +3,7 @@ function formatFileContent({ content, mimeType }) {
     case "application/json":
       try {
         const jsonData = JSON.parse(content);
-        return JSON.stringify(jsonData, null, 2);
+        return JSON.stringify(jsonData, null, 4);
       } catch (error) {
         return "";
       }
