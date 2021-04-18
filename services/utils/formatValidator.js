@@ -4,6 +4,30 @@ const stringIsEmail = (data) => {
   return EMAIL_REGEXP.test(data);
 };
 
+const DATE_ISO_REGEXP = /^(\d{4})(-(\d{2}))??(-(\d{2}))??(T(\d{2}):(\d{2})(:(\d{2}))??(\.(\d+))??(([\+\-]{1}\d{2}:\d{2})|Z)??)??$/;
+const stringIsDate = (data) => {
+  DATE_ISO_REGEXP.lastIndex = 0;
+  return DATE_ISO_REGEXP.test(data);
+};
+
+const HOUR_REGEXP = /^((?:(?:0|1)\d|2[0-3])):([0-5]\d):([0-5]\d)(\.\d{3})?$/;
+const stringIsHour = (data) => {
+  HOUR_REGEXP.lastIndex = 0;
+  return HOUR_REGEXP.test(data);
+};
+
+const SLUG_REGEXP = /^([-_]*[a-zA-Z0-9]+([-_]*[a-zA-Z0-9]+)*)$/;
+const stringIsSlug = (data) => {
+  SLUG_REGEXP.lastIndex = 0;
+  return SLUG_REGEXP.test(data);
+};
+
+const URL_REGEXP = /^[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?$/;
+const stringIsUrl = (data) => {
+  URL_REGEXP.lastIndex = 0;
+  return URL_REGEXP.test(data);
+};
+
 const urlIsMedia = (url) => {
   try {
     const parsed = new URL(url);
@@ -33,4 +57,11 @@ const urlIsMedia = (url) => {
   }
 };
 
-module.exports = { urlIsMedia, stringIsEmail };
+module.exports = {
+  stringIsEmail,
+  stringIsDate,
+  stringIsHour,
+  stringIsSlug,
+  stringIsUrl,
+  urlIsMedia,
+};

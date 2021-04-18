@@ -8,7 +8,7 @@ import React, { memo, useState, useMemo } from "react";
 import PropTypes from "prop-types";
 import UploadFileForm from "../../components/UploadFileForm";
 import RawInputForm from "../../components/RawInputForm";
-import DataMapper from "../../components/DataMapper";
+import DataMapper from "../DataMapper";
 
 import { Block, Row } from "../../components/common";
 import { Select, Label } from "@buffetjs/core";
@@ -22,18 +22,10 @@ const importSourcesOptions = [
 ];
 
 function ImportPage({ contentTypes }) {
-  const [sourceImports, setSourceImports] = useState("upload");
+  // Import Source and Import Destination States
+  const [importSource, setImportSource] = useState("upload");
   const [importDest, setImportDest] = useState("");
-  const [analysis, setAnalysis] = useState(null);
-  const [mapper, setMapper] = useState(null);
-
-  // Source Options Handler
-  const handleSelectSouceImports = ({ target: { value } }) => {
-    setSourceImports(value);
-  };
-
-  // Destination Options
-  const destinationOptions = useMemo(
+  const importDestOptions = useMemo(
     () =>
       [{ label: "Select Import Destination", value: "" }].concat(
         contentTypes.map(({ uid, info, apiID }) => ({
@@ -44,13 +36,10 @@ function ImportPage({ contentTypes }) {
     [contentTypes]
   );
 
-  // Destination Options Handler
-  const handleSelectImportDestination = ({ target: { value } }) => {
-    setImportDest(value);
-  };
-
-  // Send Data to analyze
-  const analizeImports = async (body) => {
+  // Analysis
+  const [analysis, setAnalysis] = useState(null);
+  const [target, setTarget] = useState(null);
+  const analizeImports = async ({ data, type }) => {
     // Prevent Empty Destination
     if (importDest === "")
       return strapi.notification.toggle({
@@ -62,12 +51,12 @@ function ImportPage({ contentTypes }) {
     try {
       const response = await request(`/${pluginId}/pre-analyze`, {
         method: "POST",
-        body,
+        body: { data, type },
       });
 
       // Set Content Type Data to map
-      setMapper(contentTypes.find(({ uid }) => uid === importDest));
-      setAnalysis(response);
+      setTarget(contentTypes.find(({ uid }) => uid === importDest));
+      setAnalysis(response.data);
 
       // Notifications
       strapi.notification.toggle({
@@ -83,45 +72,10 @@ function ImportPage({ contentTypes }) {
     }
   };
 
-  // Upload Data
-  const uploadData = async ({ fields, items }) => {
-    const { uid, kind } = mapper;
-    const target = { uid, kind };
-
-    // Finish with the import
-    endImport();
-
-    // Prevent Upload Empty Data;
-    if (items.length === 0) {
-      return strapi.notification.toggle({
-        type: "warning",
-        message: "import.items.empty",
-      });
-    }
-
-    try {
-      const { message } = await request(`/${pluginId}/import`, {
-        method: "POST",
-        body: { target, fields, items },
-      });
-
-      strapi.notification.toggle({
-        type: "info",
-        message,
-      });
-    } catch (error) {
-      strapi.notification.toggle({
-        type: "warning",
-        message: `import.items.error`,
-      });
-    }
-  };
-
-  // Reset analysis and mapper
+  // Reset analysis and target
   const endImport = () => {
     setAnalysis(null);
-    setImportDest("");
-    setMapper(null);
+    setTarget(null);
   };
 
   return (
@@ -137,34 +91,29 @@ function ImportPage({ contentTypes }) {
               <Label htmlFor="importSource">Import Source</Label>
               <Select
                 name="importSource"
+                value={importSource}
                 options={importSourcesOptions}
-                value={sourceImports}
-                onChange={handleSelectSouceImports}
+                onChange={({ target: { value } }) => setImportSource(value)}
               />
             </div>
             <div className="pt-3 col-sm-6">
               <Label htmlFor="importDest">Import Destination</Label>
               <Select
                 name="importDest"
-                options={destinationOptions}
                 value={importDest}
-                onChange={handleSelectImportDestination}
+                options={importDestOptions}
+                onChange={({ target: { value } }) => setImportDest(value)}
               />
             </div>
           </Row>
-          {sourceImports === "upload" ? (
+          {importSource === "upload" ? (
             <UploadFileForm onSubmit={analizeImports} />
           ) : (
             <RawInputForm onSubmit={analizeImports} />
           )}
         </>
       ) : (
-        <DataMapper
-          data={analysis}
-          mapper={mapper}
-          onSuccess={uploadData}
-          onCancel={endImport}
-        />
+        <DataMapper analysis={analysis} target={target} onImport={endImport} />
       )}
     </Block>
   );

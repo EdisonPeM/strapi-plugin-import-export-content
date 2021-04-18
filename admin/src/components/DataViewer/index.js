@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { Code } from "./styles";
 
 import formatFileContent from "../../utils/formatFileContent";
+import highlight from "../../utils/highlight";
 
 function DataViewer({ data, type }) {
   const content = formatFileContent({
@@ -10,7 +11,12 @@ function DataViewer({ data, type }) {
     mimeType: type,
   });
 
-  return <Code>{content}</Code>;
+  const __html = highlight(content, type);
+  return (
+    <Code>
+      <div dangerouslySetInnerHTML={{ __html }} />
+    </Code>
+  );
 }
 
 DataViewer.defaultProps = {

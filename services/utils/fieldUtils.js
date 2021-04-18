@@ -1,7 +1,14 @@
 "use strict";
 
-const getUrls = require("get-urls");
-const { urlIsMedia, stringIsEmail } = require("./formatValidator");
+const { isNumber, isBoolean, isObject } = require("./formatUtils");
+const {
+  stringIsEmail,
+  stringIsDate,
+  stringIsHour,
+  stringIsSlug,
+  stringIsUrl,
+  urlIsMedia,
+} = require("./formatValidator");
 
 const detectFieldFormat = (data) => {
   switch (typeof data) {
@@ -10,6 +17,7 @@ const detectFieldFormat = (data) => {
     case "boolean":
       return "boolean";
     case "object":
+      if (Array.isArray(data)) return "array";
       return "object";
     case "string":
       return detectStringFieldFormat(data);
@@ -17,21 +25,15 @@ const detectFieldFormat = (data) => {
 };
 
 const detectStringFieldFormat = (data) => {
-  if (new Date(data).toString() !== "Invalid Date") return "date";
   if (stringIsEmail(data)) return "email";
+  if (stringIsDate(data)) return "date";
+  if (stringIsHour(data)) return "hour";
+  if (stringIsUrl(data)) {
+    if (urlIsMedia(data)) return "media";
+    return "url";
+  }
+  if (data.length > 255) return "text";
   return "string";
 };
 
-const getMediaUrlsFromFieldData = (fieldData) => {
-  switch (typeof fieldData) {
-    case "string":
-      return Array.from(getUrls(fieldData)).filter(urlIsMedia);
-    case "object":
-      return urlIsMedia(fieldData.url) ? [fieldData.url] : [];
-  }
-};
-module.exports = {
-  detectStringFieldFormat,
-  detectFieldFormat,
-  getMediaUrlsFromFieldData,
-};
+module.exports = { detectFieldFormat };

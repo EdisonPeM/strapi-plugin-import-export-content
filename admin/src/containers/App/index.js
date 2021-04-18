@@ -16,6 +16,8 @@ import ExportPage from "../ExportPage";
 
 import useContentTypes from "../../hooks/useContentTypes";
 
+import "../../assets/prismjs.css";
+
 const pathTo = (uri = "") => `/plugins/${pluginId}/${uri}`;
 const navLinks = [
   {
