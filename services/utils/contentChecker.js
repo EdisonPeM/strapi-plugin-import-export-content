@@ -24,7 +24,7 @@ async function getValidContent({ value, attribute }) {
       if (Array.isArray(value)) return null;
       const id = getId(value);
       const entity = await strapi.query("file", "upload").findOne({ id });
-      return entity.id;
+      return entity?.id || null;
     }
   }
 
@@ -42,7 +42,7 @@ async function getValidContent({ value, attribute }) {
 
       const id = getId(value);
       const entity = await strapi.query(targetModel).findOne({ id });
-      return entity.id;
+      return entity?.id || null;
     }
   }
 

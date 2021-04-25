@@ -18,7 +18,7 @@ const {
 } = require("../constants/contentTypes");
 
 const { getContentFromItems } = require("./utils/contentParser");
-const { getAll } = require("./utils/exporter");
+const { getAll } = require("./exporter");
 
 module.exports = {
   preAnalyzeContent: (ctx) => {
