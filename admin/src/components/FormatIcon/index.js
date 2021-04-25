@@ -6,7 +6,7 @@ import {
   Json as JsonIcon,
   Text as TextIcon,
   NumberIcon,
-  Pending as HourIcon,
+  Pending as TimeIcon,
   Enumeration as ListIcon,
   Media as MediaIcon,
   Email as EmailIcon,
@@ -23,7 +23,7 @@ const ICONS = {
   email: EmailIcon,
   text: RichTextIcon,
   date: DateIcon,
-  hour: HourIcon,
+  time: TimeIcon,
   url: ({ fill }) => <FontAwesomeIcon icon={faLink} color={fill} />,
   media: MediaIcon,
 
