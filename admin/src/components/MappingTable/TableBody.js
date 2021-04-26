@@ -29,14 +29,12 @@ function TableBody({ rows, headers, onDeleteItem, onlyFistRow }) {
 
                     if (typeof cellItem === "string" && isUrlMedia(cellItem))
                       return (
-                        <span key={k} className="border p-1 m-2">
+                        <div key={k} className="border p-1 m-2">
                           <MediaPreview url={cellItem} height={25} />
-                        </span>
+                        </div>
                       );
 
-                    return (
-                      <span key={k} className="m-2">{`${cellItem},`}</span>
-                    );
+                    return <div key={k} className="m-2">{`${cellItem}`}</div>;
                   })}
                 </td>
               );
@@ -49,7 +47,7 @@ function TableBody({ rows, headers, onDeleteItem, onlyFistRow }) {
                 </td>
               );
 
-            if (typeof cellItem === "string" && isUrlMedia(cellItem))
+            if (typeof cell === "string" && isUrlMedia(cell))
               return (
                 <td key={j} title={cell}>
                   <div className="media justify-content-center">

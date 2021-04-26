@@ -6,17 +6,15 @@
  * @description: A set of functions similar to controller's actions to avoid code duplication.
  */
 
-const {
-  getItemsFromContent,
-  getContentFromItems,
-  mapItemToModel,
-} = require("./utils/dataParser");
-const { analyze } = require("./utils/analyzer");
-const {
-  importToCollectionType,
-  importToSingleType,
-} = require("./utils/importer");
-const { getAll } = require("./utils/exporter");
+const { getItemsFromContent } = require("./utils/contentParser");
+const { analyze } = require("./analyzer");
+
+const { mapFieldsToTargetFields } = require("./utils/fieldUtils");
+const { importContent } = require("./importer");
+const { PUBLISHED_AT_ATTRIBUTE } = require("../constants/contentTypes");
+
+const { getContentFromItems } = require("./utils/contentParser");
+const { getAll } = require("./exporter");
 
 module.exports = {
   preAnalyzeContent: (ctx) => {
@@ -29,31 +27,16 @@ module.exports = {
   importItems: async (ctx) => {
     const { user } = ctx.state;
     const { target, fields, items, asDraft } = ctx.request.body;
-    const { uid, kind } = target;
-
-    const mappedItems = items.map((item) => mapItemToModel(item, fields, ctx));
-
-    if (kind === "collectionType") {
-      return Promise.all(
-        mappedItems.map((item) =>
-          importToCollectionType(target.uid, {
-            ...item,
-            created_by: user.id,
-            updated_by: user.id,
-            published_at: asDraft ? null : Date.now(),
-          })
-        )
-      );
-    } else if (kind === "singleType") {
-      return importToSingleType(uid, {
-        ...mappedItems[0],
-        created_by: user.id,
-        updated_by: user.id,
-        published_at: asDraft ? null : Date.now(),
-      });
-    } else {
-      throw new Error("Tipe is not supported");
-    }
+    const { attributes } = target;
+    const mappedItems = await mapFieldsToTargetFields({
+      items,
+      fields,
+      attributes,
+      user,
+    });
+    return importContent(target, mappedItems, {
+      [PUBLISHED_AT_ATTRIBUTE]: asDraft ? null : Date.now(),
+    });
   },
 
   exportItems: async (ctx) => {

@@ -1,39 +1,85 @@
-"use strict";
-
-const { isNumber, isBoolean, isObject } = require("./formatUtils");
 const {
   stringIsEmail,
   stringIsDate,
   stringIsHour,
-  stringIsSlug,
   stringIsUrl,
   urlIsMedia,
-} = require("./formatValidator");
+} = require("./formatsValidator");
+const { getValidContent } = require("./contentChecker");
+const {
+  CREATED_BY_ATTRIBUTE,
+  UPDATED_BY_ATTRIBUTE,
+} = require("../../constants/contentTypes");
 
-const detectFieldFormat = (data) => {
-  switch (typeof data) {
+function getFormatFromField(field) {
+  switch (typeof field) {
     case "number":
       return "number";
     case "boolean":
       return "boolean";
     case "object":
-      if (Array.isArray(data)) return "array";
+      if (Array.isArray(field)) return "array";
       return "object";
     case "string":
-      return detectStringFieldFormat(data);
+      if (stringIsEmail(field)) return "email";
+      if (stringIsDate(field)) return "date";
+      if (stringIsHour(field)) return "time";
+      if (stringIsUrl(field)) {
+        if (urlIsMedia(field)) return "media";
+        return "url";
+      }
+      if (field.length > 255) return "text";
+      return "string";
   }
-};
+}
 
-const detectStringFieldFormat = (data) => {
-  if (stringIsEmail(data)) return "email";
-  if (stringIsDate(data)) return "date";
-  if (stringIsHour(data)) return "hour";
-  if (stringIsUrl(data)) {
-    if (urlIsMedia(data)) return "media";
-    return "url";
-  }
-  if (data.length > 255) return "text";
-  return "string";
-};
+function getFieldsFromItems(items) {
+  const fieldNames = new Set();
+  items.forEach((item) => {
+    try {
+      Object.keys(item).forEach((fieldName) => fieldNames.add(fieldName));
+    } catch (err) {
+      console.error(err);
+    }
+  });
 
-module.exports = { detectFieldFormat };
+  return Array.from(fieldNames);
+}
+
+function mapFieldsToTargetFields({ items, fields, attributes, user }) {
+  const fieldNames = getFieldsFromItems(items);
+  return Promise.all(
+    items.map(async (item) => {
+      const mappedItem = {
+        [CREATED_BY_ATTRIBUTE]: user,
+        [UPDATED_BY_ATTRIBUTE]: user,
+      };
+
+      for (const fieldname of fieldNames) {
+        const { targetField } = fields[fieldname];
+        if (targetField && targetField !== "none") {
+          const { type } = attributes[targetField];
+          let targetItem = item[fieldname];
+
+          if (["media", "relation"].includes(type)) {
+            targetItem = await getValidContent({
+              user,
+              value: targetItem,
+              attribute: attributes[targetField],
+            });
+          }
+
+          mappedItem[targetField] = targetItem;
+        }
+      }
+
+      return mappedItem;
+    })
+  );
+}
+
+module.exports = {
+  getFormatFromField,
+  getFieldsFromItems,
+  mapFieldsToTargetFields,
+};

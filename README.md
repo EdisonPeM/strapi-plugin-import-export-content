@@ -23,15 +23,16 @@ npm i strapi-plugin-import-export-content
 - Import content as draft or public
 - Recognize format of inputs and content types
 - Support to Import Media by id or object with id key
+- Support to upload media from URL
 - Support to Import Relations by id or object with id key
-- Support to Import Components and Dynamic Zone Content as a objects
+- Support to Import Components and Dynamic Zone Content as objects
 
 ## Future Work
 
-- Convert fields to string format when destination have text or richtext format
-- Support to upload media from URL or objects with url
+- Export media without formats
 - Export only url of medias instead all fields
 - Export media and relations as ids instead all fields
+- Add filters to export
 
 ## Author
 

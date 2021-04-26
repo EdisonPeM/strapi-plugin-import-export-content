@@ -1,4 +1,4 @@
-const PERMISSIONS = require("../../constants/permissions");
+const PERMISSIONS = require("../constants/permissions");
 const ignoreFields = [
   "id",
   "created_at",
@@ -31,7 +31,7 @@ async function getAll(uid, ctx) {
     { model: uid }
   );
 
-  return items.map(cleanFields);
+  return Array.isArray(items) ? items.map(cleanFields) : cleanFields(items);
 }
 
 module.exports = {
