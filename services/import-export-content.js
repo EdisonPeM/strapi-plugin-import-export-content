@@ -11,11 +11,7 @@ const { analyze } = require("./analyzer");
 
 const { mapFieldsToTargetFields } = require("./utils/fieldUtils");
 const { importContent } = require("./importer");
-const {
-  CREATED_BY_ATTRIBUTE,
-  UPDATED_BY_ATTRIBUTE,
-  PUBLISHED_AT_ATTRIBUTE,
-} = require("../constants/contentTypes");
+const { PUBLISHED_AT_ATTRIBUTE } = require("../constants/contentTypes");
 
 const { getContentFromItems } = require("./utils/contentParser");
 const { getAll } = require("./exporter");
@@ -32,14 +28,13 @@ module.exports = {
     const { user } = ctx.state;
     const { target, fields, items, asDraft } = ctx.request.body;
     const { attributes } = target;
-    const mappedItems = await mapFieldsToTargetFields(
+    const mappedItems = await mapFieldsToTargetFields({
       items,
       fields,
-      attributes
-    );
+      attributes,
+      user,
+    });
     return importContent(target, mappedItems, {
-      [CREATED_BY_ATTRIBUTE]: user,
-      [UPDATED_BY_ATTRIBUTE]: user,
       [PUBLISHED_AT_ATTRIBUTE]: asDraft ? null : Date.now(),
     });
   },

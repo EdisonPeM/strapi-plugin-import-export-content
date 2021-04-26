@@ -6,6 +6,10 @@ const {
   urlIsMedia,
 } = require("./formatsValidator");
 const { getValidContent } = require("./contentChecker");
+const {
+  CREATED_BY_ATTRIBUTE,
+  UPDATED_BY_ATTRIBUTE,
+} = require("../../constants/contentTypes");
 
 function getFormatFromField(field) {
   switch (typeof field) {
@@ -42,11 +46,15 @@ function getFieldsFromItems(items) {
   return Array.from(fieldNames);
 }
 
-function mapFieldsToTargetFields(items, fields, attributes) {
+function mapFieldsToTargetFields({ items, fields, attributes, user }) {
   const fieldNames = getFieldsFromItems(items);
   return Promise.all(
     items.map(async (item) => {
-      const mappedItem = {};
+      const mappedItem = {
+        [CREATED_BY_ATTRIBUTE]: user,
+        [UPDATED_BY_ATTRIBUTE]: user,
+      };
+
       for (const fieldname of fieldNames) {
         const { targetField } = fields[fieldname];
         if (targetField && targetField !== "none") {
@@ -55,6 +63,7 @@ function mapFieldsToTargetFields(items, fields, attributes) {
 
           if (["media", "relation"].includes(type)) {
             targetItem = await getValidContent({
+              user,
               value: targetItem,
               attribute: attributes[targetField],
             });

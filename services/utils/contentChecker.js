@@ -1,27 +1,38 @@
-const { isNumber } = require("./formatsValidator");
+const { isNumber, isString, urlIsMedia } = require("./formatsValidator");
 const { MANY_RELATIONS } = require("../../constants/relations");
+const { importMediaFromUrl } = require("./importMediaFiles");
 
 function getId(value) {
-  if (typeof value === "object") return value.id || null;
   if (isNumber(value)) return parseInt(value);
-  return null;
+  return value?.id || null;
 }
 
-async function getValidContent({ value, attribute }) {
+async function getValidContent({ value, attribute, user }) {
   const { type } = attribute;
 
   if (type === "media") {
     const { multiple } = attribute;
     if (multiple) {
       if (!Array.isArray(value)) return [];
-      const ids = value.map(getId);
+      const urls = value.filter((v) => isString(v) && urlIsMedia(v));
+      const uploadedFiles = await Promise.all(
+        urls.map((url) => importMediaFromUrl(url, user))
+      );
+
+      const ids = value.map(getId).filter((v) => v !== null);
       const entities = await strapi
         .query("file", "upload")
         .find({ id_in: ids });
-      console.log();
-      return entities.map(({ id }) => id);
+
+      return [...uploadedFiles, ...entities.map(({ id }) => id)];
     } else {
       if (Array.isArray(value)) return null;
+
+      // Upload url to plugin upload
+      if (isString(value) && urlIsMedia(value)) {
+        return importMediaFromUrl(value, user);
+      }
+
       const id = getId(value);
       const entity = await strapi.query("file", "upload").findOne({ id });
       return entity?.id || null;
