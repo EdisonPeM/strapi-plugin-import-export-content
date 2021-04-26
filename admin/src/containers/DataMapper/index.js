@@ -88,15 +88,15 @@ function DataMapper({ analysis, target, onImport }) {
 
   // Upload Data
   const uploadData = async () => {
-    // Finish with the import
-    onImport();
-
     // Prevent Upload Empty Data;
     if (importItems.length === 0) {
-      return strapi.notification.toggle({
+      strapi.notification.toggle({
         type: "warning",
         message: "import.items.empty",
       });
+
+      // Finish with the import
+      return onImport();
     }
 
     try {
@@ -118,6 +118,8 @@ function DataMapper({ analysis, target, onImport }) {
         message: `import.items.error`,
       });
     }
+
+    onImport();
   };
 
   return (
