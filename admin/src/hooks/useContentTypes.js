@@ -9,7 +9,8 @@ const permissions = ({ uid }) =>
 
 function useContentTypes() {
   const [contentTypes, setContentTypes] = useState([]);
-  const userPermissions = useContext(UserContext);
+  const userContextData = useContext(UserContext);
+  const userPermissions = userContextData.userPermissions || userContextData;
 
   useEffect(() => {
     const fetchContentTypes = async () => {
