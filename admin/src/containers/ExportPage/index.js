@@ -121,7 +121,7 @@ function ImportPage({ contentTypes }) {
         </div>
         <div className="mt-3 col-12">
           <Button
-            label="Donwload"
+            label="Download"
             color="success"
             disabled={!contentToExport}
             onClick={handleDownload}
