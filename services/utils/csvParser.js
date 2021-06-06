@@ -39,7 +39,9 @@ function jsonToCsv(data, headers) {
 
       if (
         typeof element === "string" &&
-        (element.includes(",") || element.includes('"'))
+        (element.includes("\n") ||
+          element.includes(",") ||
+          element.includes('"'))
       ) {
         return `"${escapeQuote(element)}"`;
       }
