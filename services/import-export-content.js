@@ -44,15 +44,9 @@ module.exports = {
     const exportItems = await getAll(target.uid, ctx);
 
     if (target.kind === "singleType") {
-      return getContentFromItems({
-        items:exportItems[0],
-        type
-      });
+      return getContentFromItems({ items: exportItems[0], type });
     }
 
-    return getContentFromItems({
-      items: exportItems,
-      type
-    });
+    return getContentFromItems({ items: exportItems, type });
   },
 };
