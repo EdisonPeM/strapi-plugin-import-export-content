@@ -10,7 +10,7 @@ import UploadFileForm from "../../components/UploadFileForm";
 import RawInputForm from "../../components/RawInputForm";
 import DataMapper from "../DataMapper";
 
-import { Block, Row } from "../../components/common";
+import { Loader, Block, Row } from "../../components/common";
 import { Select, Label } from "@buffetjs/core";
 
 import { request } from "strapi-helper-plugin";
@@ -39,6 +39,7 @@ function ImportPage({ contentTypes }) {
   // Analysis
   const [analysis, setAnalysis] = useState(null);
   const [target, setTarget] = useState(null);
+  const [isLoading, setIsLoadig] = useState(false);
   const analizeImports = async ({ data, type }) => {
     // Prevent Empty Destination
     if (importDest === "")
@@ -49,6 +50,7 @@ function ImportPage({ contentTypes }) {
 
     // Send Request
     try {
+      setIsLoadig(true);
       const response = await request(`/${pluginId}/pre-analyze`, {
         method: "POST",
         body: { data, type },
@@ -70,6 +72,8 @@ function ImportPage({ contentTypes }) {
         message: "import.analyze.error",
       });
     }
+
+    setIsLoadig(false);
   };
 
   // Reset analysis and target
@@ -86,6 +90,7 @@ function ImportPage({ contentTypes }) {
     >
       {analysis === null ? (
         <>
+          {isLoading && <Loader />}
           <Row>
             <div className="pt-3 col-sm-6">
               <Label htmlFor="importSource">Import Source</Label>

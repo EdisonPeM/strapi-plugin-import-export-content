@@ -7,6 +7,8 @@ const Wrapper = styled.div`
   border-radius: 2px;
   box-shadow: 0 2px 4px #e3e9f3;
   -webkit-font-smoothing: antialiased;
+
+  position: relative;
 `;
 
 const Sub = styled.div`
