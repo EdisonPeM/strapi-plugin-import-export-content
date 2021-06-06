@@ -24,7 +24,7 @@ function DataMapper({ analysis, target, onImport }) {
   const { kind, attributes, options } = target;
 
   const isSingleType = kind === "singleType";
-  const [uploadAsDraft, setUploadAsDraft] = useState(false);
+  const [uploadAsDraft, setUploadAsDraft] = useState(options.draftAndPublish);
 
   const filteredAttributes = useMemo(
     () => Object.keys(attributes).filter(filterIgnoreFields),
