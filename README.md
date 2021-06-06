@@ -14,6 +14,19 @@ or
 npm i strapi-plugin-import-export-content
 ```
 
+## Rebuild your administration panel
+New releases can introduce changes to the administration panel that require a rebuild. Rebuild the admin panel with one of the following commands:
+
+```bash
+yarn build --clean
+```
+or
+
+```bash
+npm run build -- --clean
+```
+
+
 ## Features
 
 - Read data from CSV and JSON file or from typing raw text
