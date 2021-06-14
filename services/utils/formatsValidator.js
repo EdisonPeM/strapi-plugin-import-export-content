@@ -1,38 +1,3 @@
-// Basic Types
-function isString(text) {
-  return typeof text === "string";
-}
-
-function isNumber(number) {
-  if (typeof number === "number" || typeof number === "bigint") {
-    return true;
-  }
-
-  if (typeof number === "string" && number.trim() !== "") {
-    return !isNaN(number);
-  }
-
-  return false;
-}
-
-function isBoolean(bool) {
-  return ["true", "false", true, false].includes(bool);
-}
-
-function isObject(text) {
-  try {
-    JSON.parse(text);
-    return true;
-  } catch (error) {
-    return false;
-  }
-}
-
-function isArray(text) {
-  if (isObject(text)) return Array.isArray(JSON.parse(text));
-  return false;
-}
-
 const DATE_ISO_REGEXP = /^(\d{4})(-(\d{2}))??(-(\d{2}))??(T(\d{2}):(\d{2})(:(\d{2}))??(\.(\d+))??(([\+\-]{1}\d{2}:\d{2})|Z)??)??$/;
 function stringIsDate(data) {
   DATE_ISO_REGEXP.lastIndex = 0;
@@ -88,11 +53,6 @@ function urlIsMedia(url) {
 }
 
 module.exports = {
-  isString,
-  isNumber,
-  isBoolean,
-  isObject,
-  isArray,
   stringIsEmail,
   stringIsDate,
   stringIsHour,
