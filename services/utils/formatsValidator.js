@@ -1,23 +1,26 @@
-const DATE_ISO_REGEXP = /^(\d{4})(-(\d{2}))??(-(\d{2}))??(T(\d{2}):(\d{2})(:(\d{2}))??(\.(\d+))??(([\+\-]{1}\d{2}:\d{2})|Z)??)??$/;
+const DATE_ISO_REGEXP =
+  /^(\d{4})(-(\d{2}))??(-(\d{2}))??(T(\d{2}):(\d{2})(:(\d{2}))??(\.(\d+))??(([\+\-]{1}\d{2}:\d{2})|Z)??)??$/;
 function stringIsDate(data) {
   DATE_ISO_REGEXP.lastIndex = 0;
   return DATE_ISO_REGEXP.test(data);
 }
 
 // Validate String Formats
-const EMAIL_REGEXP = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+const EMAIL_REGEXP =
+  /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 function stringIsEmail(data) {
   EMAIL_REGEXP.lastIndex = 0;
   return EMAIL_REGEXP.test(data);
 }
 
-const HOUR_REGEXP = /^((?:(?:0|1)\d|2[0-3])):([0-5]\d):([0-5]\d)(\.\d{3})?$/;
+const HOUR_REGEXP = /^((?:(?:0|1)\d|2[0-3])):([0-5]\d):([0-5]\d)(\.\d{0,3})?$/;
 function stringIsHour(data) {
   HOUR_REGEXP.lastIndex = 0;
   return HOUR_REGEXP.test(data);
 }
 
-const URL_REGEXP = /^[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?$/;
+const URL_REGEXP =
+  /^[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?$/;
 function stringIsUrl(data) {
   URL_REGEXP.lastIndex = 0;
   return URL_REGEXP.test(data);
