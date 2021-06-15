@@ -1,4 +1,4 @@
-const { urlIsMedia } = require("./formatsValidator");
+const { urlIsMedia } = require("../utils/formatsValidator");
 const request = require("request");
 
 const fetchFiles = (url) =>
