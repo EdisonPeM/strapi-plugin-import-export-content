@@ -49,7 +49,8 @@ async function importMediaFromUrl(url, user) {
       user,
     });
 
-    return uploadedFile?.id || null;
+    if (uploadedFile && uploadedFile.id) return uploadedFile.id;
+    return null;
   } catch (err) {
     console.error(err);
     return null;
