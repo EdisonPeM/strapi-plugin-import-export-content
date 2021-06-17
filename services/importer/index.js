@@ -1,8 +1,8 @@
-const { COLLECTION_TYPE, SINGLE_TYPE } = require("../constants/contentTypes");
 const {
-  importToCollectionType,
-  importToSingleType,
-} = require("./utils/importUtils");
+  COLLECTION_TYPE,
+  SINGLE_TYPE,
+} = require("../../constants/contentTypes");
+const { importToCollectionType, importToSingleType } = require("./importUtils");
 
 function importContent(target, items, options) {
   const { uid, kind } = target;

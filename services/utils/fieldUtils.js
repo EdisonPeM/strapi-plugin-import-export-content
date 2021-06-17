@@ -5,11 +5,7 @@ const {
   stringIsUrl,
   urlIsMedia,
 } = require("./formatsValidator");
-const { getValidContent } = require("./contentChecker");
-const {
-  CREATED_BY_ATTRIBUTE,
-  UPDATED_BY_ATTRIBUTE,
-} = require("../../constants/contentTypes");
+const { getValidRelations, getValidMedia } = require("./contentChecker");
 
 function getFormatFromField(field) {
   switch (typeof field) {
@@ -50,23 +46,19 @@ function mapFieldsToTargetFields({ items, fields, attributes, user }) {
   const fieldNames = getFieldsFromItems(items);
   return Promise.all(
     items.map(async (item) => {
-      const mappedItem = {
-        [CREATED_BY_ATTRIBUTE]: user,
-        [UPDATED_BY_ATTRIBUTE]: user,
-      };
+      const mappedItem = {};
 
       for (const fieldname of fieldNames) {
         const { targetField } = fields[fieldname];
         if (targetField && targetField !== "none") {
-          const { type } = attributes[targetField];
+          const attribute = attributes[targetField];
           let targetItem = item[fieldname];
 
-          if (["media", "relation"].includes(type)) {
-            targetItem = await getValidContent({
-              user,
-              value: targetItem,
-              attribute: attributes[targetField],
-            });
+          // Validate ids and import medias
+          if (attribute.type === "relation") {
+            targetItem = await getValidRelations(targetItem, attribute);
+          } else if (attribute.type === "media") {
+            targetItem = await getValidMedia(targetItem, attribute, user);
           }
 
           mappedItem[targetField] = targetItem;

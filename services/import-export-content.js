@@ -6,14 +6,17 @@
  * @description: A set of functions similar to controller's actions to avoid code duplication.
  */
 
-const { getItemsFromContent } = require("./utils/contentParser");
+const { getItemsFromContent, getContentFromItems } = require("./contentParser");
 const { analyze } = require("./analyzer");
 
 const { mapFieldsToTargetFields } = require("./utils/fieldUtils");
 const { importContent } = require("./importer");
-const { PUBLISHED_AT_ATTRIBUTE } = require("../constants/contentTypes");
+const {
+  CREATED_BY_ATTRIBUTE,
+  UPDATED_BY_ATTRIBUTE,
+  PUBLISHED_AT_ATTRIBUTE,
+} = require("../constants/contentTypes");
 
-const { getContentFromItems } = require("./utils/contentParser");
 const { getAll } = require("./exporter");
 
 module.exports = {
@@ -27,7 +30,12 @@ module.exports = {
   importItems: async (ctx) => {
     const { user } = ctx.state;
     const { target, fields, items, asDraft } = ctx.request.body;
-    const { attributes } = target;
+
+    const {
+      attributes,
+      options: { draftAndPublish },
+    } = target;
+
     const mappedItems = await mapFieldsToTargetFields({
       items,
       fields,
@@ -35,7 +43,9 @@ module.exports = {
       user,
     });
     return importContent(target, mappedItems, {
-      [PUBLISHED_AT_ATTRIBUTE]: asDraft ? null : Date.now(),
+      [CREATED_BY_ATTRIBUTE]: user,
+      [UPDATED_BY_ATTRIBUTE]: user,
+      [PUBLISHED_AT_ATTRIBUTE]: draftAndPublish && asDraft ? null : Date.now(),
     });
   },
 

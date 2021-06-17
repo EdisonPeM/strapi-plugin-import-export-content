@@ -12,11 +12,11 @@ function analyze(items) {
     fieldNames.forEach((fieldName) => {
       const fieldData = item[fieldName];
 
-      // Missig data
-      if ([null, undefined, ""].includes(fieldData)) return;
-
-      const fieldFormat = getFormatFromField(fieldData);
-      fieldsFormats[fieldName].push(fieldFormat);
+      // Get format from valid data
+      if (fieldData !== null && fieldData !== undefined) {
+        const fieldFormat = getFormatFromField(fieldData);
+        fieldsFormats[fieldName].push(fieldFormat);
+      }
     });
   });
 

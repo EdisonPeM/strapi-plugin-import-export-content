@@ -1,66 +1,56 @@
-const { isNumber, isString, urlIsMedia } = require("./formatsValidator");
 const { MANY_RELATIONS } = require("../../constants/relations");
-const { importMediaFromUrl } = require("./importMediaFiles");
+const { urlIsMedia } = require("./formatsValidator");
+const { importMediaFromUrl } = require("../importer/importMediaFiles");
 
 function getId(value) {
-  if (isNumber(value)) return parseInt(value);
-  return value?.id || null;
+  if (typeof value === "number") return value;
+  if (typeof value === "object" && value.id) return value.id;
+  return null;
 }
 
-async function getValidContent({ value, attribute, user }) {
-  const { type } = attribute;
-
-  if (type === "media") {
-    const { multiple } = attribute;
-    if (multiple) {
-      if (!Array.isArray(value)) return [];
-      const urls = value.filter((v) => isString(v) && urlIsMedia(v));
-      const uploadedFiles = await Promise.all(
-        urls.map((url) => importMediaFromUrl(url, user))
-      );
-
-      const ids = value.map(getId).filter((v) => v !== null);
-      const entities = await strapi
-        .query("file", "upload")
-        .find({ id_in: ids });
-
-      return [...uploadedFiles, ...entities.map(({ id }) => id)];
-    } else {
-      if (Array.isArray(value)) return null;
-
-      // Upload url to plugin upload
-      if (isString(value) && urlIsMedia(value)) {
-        return importMediaFromUrl(value, user);
-      }
-
-      const id = getId(value);
-      const entity = await strapi.query("file", "upload").findOne({ id });
-      return entity?.id || null;
-    }
+async function getValidRelations(value, attribute) {
+  const { relationType, targetModel } = attribute;
+  if (MANY_RELATIONS.includes(relationType)) {
+    const relations = Array.isArray(value) ? value : [value];
+    const ids = relations.map(getId);
+    const entities = await strapi.query(targetModel).find({ id_in: ids });
+    return entities.map(({ id }) => id);
+  } else {
+    const relation = Array.isArray(value) ? value[0] : value;
+    const id = getId(relation);
+    const entity = await strapi.query(targetModel).findOne({ id });
+    return entity ? entity.id : null;
   }
+}
 
-  if (type === "relation") {
-    const { relationType, targetModel } = attribute;
+async function getValidMedia(value, attribute, user) {
+  const { multiple } = attribute;
+  if (multiple) {
+    const medias = Array.isArray(value) ? value : [value];
+    const urls = medias.filter((v) => urlIsMedia(v));
+    const uploadedFiles = await Promise.all(
+      urls.map((url) => importMediaFromUrl(url, user))
+    );
 
-    if (MANY_RELATIONS.includes(relationType)) {
-      if (!Array.isArray(value)) return [];
-      const ids = value.map(getId);
+    const ids = medias.map(getId).filter((v) => v !== null);
+    const entities = await strapi.query("file", "upload").find({ id_in: ids });
 
-      const entities = await strapi.query(targetModel).find({ id_in: ids });
-      return entities.map(({ id }) => id);
-    } else {
-      if (Array.isArray(value)) return null;
+    return [...uploadedFiles, ...entities.map(({ id }) => id)];
+  } else {
+    const media = Array.isArray(value) ? value[0] : value;
 
-      const id = getId(value);
-      const entity = await strapi.query(targetModel).findOne({ id });
-      return entity?.id || null;
+    // Upload url to plugin upload
+    if (urlIsMedia(media)) {
+      return importMediaFromUrl(media, user);
     }
-  }
 
-  // Other types are not validated
-  return value;
+    const id = getId(media);
+    const entity = await strapi.query("file", "upload").findOne({ id });
+    return entity ? entity.id : null;
+  }
 }
 
 module.exports = {
-  getValidContent,
+  getValidRelations,
+  getValidMedia,
 };
