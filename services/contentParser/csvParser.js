@@ -1,9 +1,11 @@
 const {
-  isNumber,
-  isBoolean,
-  isString,
-  isObject,
-} = require("./formatsValidator");
+  textIsNumber,
+  textToNumber,
+  textIsBoolean,
+  textToBoolean,
+  textIsObject,
+  textToObject,
+} = require("./textFormats");
 const CsvParser = require("csv-parse/lib/sync");
 const CSV = require("csv-string");
 
@@ -15,11 +17,10 @@ function csvToJson(text) {
 
     // Try to convert the format of the values
     cast: (value) => {
-      if (isNumber(value)) return parseFloat(value);
-      else if (isBoolean(value))
-        if (isString(value)) return value === "true";
-        else return value;
-      else if (isObject(value)) return JSON.parse(value);
+      if (value === "") return null;
+      else if (textIsNumber(value)) return textToNumber(value);
+      else if (textIsBoolean(value)) return textToBoolean(value);
+      else if (textIsObject(value)) return textToObject(value);
       else return value;
     },
   });

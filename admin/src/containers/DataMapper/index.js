@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { Prompt } from "react-router-dom";
 
 import { Button, Checkbox } from "@buffetjs/core";
-import { Row } from "../../components/common";
+import { Loader, Row } from "../../components/common";
 import MappingTable from "../../components/MappingTable";
 
 import { request } from "strapi-helper-plugin";
@@ -24,7 +24,7 @@ function DataMapper({ analysis, target, onImport }) {
   const { kind, attributes, options } = target;
 
   const isSingleType = kind === "singleType";
-  const [uploadAsDraft, setUploadAsDraft] = useState(false);
+  const [uploadAsDraft, setUploadAsDraft] = useState(options.draftAndPublish);
 
   const filteredAttributes = useMemo(
     () => Object.keys(attributes).filter(filterIgnoreFields),
@@ -87,6 +87,7 @@ function DataMapper({ analysis, target, onImport }) {
   );
 
   // Upload Data
+  const [isLoading, setIsLoadig] = useState(false);
   const uploadData = async () => {
     // Prevent Upload Empty Data;
     if (importItems.length === 0) {
@@ -100,6 +101,7 @@ function DataMapper({ analysis, target, onImport }) {
     }
 
     try {
+      setIsLoadig(true);
       const { message } = await request(`/${pluginId}/import`, {
         method: "POST",
         body: {
@@ -119,48 +121,52 @@ function DataMapper({ analysis, target, onImport }) {
       });
     }
 
+    setIsLoadig(false);
     onImport();
   };
 
   return (
-    <div className="pt-3 col-12">
-      <Prompt message="import.mapper.unsaved" />
-      <Row>
-        <h2>Map the Import Data to Destination Field</h2>
-        <MappingTable
-          mappingHeaders={headers}
-          mappingRows={importItems}
-          mappingRowsHeaders={importItems}
-          headersMappingOptions={destinationOptions}
-          onChangeMapping={selectDestinationField}
-          onDeleteRow={deleteItem}
-          onlyFistRow={isSingleType}
-        />
-      </Row>
-      <Row>
-        <span className="mr-3">Count of Items to Import:</span>
-        <strong>{kind === "singleType" ? 1 : importItems.length}</strong>
-      </Row>
-      {options.draftAndPublish && (
+    <>
+      {isLoading && <Loader />}
+      <div className="pt-3 col-12">
+        <Prompt message="import.mapper.unsaved" />
         <Row>
-          <Checkbox
-            message="Upload as Draft"
-            name="uploadAsDraft"
-            value={uploadAsDraft}
-            onChange={() => setUploadAsDraft(!uploadAsDraft)}
+          <h2>Map the Import Data to Destination Field</h2>
+          <MappingTable
+            mappingHeaders={headers}
+            mappingRows={importItems}
+            mappingRowsHeaders={importItems}
+            headersMappingOptions={destinationOptions}
+            onChangeMapping={selectDestinationField}
+            onDeleteRow={deleteItem}
+            onlyFistRow={isSingleType}
           />
         </Row>
-      )}
-      <Row>
-        <Button label="Import Data" onClick={uploadData} />
-        <Button
-          className="ml-3"
-          label="Cancel"
-          color="delete"
-          onClick={() => onImport()}
-        />
-      </Row>
-    </div>
+        <Row>
+          <span className="mr-3">Count of Items to Import:</span>
+          <strong>{kind === "singleType" ? 1 : importItems.length}</strong>
+        </Row>
+        {options.draftAndPublish && (
+          <Row>
+            <Checkbox
+              message="Upload as Draft"
+              name="uploadAsDraft"
+              value={uploadAsDraft}
+              onChange={() => setUploadAsDraft(!uploadAsDraft)}
+            />
+          </Row>
+        )}
+        <Row>
+          <Button label="Import Data" onClick={uploadData} />
+          <Button
+            className="ml-3"
+            label="Cancel"
+            color="delete"
+            onClick={() => onImport()}
+          />
+        </Row>
+      </div>
+    </>
   );
 }
 

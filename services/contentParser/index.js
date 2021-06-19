@@ -1,5 +1,5 @@
 const { csvToJson, jsonToCsv } = require("./csvParser");
-const { getFieldsFromItems } = require("./fieldUtils");
+const { getFieldsFromItems } = require("../utils/fieldUtils");
 
 const toArray = (arr) => (Array.isArray(arr) ? arr : [arr]);
 

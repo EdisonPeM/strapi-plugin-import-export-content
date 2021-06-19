@@ -1,4 +1,4 @@
-const { urlIsMedia } = require("./formatsValidator");
+const { urlIsMedia } = require("../utils/formatsValidator");
 const request = require("request");
 
 const fetchFiles = (url) =>
@@ -49,7 +49,8 @@ async function importMediaFromUrl(url, user) {
       user,
     });
 
-    return uploadedFile?.id || null;
+    if (uploadedFile && uploadedFile.id) return uploadedFile.id;
+    return null;
   } catch (err) {
     console.error(err);
     return null;
