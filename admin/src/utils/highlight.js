@@ -11,6 +11,11 @@ prismLanguages.csv = {
   punctuation: /[,;]/,
 };
 
+prismLanguages["csv-excel"] = {
+  value: /[^\r\n",]|"(?:[^"]|"")"(?!")/,
+  punctuation: /[,;]/,
+};
+
 const languages = FORMATS.reduce((langs, { name, mimeType }) => {
   langs[mimeType] = prismLanguages[name];
   return langs;
