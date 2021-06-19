@@ -5,7 +5,12 @@ const {
   stringIsUrl,
   urlIsMedia,
 } = require("./formatsValidator");
-const { getValidRelations, getValidMedia } = require("./contentChecker");
+const {
+  getValidRelations,
+  getValidMedia,
+  getValidComponent,
+  getValidDynamic,
+} = require("./contentChecker");
 
 function getFormatFromField(field) {
   switch (typeof field) {
@@ -59,6 +64,10 @@ function mapFieldsToTargetFields({ items, fields, attributes, user }) {
             targetItem = await getValidRelations(targetItem, attribute);
           } else if (attribute.type === "media") {
             targetItem = await getValidMedia(targetItem, attribute, user);
+          } else if (attribute.type === "component") {
+            targetItem = await getValidComponent(targetItem, attribute, user);
+          } else if (attribute.type === "dynamiczone") {
+            targetItem = await getValidDynamic(targetItem, attribute, user);
           }
 
           mappedItem[targetField] = targetItem;
