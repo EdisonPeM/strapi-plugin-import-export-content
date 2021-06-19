@@ -99,7 +99,29 @@ async function getValidComponent(value, attribute, user) {
 }
 
 async function getValidDynamic(value, attribute, user) {
-  return value;
+  const { components } = attribute;
+  const dynamicValues = Array.isArray(value) ? value : [];
+
+  return Promise.all(
+    dynamicValues.map(async (dynamicComponent) => {
+      const { __component } = dynamicComponent;
+      if (
+        !__component ||
+        !components.includes(__component) ||
+        !strapi.components[__component]
+      ) {
+        return null;
+      }
+
+      const { attributes } = strapi.components[__component];
+      const content = await getValidSingleComponent(
+        dynamicComponent,
+        attributes,
+        user
+      );
+      return { __component, ...content };
+    })
+  );
 }
 
 module.exports = {
