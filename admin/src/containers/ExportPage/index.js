@@ -68,8 +68,8 @@ function ImportPage({ contentTypes }) {
 
   const handleChangeOptions = (option, value) => {
     setOptions({
-      [option]: value,
       ...options,
+      [option]: value,
     });
   };
 
@@ -143,7 +143,7 @@ function ImportPage({ contentTypes }) {
             isOpen={isOptionsOpen}
             onEntering={() => console.log("enterign")}
           >
-            <OptionsExport value={options} onChange={handleChangeOptions} />
+            <OptionsExport values={options} onChange={handleChangeOptions} />
           </Collapse>
         </div>
       </Row>
