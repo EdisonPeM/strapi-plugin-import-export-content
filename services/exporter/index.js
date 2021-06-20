@@ -20,9 +20,11 @@ function cleanFields(item) {
 
 async function getAll(uid, ctx) {
   const { userAbility } = ctx.state;
-  const permissionsManager = strapi.admin.services.permission.createPermissionsManager(
-    { ability: userAbility, model: uid }
-  );
+  const permissionsManager =
+    strapi.admin.services.permission.createPermissionsManager({
+      ability: userAbility,
+      model: uid,
+    });
 
   // Filter content by permissions
   const query = permissionsManager.queryFrom({}, PERMISSIONS.read);
