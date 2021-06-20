@@ -17,6 +17,11 @@ import pluginId from "../../pluginId";
 import { request } from "strapi-helper-plugin";
 import { downloadFile, copyClipboard } from "../../utils/exportUtils";
 
+import { Collapse } from "reactstrap";
+import { FilterIcon } from "strapi-helper-plugin";
+import BASE_OPTIONS from "../../constants/options";
+import OptionsExport from "../../components/OptionsExport";
+
 const exportFormatsOptions = FORMATS.map(({ name, mimeType }) => ({
   label: name,
   value: mimeType,
@@ -52,6 +57,22 @@ function ImportPage({ contentTypes }) {
     setContentToExport("");
   };
 
+  // Options to exporting
+  const [isOptionsOpen, setIsOptionsOpen] = useState(false);
+  const [options, setOptions] = useState(
+    BASE_OPTIONS.reduce((acc, { name, defaultValue }) => {
+      acc[name] = defaultValue;
+      return acc;
+    }, {})
+  );
+
+  const handleChangeOptions = (option, value) => {
+    setOptions({
+      [option]: value,
+      ...options,
+    });
+  };
+
   // Request to Get Available Content
   const getContent = async () => {
     if (sourceExports === "")
@@ -63,7 +84,7 @@ function ImportPage({ contentTypes }) {
     try {
       const { data } = await request(`/${pluginId}/export`, {
         method: "POST",
-        body: { target, type: exportFormat },
+        body: { target, type: exportFormat, options },
       });
 
       setContentToExport(data);
@@ -108,26 +129,49 @@ function ImportPage({ contentTypes }) {
         </div>
         <div className="pt-3 col-md-2 d-flex flex-column-reverse">
           <Button
-            onClick={getContent}
+            onClick={() => setIsOptionsOpen((v) => !v)}
             className="w-100"
-            label="Query"
-            color="primary"
+            icon={<FilterIcon />}
+            label="Options"
+            color="cancel"
           />
+        </div>
+      </Row>
+      <Row>
+        <div className="col-12">
+          <Collapse
+            isOpen={isOptionsOpen}
+            onEntering={() => console.log("enterign")}
+          >
+            <OptionsExport value={options} onChange={handleChangeOptions} />
+          </Collapse>
         </div>
       </Row>
       <Row>
         <div className="col-12">
           <DataViewer data={contentToExport} type={exportFormat} />
         </div>
-        <div className="mt-3 col-12">
+        <div className="mt-3 col-md-4">
+          <Button
+            onClick={getContent}
+            className="w-100"
+            label="Get Data"
+            color="primary"
+            disabled={!!contentToExport}
+          />
+        </div>
+        <div className="mt-3 col-md-3 col-lg-2">
           <Button
             label="Download"
+            className="w-100"
             color="success"
             disabled={!contentToExport}
             onClick={handleDownload}
           />
+        </div>
+        <div className="mt-3  col-md-3 col-lg-2">
           <Button
-            className="ml-3"
+            className="w-100"
             label="Copy to Clipboard"
             color="secondary"
             disabled={!contentToExport}
