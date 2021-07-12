@@ -7,7 +7,7 @@
 import React, { memo, useState, useMemo } from "react";
 import PropTypes from "prop-types";
 
-import { Block, Row } from "../../components/common";
+import { Loader, Block, Row } from "../../components/common";
 import { Select, Label, Button } from "@buffetjs/core";
 import DataViewer from "../../components/DataViewer";
 
@@ -74,6 +74,7 @@ function ImportPage({ contentTypes }) {
   };
 
   // Request to Get Available Content
+  const [isLoading, setIsLoadig] = useState(false);
   const getContent = async () => {
     if (sourceExports === "")
       return strapi.notification.toggle({
@@ -82,6 +83,7 @@ function ImportPage({ contentTypes }) {
       });
 
     try {
+      setIsLoadig(true);
       const { data } = await request(`/${pluginId}/export`, {
         method: "POST",
         body: { target, type: exportFormat, options },
@@ -94,6 +96,8 @@ function ImportPage({ contentTypes }) {
         message: `export.items.error`,
       });
     }
+
+    setIsLoadig(false);
   };
 
   // Export Options
@@ -108,6 +112,7 @@ function ImportPage({ contentTypes }) {
       description="Configure the Export Source & Format"
       style={{ marginBottom: 12 }}
     >
+      {isLoading && <Loader />}
       <Row>
         <div className="pt-3 col-sm-6 col-md-5">
           <Label htmlFor="exportSource">Export Source</Label>
