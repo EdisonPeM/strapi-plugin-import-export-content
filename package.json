@@ -1,6 +1,6 @@
 {
   "name": "strapi-plugin-import-export-content",
-  "version": "0.3.4",
+  "version": "0.4.0",
   "description": "This is a plugin for import and export content of collection types.",
   "license": "MIT",
   "strapi": {
