@@ -139,10 +139,7 @@ function ImportPage({ contentTypes }) {
       </Row>
       <Row>
         <div className="col-12">
-          <Collapse
-            isOpen={isOptionsOpen}
-            onEntering={() => console.log("enterign")}
-          >
+          <Collapse isOpen={isOptionsOpen}>
             <OptionsExport values={options} onChange={handleChangeOptions} />
           </Collapse>
         </div>
@@ -157,7 +154,6 @@ function ImportPage({ contentTypes }) {
             className="w-100"
             label="Get Data"
             color="primary"
-            disabled={!!contentToExport}
           />
         </div>
         <div className="mt-3 col-md-3 col-lg-2">

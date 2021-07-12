@@ -8,10 +8,7 @@ function OptionsExport({ values, onChange }) {
     <div>
       <hr />
       {BASE_OPTIONS.map(({ name, label, type, optionalValues }) => {
-        const handleChange = ({ target: { value } }) => {
-          console.log(value);
-          onChange(name, value);
-        };
+        const handleChange = ({ target: { value } }) => onChange(name, value);
 
         if (type === "select") {
           return (
