@@ -14,12 +14,6 @@ const BASE_OPTIONS = [
     defaultValue: "none",
   },
   {
-    name: "drafts",
-    label: "Export Drafts",
-    type: "boolean",
-    defaultValue: true,
-  },
-  {
     name: "ids",
     label: "Remove Ids",
     type: "boolean",
