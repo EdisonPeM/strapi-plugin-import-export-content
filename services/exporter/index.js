@@ -1,9 +1,5 @@
 const PERMISSIONS = require("../../constants/permissions");
-
-function cleanFields(item, options) {
-  // CHANGE THIS TO FILTER WITH OPTIONS
-  return item;
-}
+const { cleanFields } = require("./exportUtils");
 
 async function getData(uid, options, userAbility) {
   const permissionsManager =
@@ -14,6 +10,7 @@ async function getData(uid, options, userAbility) {
 
   // Filter content by permissions
   const query = permissionsManager.queryFrom({}, PERMISSIONS.read);
+
   const items = await strapi.entityService.find(
     { params: query },
     { model: uid }
@@ -21,7 +18,7 @@ async function getData(uid, options, userAbility) {
 
   return Array.isArray(items)
     ? items.map((item) => cleanFields(item, options))
-    : cleanFields(items, options);
+    : [cleanFields(items, options)];
 }
 
 module.exports = {
