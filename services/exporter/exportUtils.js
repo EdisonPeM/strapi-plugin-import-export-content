@@ -22,7 +22,13 @@ function cleanFields(item, options) {
     }
 
     if (typeof mappedItem[itemKey] == "object") {
-      mappedItem[itemKey] = cleanFields(mappedItem[itemKey], options);
+      if (Array.isArray(mappedItem[itemKey])) {
+        mappedItem[itemKey] = mappedItem[itemKey].map((item) =>
+          cleanFields(item, options)
+        );
+      } else {
+        mappedItem[itemKey] = cleanFields(mappedItem[itemKey], options);
+      }
     }
   });
 
