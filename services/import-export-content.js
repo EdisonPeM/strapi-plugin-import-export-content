@@ -17,7 +17,7 @@ const {
   PUBLISHED_AT_ATTRIBUTE,
 } = require("../constants/contentTypes");
 
-const { getAll } = require("./exporter");
+const { getData } = require("./exporter");
 
 module.exports = {
   preAnalyzeContent: (ctx) => {
@@ -50,13 +50,14 @@ module.exports = {
   },
 
   exportItems: async (ctx) => {
-    const { target, type } = ctx.request.body;
-    const exportItems = await getAll(target.uid, ctx);
+    const { target, type, options } = ctx.request.body;
+    const { userAbility } = ctx.state;
+    const exportItems = await getData(target.uid, options, userAbility);
 
     if (target.kind === "singleType") {
       return getContentFromItems({ items: exportItems[0], type });
+    } else {
+      return getContentFromItems({ items: exportItems, type });
     }
-
-    return getContentFromItems({ items: exportItems, type });
   },
 };

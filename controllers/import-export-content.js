@@ -77,9 +77,9 @@ module.exports = {
   },
 
   exportItems: async (ctx) => {
-    const { target, type } = ctx.request.body;
+    const { target, type, options } = ctx.request.body;
 
-    if (!target || !type) {
+    if (!target || !type || !options) {
       return ctx.throw(400, "Required parameters missing");
     }
 
