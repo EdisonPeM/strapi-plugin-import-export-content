@@ -8,28 +8,21 @@ function cleanFields(item, options) {
   if (item === null || item === undefined) return;
 
   const mappedItem = { ...item };
-  Object.keys(mappedItem).forEach((itemKey) => {
-    if (ignoreFields.ids.includes(itemKey) && options.ids) {
-      return delete mappedItem[itemKey];
-    }
+  if (options.ids) {
+    ignoreFields.ids.forEach((key) => {
+      delete mappedItem[key];
+    });
+  }
 
-    if (ignoreFields.timestamp.includes(itemKey) && options.timestamp) {
-      return delete mappedItem[itemKey];
-    }
+  if (options.timestamp) {
+    ignoreFields.timestamp.forEach((key) => {
+      delete mappedItem[key];
+    });
+  }
 
-    if (ignoreFields.user.includes(itemKey) && options.user) {
-      return delete mappedItem[itemKey];
-    }
-
-    if (typeof mappedItem[itemKey] == "object") {
-      if (Array.isArray(mappedItem[itemKey])) {
-        mappedItem[itemKey] = mappedItem[itemKey].map((item) =>
-          cleanFields(item, options)
-        );
-      } else {
-        mappedItem[itemKey] = cleanFields(mappedItem[itemKey], options);
-      }
-    }
+  // Always true
+  ignoreFields.user.forEach((key) => {
+    delete mappedItem[key];
   });
 
   return mappedItem;
