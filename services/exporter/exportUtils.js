@@ -37,6 +37,23 @@ function mapMedias(media, options) {
   }
 }
 
+function mapRelations(relation, options, attributes) {
+  if (options.relations == "ids") {
+    if (Array.isArray(relation)) {
+      return relation.map(({ id }) => id);
+    } else {
+      return relation.id;
+    }
+  }
+
+  // options.relations == "full"
+  if (Array.isArray(relation)) {
+    return relation.map((rel) => cleanFields(rel, options, attributes));
+  } else {
+    return cleanFields(relation, options, attributes);
+  }
+}
+
 function cleanFields(item, options, attributes) {
   if (item === null || item === undefined) return;
 
@@ -61,13 +78,55 @@ function cleanFields(item, options, attributes) {
   // -----------------------------
   Object.keys(attributes).forEach((itemKey) => {
     if (mappedItem[itemKey]) {
-      const attribute = attributes[itemKey];
-      if (attribute.type === "media") {
+      const { type, model, collection } = attributes[itemKey];
+      if (type === "media" || model == "file" || collection == "file") {
         if (options.medias == "none") {
           return delete mappedItem[itemKey];
         } else {
           mappedItem[itemKey] = mapMedias(mappedItem[itemKey], options);
         }
+      }
+
+      if (type === "relation") {
+        const { attributes } = model
+          ? strapi.models[model]
+          : strapi.models[collection];
+
+        if (options.relations == "none") {
+          return delete mappedItem[itemKey];
+        } else {
+          mappedItem[itemKey] = mapRelations(
+            mappedItem[itemKey],
+            options,
+            attributes
+          );
+        }
+      }
+
+      if (type == "component") {
+        const { repeatable, component } = attributes[itemKey];
+        const { attributes: componentAttributes } =
+          strapi.components[component];
+
+        if (repeatable) {
+          mappedItem[itemKey] = mappedItem[itemKey].map((componentItem) =>
+            cleanFields(componentItem, options, componentAttributes)
+          );
+        } else {
+          mappedItem[itemKey] = cleanFields(
+            mappedItem[itemKey],
+            options,
+            componentAttributes
+          );
+        }
+      }
+
+      if (type == "dynamiczone") {
+        mappedItem[itemKey] = mappedItem[itemKey].map((dynamicItem) => {
+          const { attributes: componentAttributes } =
+            strapi.components[dynamicItem["__component"]];
+          return cleanFields(dynamicItem, options, componentAttributes);
+        });
       }
     }
   });
