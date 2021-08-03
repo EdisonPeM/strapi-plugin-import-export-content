@@ -2,7 +2,7 @@ const PERMISSIONS = require("../../constants/permissions");
 const { cleanFields } = require("./exportUtils");
 
 async function getData(target, options, userAbility) {
-  const { uid } = target;
+  const { uid, attributes } = target;
   const permissionsManager =
     strapi.admin.services.permission.createPermissionsManager({
       ability: userAbility,
@@ -18,8 +18,8 @@ async function getData(target, options, userAbility) {
   );
 
   return Array.isArray(items)
-    ? items.map((item) => cleanFields(item, options))
-    : [cleanFields(items, options)];
+    ? items.map((item) => cleanFields(item, options, attributes))
+    : [cleanFields(items, options, attributes)];
 }
 
 module.exports = {
