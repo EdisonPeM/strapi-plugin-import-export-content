@@ -52,7 +52,7 @@ module.exports = {
   exportItems: async (ctx) => {
     const { target, type, options } = ctx.request.body;
     const { userAbility } = ctx.state;
-    const exportItems = await getData(target.uid, options, userAbility);
+    const exportItems = await getData(target, options, userAbility);
 
     if (target.kind === "singleType") {
       return getContentFromItems({ items: exportItems[0], type });
