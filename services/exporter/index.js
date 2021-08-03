@@ -1,7 +1,8 @@
 const PERMISSIONS = require("../../constants/permissions");
 const { cleanFields } = require("./exportUtils");
 
-async function getData(uid, options, userAbility) {
+async function getData(target, options, userAbility) {
+  const { uid } = target;
   const permissionsManager =
     strapi.admin.services.permission.createPermissionsManager({
       ability: userAbility,
