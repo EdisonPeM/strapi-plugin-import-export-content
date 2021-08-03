@@ -1,7 +1,7 @@
 import {
   highlight as prismHighlight,
   languages as prismLanguages,
-} from "prismjs/components/prism-core";
+} from "prismjs";
 import "prismjs/components/prism-json";
 
 import FORMATS from "../constants/formats";
