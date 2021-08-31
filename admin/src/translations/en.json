@@ -15,12 +15,17 @@
   "import.file.type.error": "The file type is not supported",
   "import.raw.format": "Data Format",
   "import.analyze": "Analyze",
-  "import.analyze.success": "",
-  "import.analyze.error": "",
-  "import.mapper.unsaved": "",
-  "import.items.empty": "",
-  "import.items.succesfully": "",
-  "import.items.error": "",
+  "import.analyze.success": "Data have been analyzed successfuly",
+  "import.analyze.error": "An error occurred while analyzing the data",
+  "import.mapper.title": "Map the Import Data to Destination Field",
+  "import.mapper.count": "Count of Items to Import",
+  "import.mapper.publish": "Upload and publish",
+  "import.mapper.import": "Import Data",
+  "import.mapper.cancel": "Cancel",
+  "import.mapper.unsaved": "Are you sure you want to leave this page? The data will not be imported",
+  "import.items.empty": "No data to import",
+  "import.items.error": "An error occurred while importing the data",
+
   "export.source.empty": "",
   "export.items.error": ""
 }

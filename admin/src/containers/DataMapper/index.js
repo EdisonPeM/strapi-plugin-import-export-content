@@ -8,6 +8,7 @@ import MappingTable from "../../components/MappingTable";
 
 import { request } from "strapi-helper-plugin";
 import pluginId from "../../pluginId";
+import useTrads from "../../hooks/useTrads";
 
 const filterIgnoreFields = (fieldName) =>
   ![
@@ -20,6 +21,8 @@ const filterIgnoreFields = (fieldName) =>
   ].includes(fieldName);
 
 function DataMapper({ analysis, target, onImport }) {
+  const formatMessage = useTrads();
+
   const { fieldsInfo, parsedData } = analysis;
   const { kind, attributes, options } = target;
 
@@ -67,23 +70,25 @@ function DataMapper({ analysis, target, onImport }) {
 
   // Handler Mapping
   const selectDestinationField = useCallback(
-    (source) => ({ target: { value } }) => {
-      setMappedFields((fields) => ({
-        ...fields,
-        [source]: {
-          ...fields[source],
-          targetField: value,
-          targetFormat: value !== "none" ? attributes[value].type : undefined,
-        },
-      }));
-    },
+    (source) =>
+      ({ target: { value } }) => {
+        setMappedFields((fields) => ({
+          ...fields,
+          [source]: {
+            ...fields[source],
+            targetField: value,
+            targetFormat: value !== "none" ? attributes[value].type : undefined,
+          },
+        }));
+      },
     [attributes]
   );
 
   // Mapping Table Rows
   const [importItems, setImportItems] = useState(parsedData);
-  const deleteItem = useCallback((deleteItem) => () =>
-    setImportItems((items) => items.filter((item) => item !== deleteItem))
+  const deleteItem = useCallback(
+    (deleteItem) => () =>
+      setImportItems((items) => items.filter((item) => item !== deleteItem))
   );
 
   // Upload Data
@@ -93,7 +98,7 @@ function DataMapper({ analysis, target, onImport }) {
     if (importItems.length === 0) {
       strapi.notification.toggle({
         type: "warning",
-        message: "import.items.empty",
+        message: formatMessage("import.items.empty"),
       });
 
       // Finish with the import
@@ -117,7 +122,7 @@ function DataMapper({ analysis, target, onImport }) {
       console.log(error);
       strapi.notification.toggle({
         type: "warning",
-        message: `import.items.error`,
+        message: formatMessage(`import.items.error`),
       });
     }
 
@@ -129,9 +134,9 @@ function DataMapper({ analysis, target, onImport }) {
     <>
       {isLoading && <Loader />}
       <div className="pt-3 col-12">
-        <Prompt message="import.mapper.unsaved" />
+        <Prompt message={formatMessage("import.mapper.unsaved")} />
         <Row>
-          <h2>Map the Import Data to Destination Field</h2>
+          <h3>{formatMessage("import.mapper.title")}</h3>
           <MappingTable
             mappingHeaders={headers}
             mappingRows={importItems}
@@ -143,24 +148,28 @@ function DataMapper({ analysis, target, onImport }) {
           />
         </Row>
         <Row>
-          <span className="mr-3">Count of Items to Import:</span>
+          <span className="mr-3">{formatMessage("import.mapper.count")}:</span>
           <strong>{kind === "singleType" ? 1 : importItems.length}</strong>
         </Row>
         {options.draftAndPublish && (
           <Row>
             <Checkbox
-              message="Upload as Draft"
+              // Change the message from "upload as draft" to "upload and publish"
+              message={formatMessage("import.mapper.publish")}
               name="uploadAsDraft"
-              value={uploadAsDraft}
+              value={!uploadAsDraft}
               onChange={() => setUploadAsDraft(!uploadAsDraft)}
             />
           </Row>
         )}
         <Row>
-          <Button label="Import Data" onClick={uploadData} />
+          <Button
+            label={formatMessage("import.mapper.import")}
+            onClick={uploadData}
+          />
           <Button
             className="ml-3"
-            label="Cancel"
+            label={formatMessage("import.mapper.cancel")}
             color="delete"
             onClick={() => onImport()}
           />
