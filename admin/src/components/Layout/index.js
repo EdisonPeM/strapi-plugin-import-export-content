@@ -10,7 +10,7 @@ function Layout({ navLinks, children }) {
     <div className="container-fluid" style={{ padding: "18px 30px" }}>
       <PluginHeader
         title={format("plugin.name")}
-        description={format("plugin.description.long")}
+        description={format("plugin.description")}
       />
       <HeaderNav links={navLinks} style={{ marginTop: "4.4rem" }} />
       <div className="row">{children}</div>

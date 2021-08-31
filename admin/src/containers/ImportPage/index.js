@@ -15,19 +15,25 @@ import { Select, Label } from "@buffetjs/core";
 
 import { request } from "strapi-helper-plugin";
 import pluginId from "../../pluginId";
-
-const importSourcesOptions = [
-  { label: "Upload file", value: "upload" },
-  { label: "Raw text", value: "raw" },
-];
+import useTrads from "../../hooks/useTrads";
 
 function ImportPage({ contentTypes }) {
+  const format = useTrads();
+
   // Import Source and Import Destination States
   const [importSource, setImportSource] = useState("upload");
+  const importSourcesOptions = useMemo(
+    () => [
+      { label: format("import.source.upload"), value: "upload" },
+      { label: format("import.source.raw"), value: "raw" },
+    ],
+    []
+  );
+
   const [importDest, setImportDest] = useState("");
   const importDestOptions = useMemo(
     () =>
-      [{ label: "Select Import Destination", value: "" }].concat(
+      [{ label: "Select Destination", value: "" }].concat(
         contentTypes.map(({ uid, info, apiID }) => ({
           label: info.label || apiID,
           value: uid,
@@ -45,7 +51,7 @@ function ImportPage({ contentTypes }) {
     if (importDest === "")
       return strapi.notification.toggle({
         type: "warning",
-        message: "import.destination.empty",
+        message: format("import.destination.empty"),
       });
 
     // Send Request
@@ -63,13 +69,13 @@ function ImportPage({ contentTypes }) {
       // Notifications
       strapi.notification.toggle({
         type: "success",
-        message: "import.analyze.success",
+        message: format("import.analyze.success"),
       });
     } catch (error) {
       console.error(error);
       strapi.notification.toggle({
         type: "warning",
-        message: "import.analyze.error",
+        message: format("import.analyze.error"),
       });
     }
 
@@ -84,8 +90,8 @@ function ImportPage({ contentTypes }) {
 
   return (
     <Block
-      title="General"
-      description="Configure the Import Source & Destination"
+      title={format("import.title")}
+      description={format("import.description")}
       style={{ marginBottom: 12 }}
     >
       {analysis === null ? (
@@ -93,7 +99,7 @@ function ImportPage({ contentTypes }) {
           {isLoading && <Loader />}
           <Row>
             <div className="pt-3 col-sm-6">
-              <Label htmlFor="importSource">Import Source</Label>
+              <Label htmlFor="importSource">{format("import.source")}</Label>
               <Select
                 name="importSource"
                 value={importSource}
@@ -102,7 +108,7 @@ function ImportPage({ contentTypes }) {
               />
             </div>
             <div className="pt-3 col-sm-6">
-              <Label htmlFor="importDest">Import Destination</Label>
+              <Label htmlFor="importDest">{format("import.destination")}</Label>
               <Select
                 name="importDest"
                 value={importDest}
