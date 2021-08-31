@@ -25,7 +25,16 @@
   "import.mapper.unsaved": "Are you sure you want to leave this page? The data will not be imported",
   "import.items.empty": "No data to import",
   "import.items.error": "An error occurred while importing the data",
-
-  "export.source.empty": "",
-  "export.items.error": ""
+  "export.title": "Export",
+  "export.description": "Configure the Export Source & Format",
+  "export.source": "Export Source",
+  "export.format": "Export Format",
+  "export.getData": "Get Data",
+  "export.download": "Download",
+  "export.copy": "Copy to Clipboard",
+  "export.copy.success": "Content copied to Clipboard",
+  "export.copy.error": "Error copying to clipboard",
+  "export.options": "Options",
+  "export.source.empty": "You have not selected a Export Source",
+  "export.items.error": "An error occurred while exporting data"
 }
