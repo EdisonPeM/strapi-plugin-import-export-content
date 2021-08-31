@@ -13,6 +13,7 @@
   "import.file.remove": "Remove File",
   "import.file.content.error": "An error occurred while reading the file",
   "import.file.type.error": "The file type is not supported",
+  "import.raw.format": "Data Format",
   "import.analyze": "Analyze",
   "import.analyze.success": "",
   "import.analyze.error": "",

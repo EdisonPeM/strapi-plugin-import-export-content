@@ -10,12 +10,15 @@ import { Row } from "../../components/common";
 import FORMATS from "../../constants/formats";
 import highlight from "../../utils/highlight";
 
+import useTrads from "../../hooks/useTrads";
+
 const fortmatsOptions = FORMATS.map(({ name, mimeType }) => ({
   label: name,
   value: mimeType,
 }));
 
 function RawInputForm({ onSubmit }) {
+  const format = useTrads();
   const [rawText, setRawText] = useState("");
   const [rawFormat, setRawFormat] = useState(FORMATS[0].mimeType || "");
 
@@ -30,7 +33,7 @@ function RawInputForm({ onSubmit }) {
   return (
     <form className="col-12" onSubmit={handleSubmit}>
       <Row>
-        <Label message="Data Format" htmlFor="dataFormats" />
+        <Label message={format("import.raw.format")} htmlFor="dataFormats" />
         <Select
           name="dataFormats"
           options={fortmatsOptions}
@@ -50,7 +53,11 @@ function RawInputForm({ onSubmit }) {
         </EditorWrapper>
       </Row>
       <Row>
-        <Button type="submit" label={"Analyze"} disabled={rawText === ""} />
+        <Button
+          type="submit"
+          label={format("import.analyze")}
+          disabled={rawText === ""}
+        />
       </Row>
     </form>
   );
