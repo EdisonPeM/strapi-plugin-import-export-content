@@ -1,4 +1,9 @@
 {
+  "plugin.name": "Import / Export Content",
+  "plugin.description.long": "Import CSV or JSON data into your Content Types",
+  "plugin.description.short": "Import CSV or JSON data into your Content Types",
+  "navlink.import": "Import Data",
+  "navlink.export": "Export Data",
   "import.mapper.unsaved": "",
   "import.destination.empty": "",
   "import.analyze.success": "",
@@ -9,6 +14,5 @@
   "import.file.content.error": "",
   "import.file.type.error": "",
   "export.source.empty": "",
-  "export.items.error": "",
-  "plugin.name": "Import / Export Content"
+  "export.items.error": ""
 }
