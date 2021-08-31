@@ -15,28 +15,25 @@ import ImportPage from "../ImportPage";
 import ExportPage from "../ExportPage";
 
 import useContentTypes from "../../hooks/useContentTypes";
-import useTrads from "../../hooks/useTrads";
 
 import "../../assets/prismjs.css";
 
 const pathTo = (uri = "") => `/plugins/${pluginId}/${uri}`;
+const navLinks = [
+  {
+    name: `${pluginId}.navlink.import`,
+    to: pathTo("import"),
+  },
+  {
+    name: `${pluginId}.navlink.export`,
+    to: pathTo("export"),
+  },
+];
+
 function App() {
   const userContentTypes = useContentTypes();
-  const format = useTrads();
-
   return (
-    <Layout
-      navLinks={[
-        {
-          name: format("navlink.import"),
-          to: pathTo("import"),
-        },
-        {
-          name: format("navlink.export"),
-          to: pathTo("export"),
-        },
-      ]}
-    >
+    <Layout navLinks={navLinks}>
       <Switch>
         <Route path={pathTo("import")}>
           <ImportPage contentTypes={userContentTypes} />
@@ -45,7 +42,7 @@ function App() {
           <ExportPage contentTypes={userContentTypes} />
         </Route>
         <Route>
-          {/* Default Route Retur to Import Page */}
+          {/* Default Route Return to Import Page */}
           <Redirect to={pathTo("import")} />
         </Route>
       </Switch>
