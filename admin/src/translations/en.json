@@ -35,6 +35,10 @@
   "export.copy.success": "Content copied to Clipboard",
   "export.copy.error": "Error copying to clipboard",
   "export.options": "Options",
+  "export.options.medias": "Select how medias will be exported.",
+  "export.options.relations": "Select how relation will be exported.",
+  "export.options.ids": "Remove Ids",
+  "export.options.timestamp": "Remove TimeStamps",
   "export.source.empty": "You have not selected a Export Source",
   "export.items.error": "An error occurred while exporting data"
 }
