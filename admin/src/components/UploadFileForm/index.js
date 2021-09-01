@@ -9,8 +9,10 @@ import { Row } from "../common";
 
 import FORMATS from "../../constants/formats";
 import readFileContent from "../../utils/readFileContent";
+import useTrads from "../../hooks/useTrads";
 
 function UploadFileForm({ onSubmit }) {
+  const formatMessage = useTrads();
   const [file, setFile] = useState(null);
   const [data, setData] = useState("");
 
@@ -22,7 +24,7 @@ function UploadFileForm({ onSubmit }) {
     } catch (err) {
       strapi.notification.toggle({
         type: "warning",
-        message: "import.file.content.error",
+        message: formatMessage("import.file.content.error"),
       });
     }
   };
@@ -51,7 +53,7 @@ function UploadFileForm({ onSubmit }) {
             onUploadError={() =>
               strapi.notification.toggle({
                 type: "warning",
-                message: "import.file.type.error",
+                message: formatMessage("import.file.type.error"),
               })
             }
           />
@@ -60,13 +62,13 @@ function UploadFileForm({ onSubmit }) {
       <Row>
         <Button
           type="submit"
-          label="Analyze"
+          label={formatMessage("import.analyze")}
           color={file ? "primary" : "cancel"}
           disabled={!file}
         />
         <Button
           className="ml-3"
-          label="Remove File"
+          label={formatMessage("import.file.remove")}
           color="delete"
           onClick={removeFile}
           disabled={!file}

@@ -21,6 +21,7 @@ import { Collapse } from "reactstrap";
 import { FilterIcon } from "strapi-helper-plugin";
 import BASE_OPTIONS from "../../constants/options";
 import OptionsExport from "../../components/OptionsExport";
+import useTrads from "../../hooks/useTrads";
 
 const exportFormatsOptions = FORMATS.map(({ name, mimeType }) => ({
   label: name,
@@ -28,6 +29,7 @@ const exportFormatsOptions = FORMATS.map(({ name, mimeType }) => ({
 }));
 
 function ImportPage({ contentTypes }) {
+  const formatMessage = useTrads();
   const [target, setTarget] = useState(null);
   const [sourceExports, setSourceExports] = useState("");
   const [exportFormat, setExportFormat] = useState("application/json");
@@ -35,7 +37,7 @@ function ImportPage({ contentTypes }) {
 
   const sourceOptions = useMemo(
     () =>
-      [{ label: "Select Export Source", value: "" }].concat(
+      [{ label: "Select Source", value: "" }].concat(
         contentTypes.map(({ uid, info, apiID }) => ({
           label: info.label || apiID,
           value: uid,
@@ -79,7 +81,7 @@ function ImportPage({ contentTypes }) {
     if (sourceExports === "")
       return strapi.notification.toggle({
         type: "warning",
-        message: "export.source.empty",
+        message: formatMessage("export.source.empty"),
       });
 
     try {
@@ -93,7 +95,7 @@ function ImportPage({ contentTypes }) {
     } catch (error) {
       strapi.notification.toggle({
         type: "warning",
-        message: `export.items.error`,
+        message: formatMessage("export.items.error"),
       });
     }
 
@@ -104,18 +106,18 @@ function ImportPage({ contentTypes }) {
   const handleDownload = () => {
     downloadFile(target.info.name, contentToExport, exportFormat);
   };
-  const handleCopy = () => copyClipboard(contentToExport);
+  const handleCopy = () => copyClipboard(contentToExport, formatMessage);
 
   return (
     <Block
-      title="Export"
-      description="Configure the Export Source & Format"
+      title={formatMessage("export.title")}
+      description={formatMessage("export.description")}
       style={{ marginBottom: 12 }}
     >
       {isLoading && <Loader />}
       <Row>
         <div className="pt-3 col-sm-6 col-md-5">
-          <Label htmlFor="exportSource">Export Source</Label>
+          <Label htmlFor="exportSource">{formatMessage("export.source")}</Label>
           <Select
             name="exportSource"
             options={sourceOptions}
@@ -124,7 +126,7 @@ function ImportPage({ contentTypes }) {
           />
         </div>
         <div className="pt-3 col-sm-6 col-md-5">
-          <Label htmlFor="exportFormat">Export Format</Label>
+          <Label htmlFor="exportFormat">{formatMessage("export.format")}</Label>
           <Select
             name="exportFormat"
             options={exportFormatsOptions}
@@ -137,7 +139,7 @@ function ImportPage({ contentTypes }) {
             onClick={() => setIsOptionsOpen((v) => !v)}
             className="w-100"
             icon={<FilterIcon />}
-            label="Options"
+            label={formatMessage("export.options")}
             color="cancel"
           />
         </div>
@@ -157,23 +159,23 @@ function ImportPage({ contentTypes }) {
           <Button
             onClick={getContent}
             className="w-100"
-            label="Get Data"
+            label={formatMessage("export.getData")}
             color="primary"
           />
         </div>
-        <div className="mt-3 col-md-3 col-lg-2">
+        <div className="mt-3 col-md-3">
           <Button
-            label="Download"
+            label={formatMessage("export.download")}
             className="w-100"
             color="success"
             disabled={!contentToExport}
             onClick={handleDownload}
           />
         </div>
-        <div className="mt-3  col-md-3 col-lg-2">
+        <div className="mt-3 col-md-3">
           <Button
             className="w-100"
-            label="Copy to Clipboard"
+            label={formatMessage("export.copy")}
             color="secondary"
             disabled={!contentToExport}
             onClick={handleCopy}

@@ -2,20 +2,21 @@ import React from "react";
 import { Select, Checkbox } from "@buffetjs/core";
 
 import BASE_OPTIONS from "../../constants/options";
+import useTrads from "../../hooks/useTrads";
 
 function OptionsExport({ values, onChange }) {
+  const formatMessage = useTrads();
   return (
     <div>
       <hr />
-      {BASE_OPTIONS.map(({ name, label, type, optionalValues }) => {
+      {BASE_OPTIONS.map(({ name, type, optionalValues }) => {
         const handleChange = ({ target: { value } }) => onChange(name, value);
 
         if (type === "select") {
           return (
-            <div className="mt-3">
-              <span>{label}:</span>
+            <div key={name} className="mt-3">
+              <span>{formatMessage(`export.options.${name}`)}:</span>
               <Select
-                key={name}
                 name={name}
                 value={values[name]}
                 onChange={handleChange}
@@ -25,10 +26,9 @@ function OptionsExport({ values, onChange }) {
           );
         } else if (type === "boolean") {
           return (
-            <div className="mt-3">
+            <div key={name} className="mt-3">
               <Checkbox
-                key={name}
-                message={label}
+                message={formatMessage(`export.options.${name}`)}
                 name={name}
                 value={values[name]}
                 onChange={handleChange}

@@ -6,7 +6,7 @@
   "strapi": {
     "name": "Import / Export Content",
     "icon": "sync-alt",
-    "description": "Import and Export your Content"
+    "description": "import-export-content.plugin.description"
   },
   "scripts": {
     "test": "echo \"No test specified\""

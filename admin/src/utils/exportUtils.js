@@ -13,7 +13,7 @@ function downloadFile(name, content, type) {
   el.click();
 }
 
-async function copyClipboard(content) {
+async function copyClipboard(content, formatMessage) {
   if (navigator.clipboard) {
     try {
       await navigator.clipboard.writeText(content);
@@ -21,7 +21,7 @@ async function copyClipboard(content) {
       console.error("Failed to copy!", err);
       return strapi.notification.toggle({
         type: "warning",
-        message: "Copy to Clipboard Error",
+        message: formatMessage("export.copy.error"),
       });
     }
   } else {
@@ -33,7 +33,7 @@ async function copyClipboard(content) {
 
   strapi.notification.toggle({
     type: "success",
-    message: "Content Copy to Clipboard",
+    message: formatMessage("export.copy.success"),
   });
 }
 
