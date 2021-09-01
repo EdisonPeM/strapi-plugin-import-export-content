@@ -119,7 +119,7 @@ function DataMapper({ analysis, target, onImport }) {
 
       strapi.notification.toggle({ type: "info", message });
     } catch (error) {
-      console.log(error);
+      console.error(error);
       strapi.notification.toggle({
         type: "warning",
         message: formatMessage(`import.items.error`),

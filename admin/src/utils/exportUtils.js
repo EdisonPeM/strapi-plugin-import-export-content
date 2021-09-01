@@ -6,7 +6,7 @@ function downloadFile(name, content, type) {
   const file = new Blob([content], { type });
   const fileURL = window.URL.createObjectURL(file);
 
-  const dateTime = new Date().toLocaleDateString();
+  const dateTime = new Date().toISOString();
   const el = document.createElement("a");
   el.href = fileURL;
   el.download = `${name}_${dateTime}${format.ext}` || "file.txt";
