@@ -7,7 +7,7 @@
 import React, { memo, useState, useMemo } from "react";
 import PropTypes from "prop-types";
 
-import { Loader, Block, Row } from "../../components/common";
+import { Loader, Block, Row, SelectWarning } from "../../components/common";
 import { Select, Label, Button } from "@buffetjs/core";
 import DataViewer from "../../components/DataViewer";
 
@@ -77,12 +77,15 @@ function ImportPage({ contentTypes }) {
 
   // Request to Get Available Content
   const [isLoading, setIsLoadig] = useState(false);
+  const [sourceEmpty, setSourceEmpty] = useState(false);
   const getContent = async () => {
-    if (sourceExports === "")
+    if (sourceExports === "") {
+      setSourceEmpty(true);
       return strapi.notification.toggle({
         type: "warning",
         message: formatMessage("export.source.empty"),
       });
+    }
 
     try {
       setIsLoadig(true);
@@ -118,11 +121,12 @@ function ImportPage({ contentTypes }) {
       <Row>
         <div className="pt-3 col-sm-6 col-md-5">
           <Label htmlFor="exportSource">{formatMessage("export.source")}</Label>
-          <Select
+          <SelectWarning
             name="exportSource"
             options={sourceOptions}
             value={sourceExports}
             onChange={handleSelectSourceExports}
+            showWarning={sourceEmpty}
           />
         </div>
         <div className="pt-3 col-sm-6 col-md-5">
