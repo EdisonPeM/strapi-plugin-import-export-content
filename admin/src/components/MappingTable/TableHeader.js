@@ -1,7 +1,8 @@
 import React, { memo } from "react";
 import PropTypes from "prop-types";
 
-import { Label, Select } from "@buffetjs/core";
+import { Label } from "@buffetjs/core";
+import { SelectWarning } from "../common";
 import FormatIcon from "../FormatIcon";
 
 function TableHeader({ headers, headersSelectOptions, onChangeSelect }) {
@@ -22,12 +23,13 @@ function TableHeader({ headers, headersSelectOptions, onChangeSelect }) {
         {headers.map(({ name, value }) => (
           <th key={name}>
             <Label htmlFor={`map-${name}`}>
-              <Select
+              <SelectWarning
                 name={`map-${name}`}
                 value={value}
                 options={headersSelectOptions}
                 onChange={onChangeSelect(name)}
-                className={value === "none" ? "unselected" : ""}
+                valueWarning="none"
+                showWarning
               />
             </Label>
           </th>
