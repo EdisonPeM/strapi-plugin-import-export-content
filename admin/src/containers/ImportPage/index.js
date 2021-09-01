@@ -18,14 +18,14 @@ import pluginId from "../../pluginId";
 import useTrads from "../../hooks/useTrads";
 
 function ImportPage({ contentTypes }) {
-  const format = useTrads();
+  const formatMessage = useTrads();
 
   // Import Source and Import Destination States
   const [importSource, setImportSource] = useState("upload");
   const importSourcesOptions = useMemo(
     () => [
-      { label: format("import.source.upload"), value: "upload" },
-      { label: format("import.source.raw"), value: "raw" },
+      { label: formatMessage("import.source.upload"), value: "upload" },
+      { label: formatMessage("import.source.raw"), value: "raw" },
     ],
     []
   );
@@ -51,7 +51,7 @@ function ImportPage({ contentTypes }) {
     if (importDest === "")
       return strapi.notification.toggle({
         type: "warning",
-        message: format("import.destination.empty"),
+        message: formatMessage("import.destination.empty"),
       });
 
     // Send Request
@@ -69,13 +69,13 @@ function ImportPage({ contentTypes }) {
       // Notifications
       strapi.notification.toggle({
         type: "success",
-        message: format("import.analyze.success"),
+        message: formatMessage("import.analyze.success"),
       });
     } catch (error) {
       console.error(error);
       strapi.notification.toggle({
         type: "warning",
-        message: format("import.analyze.error"),
+        message: formatMessage("import.analyze.error"),
       });
     }
 
@@ -90,8 +90,8 @@ function ImportPage({ contentTypes }) {
 
   return (
     <Block
-      title={format("import.title")}
-      description={format("import.description")}
+      title={formatMessage("import.title")}
+      description={formatMessage("import.description")}
       style={{ marginBottom: 12 }}
     >
       {analysis === null ? (
@@ -99,7 +99,9 @@ function ImportPage({ contentTypes }) {
           {isLoading && <Loader />}
           <Row>
             <div className="pt-3 col-sm-6">
-              <Label htmlFor="importSource">{format("import.source")}</Label>
+              <Label htmlFor="importSource">
+                {formatMessage("import.source")}
+              </Label>
               <Select
                 name="importSource"
                 value={importSource}
@@ -108,7 +110,9 @@ function ImportPage({ contentTypes }) {
               />
             </div>
             <div className="pt-3 col-sm-6">
-              <Label htmlFor="importDest">{format("import.destination")}</Label>
+              <Label htmlFor="importDest">
+                {formatMessage("import.destination")}
+              </Label>
               <Select
                 name="importDest"
                 value={importDest}

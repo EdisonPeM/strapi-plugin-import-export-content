@@ -18,7 +18,7 @@ const fortmatsOptions = FORMATS.map(({ name, mimeType }) => ({
 }));
 
 function RawInputForm({ onSubmit }) {
-  const format = useTrads();
+  const formatMessage = useTrads();
   const [rawText, setRawText] = useState("");
   const [rawFormat, setRawFormat] = useState(FORMATS[0].mimeType || "");
 
@@ -33,7 +33,10 @@ function RawInputForm({ onSubmit }) {
   return (
     <form className="col-12" onSubmit={handleSubmit}>
       <Row>
-        <Label message={format("import.raw.format")} htmlFor="dataFormats" />
+        <Label
+          message={formatMessage("import.raw.formatMessage")}
+          htmlFor="dataFormats"
+        />
         <Select
           name="dataFormats"
           options={fortmatsOptions}
@@ -55,7 +58,7 @@ function RawInputForm({ onSubmit }) {
       <Row>
         <Button
           type="submit"
-          label={format("import.analyze")}
+          label={formatMessage("import.analyze")}
           disabled={rawText === ""}
         />
       </Row>
