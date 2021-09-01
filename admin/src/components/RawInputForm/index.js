@@ -34,7 +34,7 @@ function RawInputForm({ onSubmit }) {
     <form className="col-12" onSubmit={handleSubmit}>
       <Row>
         <Label
-          message={formatMessage("import.raw.formatMessage")}
+          message={formatMessage("import.raw.format")}
           htmlFor="dataFormats"
         />
         <Select
