@@ -10,7 +10,7 @@ import UploadFileForm from "../../components/UploadFileForm";
 import RawInputForm from "../../components/RawInputForm";
 import DataMapper from "../DataMapper";
 
-import { Loader, Block, Row } from "../../components/common";
+import { Loader, Block, Row, SelectWarning } from "../../components/common";
 import { Select, Label } from "@buffetjs/core";
 
 import { request } from "strapi-helper-plugin";
@@ -46,14 +46,16 @@ function ImportPage({ contentTypes }) {
   const [analysis, setAnalysis] = useState(null);
   const [target, setTarget] = useState(null);
   const [isLoading, setIsLoadig] = useState(false);
+  const [destEmpty, setDestEmpty] = useState(false);
   const analizeImports = async ({ data, type }) => {
     // Prevent Empty Destination
-    if (importDest === "")
+    if (importDest === "") {
+      setDestEmpty(true);
       return strapi.notification.toggle({
         type: "warning",
         message: formatMessage("import.destination.empty"),
       });
-
+    }
     // Send Request
     try {
       setIsLoadig(true);
@@ -113,11 +115,12 @@ function ImportPage({ contentTypes }) {
               <Label htmlFor="importDest">
                 {formatMessage("import.destination")}
               </Label>
-              <Select
+              <SelectWarning
                 name="importDest"
                 value={importDest}
                 options={importDestOptions}
                 onChange={({ target: { value } }) => setImportDest(value)}
+                showWarning={destEmpty}
               />
             </div>
           </Row>
