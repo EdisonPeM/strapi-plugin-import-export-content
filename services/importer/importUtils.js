@@ -1,10 +1,20 @@
+const getErrorMessages = (error) => {
+  const errorMessages = [];
+  for (const key in error.data.errors){
+    if (error.data.errors.hasOwnProperty(key)) {
+      errorMessages.push(error.data.errors[key]);
+    }
+  }
+  return errorMessages;
+};
+
 const importToCollectionType = async (uid, item) => {
   try {
     await strapi.entityService.create({ data: item }, { model: uid });
     // await strapi.query(uid).create(item);
     return true;
   } catch (error) {
-    return false;
+    return getErrorMessages(error);
   }
 };
 
@@ -20,7 +30,7 @@ const importToSingleType = async (uid, item) => {
     }
     return [true];
   } catch (error) {
-    return [false];
+    return [getErrorMessages(error)];
   }
 };
 

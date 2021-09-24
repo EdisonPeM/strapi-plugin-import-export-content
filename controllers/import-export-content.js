@@ -8,6 +8,15 @@ function getService(service = PLUGIN_ID) {
   return SERVICES[service];
 }
 
+function processErrors(errors = []) {
+  const errorMessages = errors.flatMap((obj) => obj.res.map((msg) => msg)).flatMap((arr) => arr);
+  const withoutDuplicates = errorMessages
+    .filter((elem, index) => errorMessages.indexOf(elem) == index) // remove duplicates
+    .splice(0, 10) // Limit to the first 10 errors to keep it human readable
+    .join('\n');
+  return withoutDuplicates;
+} 
+
 const PERMISSIONS = require("../constants/permissions");
 
 /**
@@ -61,18 +70,16 @@ module.exports = {
     try {
       const service = getService();
       const results = await service.importItems(ctx);
-      const succesfully = results.every((res) => res);
+      const errors = results
+        .map((res, index) => ({ res, index }))
+        .filter((obj) => obj.res !== true);
+      const errorMessages = processErrors(errors);
       ctx.send({
-        succesfully,
-        message: succesfully
+        succesfully: errors.length === 0,
+        message: errors.length === 0
           ? "All Data Imported"
-          : results.some((res) => res)
-          ? "Some Items Imported"
-          : "No Items Imported",
+          : `${errors.length} item(s) were not imported: \n${errorMessages}`,
       });
-    } catch (error) {
-      console.error(error);
-      ctx.throw(406, `could not parse: ${error}`);
     }
   },
 
