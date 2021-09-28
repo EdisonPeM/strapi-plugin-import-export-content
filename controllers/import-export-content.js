@@ -80,6 +80,9 @@ module.exports = {
           ? "All Data Imported"
           : `${errors.length} item(s) were not imported: \n${errorMessages}`,
       });
+    } catch (error) {
+      console.error(error);
+      ctx.throw(406, `could not parse: ${error}`);
     }
   },
 
