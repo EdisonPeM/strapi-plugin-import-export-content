@@ -11,7 +11,7 @@ async function getData(target, options, userAbility) {
 
   // Filter content by permissions
   const query = permissionsManager.queryFrom({}, PERMISSIONS.read);
-
+  query._limit = -1;  
   const items = await strapi.entityService.find(
     { params: query },
     { model: uid }
