@@ -10,7 +10,7 @@ async function getData(target, options, userAbility) {
     });
 
   // Filter content by permissions
-  const query = permissionsManager.queryFrom({}, PERMISSIONS.read);
+  const query = permissionsManager.queryFrom({ _limit: -1 }, PERMISSIONS.read);
 
   const items = await strapi.entityService.find(
     { params: query },
