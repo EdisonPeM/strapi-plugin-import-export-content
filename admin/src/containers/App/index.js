@@ -10,6 +10,10 @@ import { Redirect, Route, Switch } from "react-router-dom";
 import Layout from "../../components/Layout";
 // Utils
 import pluginId from "../../pluginId";
+//Trad
+import { request, useGlobalContext } from "strapi-helper-plugin";
+import getTrad from '../../utils/getTrad';
+
 // Pages
 import ImportPage from "../ImportPage";
 import ExportPage from "../ExportPage";
@@ -18,19 +22,19 @@ import useContentTypes from "../../hooks/useContentTypes";
 
 import "../../assets/prismjs.css";
 
-const pathTo = (uri = "") => `/plugins/${pluginId}/${uri}`;
-const navLinks = [
-  {
-    name: "Import Data",
-    to: pathTo("import"),
-  },
-  {
-    name: "Export Data",
-    to: pathTo("export"),
-  },
-];
-
 function App() {
+  const { formatMessage } = useGlobalContext();
+  const pathTo = (uri = "") => `/plugins/${pluginId}/${uri}`;
+  const navLinks = [
+    {
+      name: formatMessage({id: getTrad('import.tab.name')}),
+      to: pathTo("import"),
+    },
+    {
+      name: formatMessage({id: getTrad('export.tab.name')}),
+      to: pathTo("export"),
+    },
+  ];
   const userContentTypes = useContentTypes();
 
   return (

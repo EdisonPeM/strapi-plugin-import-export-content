@@ -8,9 +8,15 @@ import { Button } from "@buffetjs/core";
 import { Row } from "../common";
 
 import FORMATS from "../../constants/formats";
+
 import readFileContent from "../../utils/readFileContent";
 
+import { useGlobalContext } from "strapi-helper-plugin";
+import getTrad from '../../utils/getTrad';
+
 function UploadFileForm({ onSubmit }) {
+  const { formatMessage } = useGlobalContext();
+  
   const [file, setFile] = useState(null);
   const [data, setData] = useState("");
 
@@ -22,7 +28,7 @@ function UploadFileForm({ onSubmit }) {
     } catch (err) {
       strapi.notification.toggle({
         type: "warning",
-        message: "import.file.content.error",
+        message: formatMessage({ id: getTrad("import.file.content.error")})
       });
     }
   };
@@ -51,7 +57,7 @@ function UploadFileForm({ onSubmit }) {
             onUploadError={() =>
               strapi.notification.toggle({
                 type: "warning",
-                message: "import.file.type.error",
+                message: formatMessage({ id: getTrad("import.file.type.error")})
               })
             }
           />
@@ -60,13 +66,13 @@ function UploadFileForm({ onSubmit }) {
       <Row>
         <Button
           type="submit"
-          label="Analyze"
+          label={formatMessage({ id: getTrad('import.upload.button.analyze')})}
           color={file ? "primary" : "cancel"}
           disabled={!file}
         />
         <Button
           className="ml-3"
-          label="Remove File"
+          label={formatMessage({ id: getTrad('import.upload.button.remove')})}
           color="delete"
           onClick={removeFile}
           disabled={!file}

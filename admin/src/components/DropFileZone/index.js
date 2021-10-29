@@ -4,12 +4,17 @@ import PropTypes from "prop-types";
 import DragAndDropIcon from "./DragAndDropIcon";
 import { Label, P } from "./styles";
 
+import { useGlobalContext } from "strapi-helper-plugin";
+import getTrad from '../../utils/getTrad';
+
 function DropFileZone({
   acceptMimeTypes,
   acceptFilesTypes,
   onUploadFile,
   onUploadError,
 }) {
+  const { formatMessage } = useGlobalContext();
+  
   const validateFile = (file) => {
     if (acceptMimeTypes.includes(file.type)) {
       onUploadFile(file);
@@ -42,8 +47,8 @@ function DropFileZone({
       <DragAndDropIcon />
       <P>
         <span>
-          Drag & drop your file into this area or{" "}
-          <span className={"underline"}>browse</span> for a file to upload
+          {formatMessage({ id: getTrad('import.dragAndDrop.firstPart')})}{" "}
+          <span className={"underline"}>{formatMessage({ id: getTrad('import.dragAndDrop.browse')})}</span> {formatMessage({ id: getTrad('import.dragAndDrop.secondPart')})}
         </span>
       </P>
       {isDragging && (

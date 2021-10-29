@@ -14,7 +14,7 @@ import DataViewer from "../../components/DataViewer";
 import FORMATS from "../../constants/formats";
 
 import pluginId from "../../pluginId";
-import { request } from "strapi-helper-plugin";
+import { request, useGlobalContext } from "strapi-helper-plugin";
 import { downloadFile, copyClipboard } from "../../utils/exportUtils";
 
 import { Collapse } from "reactstrap";
@@ -22,12 +22,16 @@ import { FilterIcon } from "strapi-helper-plugin";
 import BASE_OPTIONS from "../../constants/options";
 import OptionsExport from "../../components/OptionsExport";
 
+import getTrad from '../../utils/getTrad';
+
 const exportFormatsOptions = FORMATS.map(({ name, mimeType }) => ({
   label: name,
   value: mimeType,
 }));
 
-function ImportPage({ contentTypes }) {
+function ExportPage({ contentTypes }) {
+  const { formatMessage } = useGlobalContext();
+
   const [target, setTarget] = useState(null);
   const [sourceExports, setSourceExports] = useState("");
   const [exportFormat, setExportFormat] = useState("application/json");
@@ -35,7 +39,7 @@ function ImportPage({ contentTypes }) {
 
   const sourceOptions = useMemo(
     () =>
-      [{ label: "Select Export Source", value: "" }].concat(
+      [{ label: formatMessage({ id: getTrad('export.source.select')}), value: "" }].concat(
         contentTypes.map(({ uid, info, apiID }) => ({
           label: info.label || apiID,
           value: uid,
@@ -79,7 +83,7 @@ function ImportPage({ contentTypes }) {
     if (sourceExports === "")
       return strapi.notification.toggle({
         type: "warning",
-        message: "export.source.empty",
+        message: formatMessage({ id: getTrad("export.source.empty")})
       });
 
     try {
@@ -93,7 +97,7 @@ function ImportPage({ contentTypes }) {
     } catch (error) {
       strapi.notification.toggle({
         type: "warning",
-        message: `export.items.error`,
+        message: formatMessage({ id: getTrad("export.items.error")})
       });
     }
 
@@ -104,18 +108,23 @@ function ImportPage({ contentTypes }) {
   const handleDownload = () => {
     downloadFile(target.info.name, contentToExport, exportFormat);
   };
-  const handleCopy = () => copyClipboard(contentToExport);
+  const handleCopy = () => copyClipboard(contentToExport).then(message => {    
+    if(message) strapi.notification.toggle({
+      type: message.type,
+      message: formatMessage({ id: getTrad(message.id)}),
+    });
+  })
 
   return (
     <Block
-      title="Export"
-      description="Configure the Export Source & Format"
+      title={formatMessage({ id: getTrad('export.page.title')})}
+      description={formatMessage({ id: getTrad('export.page.description')})}
       style={{ marginBottom: 12 }}
     >
       {isLoading && <Loader />}
       <Row>
         <div className="pt-3 col-sm-6 col-md-5">
-          <Label htmlFor="exportSource">Export Source</Label>
+          <Label htmlFor="exportSource">{formatMessage({ id: getTrad('export.page.label.source')})}</Label>
           <Select
             name="exportSource"
             options={sourceOptions}
@@ -124,7 +133,7 @@ function ImportPage({ contentTypes }) {
           />
         </div>
         <div className="pt-3 col-sm-6 col-md-5">
-          <Label htmlFor="exportFormat">Export Format</Label>
+          <Label htmlFor="exportFormat">{formatMessage({ id: getTrad('export.page.label.format')})}</Label>
           <Select
             name="exportFormat"
             options={exportFormatsOptions}
@@ -137,7 +146,7 @@ function ImportPage({ contentTypes }) {
             onClick={() => setIsOptionsOpen((v) => !v)}
             className="w-100"
             icon={<FilterIcon />}
-            label="Options"
+            label={formatMessage({ id: getTrad('export.button.options')})}
             color="cancel"
           />
         </div>
@@ -157,13 +166,13 @@ function ImportPage({ contentTypes }) {
           <Button
             onClick={getContent}
             className="w-100"
-            label="Get Data"
+            label={formatMessage({ id: getTrad('export.button.getData')})}
             color="primary"
           />
         </div>
         <div className="mt-3 col-md-3 col-lg-2">
           <Button
-            label="Download"
+            label={formatMessage({ id: getTrad('export.button.download')})}
             className="w-100"
             color="success"
             disabled={!contentToExport}
@@ -173,7 +182,7 @@ function ImportPage({ contentTypes }) {
         <div className="mt-3  col-md-3 col-lg-2">
           <Button
             className="w-100"
-            label="Copy to Clipboard"
+            label={formatMessage({ id: getTrad('export.button.copy')})}
             color="secondary"
             disabled={!contentToExport}
             onClick={handleCopy}
@@ -184,12 +193,12 @@ function ImportPage({ contentTypes }) {
   );
 }
 
-ImportPage.defaultProps = {
+ExportPage.defaultProps = {
   contentTypes: [],
 };
 
-ImportPage.propTypes = {
+ExportPage.propTypes = {
   contentTypes: PropTypes.array,
 };
 
-export default memo(ImportPage);
+export default memo(ExportPage);

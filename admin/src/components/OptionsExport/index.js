@@ -3,17 +3,23 @@ import { Select, Checkbox } from "@buffetjs/core";
 
 import BASE_OPTIONS from "../../constants/options";
 
+import { useGlobalContext } from "strapi-helper-plugin";
+import getTrad from '../../utils/getTrad';
+
 function OptionsExport({ values, onChange }) {
+  const { formatMessage } = useGlobalContext();
+
   return (
     <div>
       <hr />
       {BASE_OPTIONS.map(({ name, label, type, optionalValues }) => {
+
         const handleChange = ({ target: { value } }) => onChange(name, value);
 
         if (type === "select") {
           return (
             <div className="mt-3">
-              <span>{label}:</span>
+              <span>{formatMessage({ id: getTrad(label)})}:</span>
               <Select
                 key={name}
                 name={name}
@@ -28,7 +34,7 @@ function OptionsExport({ values, onChange }) {
             <div className="mt-3">
               <Checkbox
                 key={name}
-                message={label}
+                message={formatMessage({ id: getTrad(label)})}
                 name={name}
                 value={values[name]}
                 onChange={handleChange}

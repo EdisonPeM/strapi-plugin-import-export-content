@@ -65,10 +65,10 @@ module.exports = {
       ctx.send({
         succesfully,
         message: succesfully
-          ? "All Data Imported"
+          ? {type: "success", id: "import.result.all"}
           : results.some((res) => res)
-          ? "Some Items Imported"
-          : "No Items Imported",
+          ? {type: "success", id: "import.result.some"}
+          : {type: "warning", id: "import.result.none"},
       });
     } catch (error) {
       console.error(error);

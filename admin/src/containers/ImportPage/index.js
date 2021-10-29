@@ -13,21 +13,25 @@ import DataMapper from "../DataMapper";
 import { Loader, Block, Row } from "../../components/common";
 import { Select, Label } from "@buffetjs/core";
 
-import { request } from "strapi-helper-plugin";
+import { request, useGlobalContext } from "strapi-helper-plugin";
 import pluginId from "../../pluginId";
 
-const importSourcesOptions = [
-  { label: "Upload file", value: "upload" },
-  { label: "Raw text", value: "raw" },
-];
+import getTrad from '../../utils/getTrad';
 
 function ImportPage({ contentTypes }) {
+  const { formatMessage } = useGlobalContext();
+
+  const importSourcesOptions = [
+    { label: formatMessage({ id: getTrad('import.page.select.importSource.upload')}), value: "upload" },
+    { label: formatMessage({ id: getTrad('import.page.select.importSource.raw')}), value: "raw" },
+  ];
+
   // Import Source and Import Destination States
   const [importSource, setImportSource] = useState("upload");
   const [importDest, setImportDest] = useState("");
   const importDestOptions = useMemo(
     () =>
-      [{ label: "Select Import Destination", value: "" }].concat(
+      [{ label: formatMessage({ id: getTrad('import.page.select.importDestination')}), value: "" }].concat(
         contentTypes.map(({ uid, info, apiID }) => ({
           label: info.label || apiID,
           value: uid,
@@ -45,7 +49,7 @@ function ImportPage({ contentTypes }) {
     if (importDest === "")
       return strapi.notification.toggle({
         type: "warning",
-        message: "import.destination.empty",
+        message: formatMessage({ id: getTrad("import.destination.empty")})
       });
 
     // Send Request
@@ -63,13 +67,13 @@ function ImportPage({ contentTypes }) {
       // Notifications
       strapi.notification.toggle({
         type: "success",
-        message: "import.analyze.success",
+        message: formatMessage({ id: getTrad("import.analyze.success")})
       });
     } catch (error) {
       console.error(error);
       strapi.notification.toggle({
         type: "warning",
-        message: "import.analyze.error",
+        message: formatMessage({ id: getTrad("import.analyze.error")})
       });
     }
 
@@ -84,8 +88,8 @@ function ImportPage({ contentTypes }) {
 
   return (
     <Block
-      title="General"
-      description="Configure the Import Source & Destination"
+      title={formatMessage({ id: getTrad('import.page.title')})}
+      description={formatMessage({ id: getTrad('import.page.description')})}
       style={{ marginBottom: 12 }}
     >
       {analysis === null ? (
@@ -93,7 +97,7 @@ function ImportPage({ contentTypes }) {
           {isLoading && <Loader />}
           <Row>
             <div className="pt-3 col-sm-6">
-              <Label htmlFor="importSource">Import Source</Label>
+              <Label htmlFor="importSource">{formatMessage({ id: getTrad('import.page.label.source')})}</Label>
               <Select
                 name="importSource"
                 value={importSource}
@@ -102,7 +106,7 @@ function ImportPage({ contentTypes }) {
               />
             </div>
             <div className="pt-3 col-sm-6">
-              <Label htmlFor="importDest">Import Destination</Label>
+              <Label htmlFor="importDest">{formatMessage({ id: getTrad('import.page.label.destination')})}</Label>
               <Select
                 name="importDest"
                 value={importDest}

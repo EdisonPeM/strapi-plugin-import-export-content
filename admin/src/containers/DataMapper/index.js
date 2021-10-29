@@ -6,8 +6,9 @@ import { Button, Checkbox } from "@buffetjs/core";
 import { Loader, Row } from "../../components/common";
 import MappingTable from "../../components/MappingTable";
 
-import { request } from "strapi-helper-plugin";
+import { request, useGlobalContext } from "strapi-helper-plugin";
 import pluginId from "../../pluginId";
+import getTrad from '../../utils/getTrad';
 
 const filterIgnoreFields = (fieldName) =>
   ![
@@ -17,9 +18,16 @@ const filterIgnoreFields = (fieldName) =>
     "updated_at",
     "updated_by",
     "published_at",
+    "createdAt",
+    "createdBy",
+    "updatedAt",
+    "updatedBy",
+    "publishedAt",
   ].includes(fieldName);
 
 function DataMapper({ analysis, target, onImport }) {
+  const { formatMessage } = useGlobalContext();
+
   const { fieldsInfo, parsedData } = analysis;
   const { kind, attributes, options } = target;
 
@@ -93,7 +101,7 @@ function DataMapper({ analysis, target, onImport }) {
     if (importItems.length === 0) {
       strapi.notification.toggle({
         type: "warning",
-        message: "import.items.empty",
+        message: formatMessage({ id: getTrad("import.items.empty")})
       });
 
       // Finish with the import
@@ -111,13 +119,12 @@ function DataMapper({ analysis, target, onImport }) {
           asDraft: uploadAsDraft,
         },
       });
-
-      strapi.notification.toggle({ type: "info", message });
+      strapi.notification.toggle({ type: message.type, message: formatMessage({ id: getTrad(message.id)}) });
     } catch (error) {
       console.log(error);
       strapi.notification.toggle({
         type: "warning",
-        message: `import.items.error`,
+        message: formatMessage({ id: getTrad('import.items.error')})
       });
     }
 
@@ -129,9 +136,9 @@ function DataMapper({ analysis, target, onImport }) {
     <>
       {isLoading && <Loader />}
       <div className="pt-3 col-12">
-        <Prompt message="import.mapper.unsaved" />
+        <Prompt message={formatMessage({ id: getTrad('import.mapper.unsaved')})} />
         <Row>
-          <h2>Map the Import Data to Destination Field</h2>
+          <h2>{formatMessage({ id: getTrad('import.mapper.label')})}</h2>
           <MappingTable
             mappingHeaders={headers}
             mappingRows={importItems}
@@ -143,13 +150,13 @@ function DataMapper({ analysis, target, onImport }) {
           />
         </Row>
         <Row>
-          <span className="mr-3">Count of Items to Import:</span>
+          <span className="mr-3">{formatMessage({ id: getTrad('import.mapper.count')})}</span>
           <strong>{kind === "singleType" ? 1 : importItems.length}</strong>
         </Row>
         {options.draftAndPublish && (
           <Row>
             <Checkbox
-              message="Upload as Draft"
+              message={formatMessage({ id: getTrad('import.mapper.checkbox.draft')})}
               name="uploadAsDraft"
               value={uploadAsDraft}
               onChange={() => setUploadAsDraft(!uploadAsDraft)}
@@ -157,10 +164,10 @@ function DataMapper({ analysis, target, onImport }) {
           </Row>
         )}
         <Row>
-          <Button label="Import Data" onClick={uploadData} />
+          <Button label={formatMessage({ id: getTrad('import.mapper.button.import')})} onClick={uploadData} />
           <Button
             className="ml-3"
-            label="Cancel"
+            label={formatMessage({ id: getTrad('import.mapper.button.cancel')})}
             color="delete"
             onClick={() => onImport()}
           />
