@@ -1,5 +1,5 @@
 import React from "react";
-import { getMediaFormat } from "../../utils/mediaFormat";
+import { getMediaFormat } from "../../../utils/mediaFormat";
 
 function MediaPreview({ url, ...oterProps }) {
   const { type, format } = getMediaFormat(url);
