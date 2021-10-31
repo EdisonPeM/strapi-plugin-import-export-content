@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 import { Label } from "@buffetjs/core";
 import { SelectWarning } from "../../common";
-import FormatIcon from "../../FormatIcon";
+import FormatIcon from "./FormatIcon";
 
 function TableHeader({ headers, headersSelectOptions, onChangeSelect }) {
   return (
