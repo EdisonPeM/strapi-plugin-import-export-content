@@ -4,15 +4,15 @@ import { HeaderNav, PluginHeader } from "strapi-helper-plugin";
 import useTrads from "../../hooks/useTrads";
 
 function Layout({ navLinks, children }) {
-  const formatMessage = useTrads();
+  const t = useTrads();
 
   return (
-    <div className="container-fluid" style={{ padding: "18px 30px" }}>
+    <div className="container-fluid py-4 px-5">
       <PluginHeader
-        title={formatMessage("plugin.name")}
-        description={formatMessage("plugin.description")}
+        title={t("plugin.name")}
+        description={t("plugin.description")}
       />
-      <HeaderNav links={navLinks} style={{ marginTop: "4.4rem" }} />
+      <HeaderNav links={navLinks} />
       <div className="row">{children}</div>
     </div>
   );

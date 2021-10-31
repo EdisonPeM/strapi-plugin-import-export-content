@@ -2,10 +2,10 @@ import React, { memo } from "react";
 import PropTypes from "prop-types";
 import { Wrapper, Sub } from "./styles";
 
-function Block({ children, description, style, title }) {
+function Block({ title, description, children }) {
   return (
     <div className="col-12">
-      <Wrapper style={style}>
+      <Wrapper>
         <Sub>
           {!!title && <p>{title} </p>} {!!description && <p>{description} </p>}
         </Sub>
@@ -28,4 +28,5 @@ Block.propTypes = {
   style: PropTypes.object,
   title: PropTypes.string,
 };
+
 export default memo(Block);
