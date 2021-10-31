@@ -12,7 +12,11 @@ import DataMapper from "../../components/ImportPage/DataMapper";
 
 import useTrads from "../../hooks/useTrads";
 import usePluginRequest from "../../hooks/usePluginRequest";
-import { successNotify, warningNotify } from "../../utils/notifications";
+import {
+  infoNotify,
+  successNotify,
+  warningNotify,
+} from "../../utils/notifications";
 
 function ImportPage() {
   const t = useTrads();
@@ -46,12 +50,12 @@ function ImportPage() {
   } = usePluginRequest();
   const uploadData = async ({ fields, items, asDraft }) => {
     try {
-      const messages = await sendToImport({
+      const { message } = await sendToImport({
         url: "import",
         body: { target, fields, items, asDraft },
       });
 
-      successNotify(messages);
+      infoNotify(message);
     } catch (error) {
       warningNotify(t(`import.items.error`));
     }
@@ -66,7 +70,7 @@ function ImportPage() {
         <AnalizerForm onSubmit={analizeImports} />
       ) : (
         <DataMapper
-          analysis={analysis}
+          analysis={analysis.data}
           target={target}
           onSubmit={uploadData}
           onFail={() => setTarget(null)}

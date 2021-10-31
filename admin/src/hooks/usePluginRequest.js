@@ -12,7 +12,7 @@ function usePluginRequest() {
   const sendData = async ({ url, body = {} }) => {
     try {
       setState((prevState) => ({ ...prevState, loading: true }));
-      const { data } = await request(`/${pluginId}/${url}`, {
+      const data = await request(`/${pluginId}/${url}`, {
         method: "POST",
         body,
       });
