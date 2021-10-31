@@ -50,12 +50,13 @@ function ImportPage() {
   } = usePluginRequest();
   const uploadData = async ({ fields, items, asDraft }) => {
     try {
-      const { message } = await sendToImport({
+      const { message, succesfully } = await sendToImport({
         url: "import",
         body: { target, fields, items, asDraft },
       });
 
-      infoNotify(message);
+      if (succesfully) infoNotify(message);
+      else warningNotify(message);
     } catch (error) {
       warningNotify(t(`import.items.error`));
     }
