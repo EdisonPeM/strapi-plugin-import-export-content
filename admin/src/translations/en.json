@@ -8,6 +8,7 @@
   "import.source": "Import Source",
   "import.source.upload": "Upload File",
   "import.source.raw": "Raw Text",
+  "import.source.unsaved": "Are you sure you want to leave this page? The data entered will de deleted",
   "import.destination": "Import Destination",
   "import.destination.empty": "You have not selected an import destination",
   "import.file.remove": "Remove File",

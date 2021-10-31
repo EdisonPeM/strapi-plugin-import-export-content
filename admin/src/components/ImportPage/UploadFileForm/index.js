@@ -40,6 +40,7 @@ function UploadFileForm({ onSubmit }) {
 
   return (
     <form className="col-12" onSubmit={handleSubmit}>
+      {data !== "" && <Prompt message={t("import.source.unsaved")} />}
       <Row>
         {file ? (
           <DataViewer data={data} type={file.type} />

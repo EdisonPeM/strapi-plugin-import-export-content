@@ -8,6 +8,7 @@
   "import.source": "Fuente de Importación",
   "import.source.upload": "Subir un Archivo",
   "import.source.raw": "Texto Plano",
+  "import.source.unsaved": "¿Está seguro de que quiere abandonar esta página? Los datos ingresados serán eliminados",
   "import.destination": "Destino de la Importación",
   "import.destination.empty": "No ha seleccionado un destino de importación",
   "import.file.remove": "Eliminar Archivo",
