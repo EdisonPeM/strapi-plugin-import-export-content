@@ -1,16 +1,17 @@
 import React, { useState, memo } from "react";
 import PropTypes from "prop-types";
+import { Prompt } from "react-router-dom";
 
 import { EditorWrapper } from "./styles";
 import Editor from "react-simple-code-editor";
 
 import { Label, Select, Button } from "@buffetjs/core";
-import { Row } from "../../components/common";
+import { Row } from "../../common";
 
-import FORMATS from "../../constants/formats";
-import highlight from "../../utils/highlight";
+import FORMATS from "../../../constants/formats";
+import highlight from "../../../utils/highlight";
 
-import useTrads from "../../hooks/useTrads";
+import useTrads from "../../../hooks/useTrads";
 
 const fortmatsOptions = FORMATS.map(({ name, mimeType }) => ({
   label: name,
@@ -18,7 +19,7 @@ const fortmatsOptions = FORMATS.map(({ name, mimeType }) => ({
 }));
 
 function RawInputForm({ onSubmit }) {
-  const formatMessage = useTrads();
+  const t = useTrads();
   const [rawText, setRawText] = useState("");
   const [rawFormat, setRawFormat] = useState(FORMATS[0].mimeType || "");
 
@@ -33,10 +34,7 @@ function RawInputForm({ onSubmit }) {
   return (
     <form className="col-12" onSubmit={handleSubmit}>
       <Row>
-        <Label
-          message={formatMessage("import.raw.format")}
-          htmlFor="dataFormats"
-        />
+        <Label message={t("import.raw.format")} htmlFor="dataFormats" />
         <Select
           name="dataFormats"
           options={fortmatsOptions}
@@ -58,7 +56,7 @@ function RawInputForm({ onSubmit }) {
       <Row>
         <Button
           type="submit"
-          label={formatMessage("import.analyze")}
+          label={t("import.analyze")}
           disabled={rawText === ""}
         />
       </Row>

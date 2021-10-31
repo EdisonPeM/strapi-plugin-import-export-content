@@ -1,18 +1,19 @@
 import React, { useState, memo } from "react";
 import PropTypes from "prop-types";
-
-import DropFileZone from "../DropFileZone";
-import DataViewer from "../DataViewer";
+import { Prompt } from "react-router-dom";
 
 import { Button } from "@buffetjs/core";
-import { Row } from "../common";
+import { Row } from "../../common";
+import DropFileZone from "../DropFileZone";
+import DataViewer from "../../DataViewer";
 
-import FORMATS from "../../constants/formats";
-import readFileContent from "../../utils/readFileContent";
-import useTrads from "../../hooks/useTrads";
+import useTrads from "../../../hooks/useTrads";
+import readFileContent from "../../../utils/readFileContent";
+import FORMATS from "../../../constants/formats";
+import { warningNotify } from "../../../utils/notifications";
 
 function UploadFileForm({ onSubmit }) {
-  const formatMessage = useTrads();
+  const t = useTrads();
   const [file, setFile] = useState(null);
   const [data, setData] = useState("");
 
@@ -22,10 +23,7 @@ function UploadFileForm({ onSubmit }) {
       setData(content);
       setFile(file);
     } catch (err) {
-      strapi.notification.toggle({
-        type: "warning",
-        message: formatMessage("import.file.content.error"),
-      });
+      warningNotify(t("import.file.content.error"));
     }
   };
 
@@ -50,25 +48,20 @@ function UploadFileForm({ onSubmit }) {
             acceptMimeTypes={FORMATS.map(({ mimeType }) => mimeType)}
             acceptFilesTypes={FORMATS.map(({ ext }) => ext)}
             onUploadFile={handleFileUpload}
-            onUploadError={() =>
-              strapi.notification.toggle({
-                type: "warning",
-                message: formatMessage("import.file.type.error"),
-              })
-            }
+            onUploadError={() => warningNotify(t("import.file.type.error"))}
           />
         )}
       </Row>
       <Row>
         <Button
           type="submit"
-          label={formatMessage("import.analyze")}
+          label={t("import.analyze")}
           color={file ? "primary" : "cancel"}
           disabled={!file}
         />
         <Button
           className="ml-3"
-          label={formatMessage("import.file.remove")}
+          label={t("import.file.remove")}
           color="delete"
           onClick={removeFile}
           disabled={!file}
