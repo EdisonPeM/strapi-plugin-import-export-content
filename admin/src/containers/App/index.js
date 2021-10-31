@@ -14,7 +14,7 @@ import pluginId from "../../pluginId";
 import ImportPage from "../ImportPage";
 import ExportPage from "../ExportPage";
 
-import useContentTypes from "../../hooks/useContentTypes";
+import { ContentTypesProviver } from "../../context/contentTypes";
 
 import "../../assets/prismjs.css";
 
@@ -31,21 +31,22 @@ const navLinks = [
 ];
 
 function App() {
-  const userContentTypes = useContentTypes();
   return (
     <Layout navLinks={navLinks}>
-      <Switch>
-        <Route path={pathTo("import")}>
-          <ImportPage contentTypes={userContentTypes} />
-        </Route>
-        <Route path={pathTo("export")}>
-          <ExportPage contentTypes={userContentTypes} />
-        </Route>
-        <Route>
-          {/* Default Route Return to Import Page */}
-          <Redirect to={pathTo("import")} />
-        </Route>
-      </Switch>
+      <ContentTypesProviver>
+        <Switch>
+          <Route path={pathTo("import")}>
+            <ImportPage />
+          </Route>
+          <Route path={pathTo("export")}>
+            <ExportPage />
+          </Route>
+          <Route>
+            {/* Default Route Return to Import Page */}
+            <Redirect to={pathTo("import")} />
+          </Route>
+        </Switch>
+      </ContentTypesProviver>
     </Layout>
   );
 }

@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import React, { createContext, useState, useEffect, useContext } from "react";
 import { request, UserContext, hasPermissions } from "strapi-helper-plugin";
 
 const permissions = ({ uid }) =>
@@ -7,7 +7,16 @@ const permissions = ({ uid }) =>
     subject: uid,
   }));
 
-function useContentTypes() {
+// Context
+export const ContentTypesCtx = createContext([]);
+
+// Hook to acces the context
+export function useContextTypeCtx() {
+  return useContext(ContentTypesCtx);
+}
+
+// Provider of the context
+export function ContentTypesProviver({ children }) {
   const [contentTypes, setContentTypes] = useState([]);
   const userContextData = useContext(UserContext);
   const userPermissions = userContextData.userPermissions || userContextData;
@@ -44,7 +53,9 @@ function useContentTypes() {
     fetchContentTypes();
   }, [userPermissions]);
 
-  return contentTypes;
+  return (
+    <ContentTypesCtx.Provider value={contentTypes}>
+      {children}
+    </ContentTypesCtx.Provider>
+  );
 }
-
-export default useContentTypes;
