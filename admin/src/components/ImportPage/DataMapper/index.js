@@ -30,13 +30,13 @@ function DataMapper({ analysis, target, onSubmit, onFail }) {
   const [mappedFields, setMappedFields] = useState(() => {
     const fields = {};
     Object.keys(fieldsInfo).forEach((field) => {
-      const { format } = fieldsInfo[field];
+      const formats = fieldsInfo[field];
       const targetField = filteredAttributes.includes(field) ? field : "none";
       const targetFormat = attributes[targetField]
         ? attributes[targetField].type
         : null;
 
-      fields[field] = { format, targetField, targetFormat };
+      fields[field] = { formats, targetField, targetFormat };
     });
     return fields;
   });
@@ -46,7 +46,7 @@ function DataMapper({ analysis, target, onSubmit, onFail }) {
     () =>
       Object.keys(mappedFields).map((field) => ({
         name: field,
-        format: mappedFields[field].format,
+        formats: mappedFields[field].formats,
         value: mappedFields[field].targetField,
       })),
     [mappedFields]

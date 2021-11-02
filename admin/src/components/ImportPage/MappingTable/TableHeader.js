@@ -9,11 +9,15 @@ function TableHeader({ headers, headersSelectOptions, onChangeSelect }) {
   return (
     <thead>
       <tr>
-        {headers.map(({ name, format }) => (
+        {headers.map(({ name, formats }) => (
           <th key={name}>
             <span className="mr-3">{name}</span>
-            <span title={`${format} format`}>
-              <FormatIcon format={format} />
+            <span title={`${formats} format`} style={{ cursor: "help" }}>
+              {formats.length > 1 ? (
+                <FormatIcon format={"mixed"} />
+              ) : (
+                <FormatIcon format={formats[0]} />
+              )}
             </span>
           </th>
         ))}

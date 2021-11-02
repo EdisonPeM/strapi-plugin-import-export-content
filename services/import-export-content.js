@@ -22,9 +22,9 @@ const { getData } = require("./exporter");
 module.exports = {
   preAnalyzeContent: (ctx) => {
     const { data, type } = ctx.request.body;
-    const items = getItemsFromContent({ data, type });
-    const fieldsInfo = analyze(items);
-    return { fieldsInfo, parsedData: items };
+    const parsedData = getItemsFromContent({ data, type });
+    const fieldsInfo = analyze(parsedData);
+    return { fieldsInfo, parsedData };
   },
 
   importItems: async (ctx) => {

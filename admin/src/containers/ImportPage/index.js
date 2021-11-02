@@ -73,7 +73,7 @@ function ImportPage() {
         <AnalizerForm onSubmit={analizeImports} />
       ) : (
         <DataMapper
-          analysis={analysis.data}
+          analysis={analysis}
           target={target}
           onSubmit={uploadData}
           onFail={removeTarget}

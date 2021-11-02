@@ -1,40 +1,27 @@
-const {
-  getFieldsFromItems,
-  getFormatFromField,
-} = require("./utils/fieldUtils");
+const { getFormatFromField } = require("./utils/fieldUtils");
 
-function analyze(items) {
+function analyze(items = []) {
   const fieldsFormats = {};
-  const fieldNames = getFieldsFromItems(items);
-  fieldNames.forEach((fieldName) => (fieldsFormats[fieldName] = []));
 
   items.forEach((item) => {
-    fieldNames.forEach((fieldName) => {
-      const fieldData = item[fieldName];
+    Object.keys(item).forEach((fieldName) => {
+      const data = item[fieldName];
+      const format = getFormatFromField(data);
+      const fieldFormats = fieldsFormats[fieldName];
 
-      // Get format from valid data
-      if (fieldData !== null && fieldData !== undefined) {
-        const fieldFormat = getFormatFromField(fieldData);
-        fieldsFormats[fieldName].push(fieldFormat);
+      // If no array exists for this fieldName, then it is created
+      if (!fieldFormats) {
+        fieldsFormats[fieldName] = [format];
+
+        // If the fieldsFormats array exists for this fieldName,
+        // and does not include this format then it is added
+      } else if (!fieldFormats.includes(format)) {
+        fieldsFormats[fieldName] = fieldFormats.concat(format);
       }
     });
   });
 
-  const fieldsInfo = {};
-  Object.keys(fieldsFormats).map((fieldName) => {
-    const fieldFormats = fieldsFormats[fieldName].map((value) =>
-      value === "text" ? "string" : value
-    );
-    const uniqueFormats = new Set(fieldFormats);
-    const format = uniqueFormats.size > 1 ? "mixed" : [...uniqueFormats][0];
-
-    fieldsInfo[fieldName] = {
-      count: fieldFormats.length,
-      format,
-    };
-  });
-
-  return fieldsInfo;
+  return fieldsFormats;
 }
 
 module.exports = { analyze };

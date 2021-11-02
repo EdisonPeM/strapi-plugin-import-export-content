@@ -35,8 +35,8 @@ module.exports = {
 
     try {
       const service = getService();
-      const data = await service.preAnalyzeContent(ctx);
-      ctx.send({ data, message: "ok" });
+      const { fieldsInfo, parsedData } = await service.preAnalyzeContent(ctx);
+      ctx.send({ fieldsInfo, parsedData, message: "ok" });
     } catch (error) {
       console.error(error);
       ctx.throw(406, `could not parse: ${error}`);
