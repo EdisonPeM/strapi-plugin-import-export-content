@@ -21,6 +21,7 @@ import {
 function ImportPage() {
   const t = useTrads();
   const [target, setTarget] = useState(null);
+  const removeTarget = () => setTarget(null);
 
   // Analysis
   const {
@@ -55,13 +56,14 @@ function ImportPage() {
         body: { target, fields, items, asDraft },
       });
 
+      // TODO: Use internationalization messages t('key.subkey')
       if (succesfully) infoNotify(message);
       else warningNotify(message);
     } catch (error) {
       warningNotify(t(`import.items.error`));
     }
 
-    setTarget(null);
+    removeTarget();
   };
 
   return (
@@ -74,7 +76,7 @@ function ImportPage() {
           analysis={analysis.data}
           target={target}
           onSubmit={uploadData}
-          onFail={() => setTarget(null)}
+          onFail={removeTarget}
         />
       )}
     </Block>

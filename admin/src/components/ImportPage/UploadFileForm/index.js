@@ -28,7 +28,7 @@ function UploadFileForm({ onSubmit }) {
   };
 
   const removeFile = () => {
-    setData(null);
+    setData("");
     setFile(null);
   };
 
@@ -40,7 +40,7 @@ function UploadFileForm({ onSubmit }) {
 
   return (
     <form className="col-12" onSubmit={handleSubmit}>
-      {data !== "" && <Prompt message={t("import.source.unsaved")} />}
+      <Prompt when={data} message={t("import.source.unsaved")} />
       <Row>
         {file ? (
           <DataViewer data={data} type={file.type} />

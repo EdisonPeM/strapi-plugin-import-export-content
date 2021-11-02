@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 
 import { Label, Select } from "@buffetjs/core";
@@ -11,30 +11,22 @@ import { useContextTypeCtx } from "../../../context/contentTypes";
 import useTrads from "../../../hooks/useTrads";
 
 import { warningNotify } from "../../../utils/notifications";
+import { MapContentTypes } from "../../../utils/contentTypes";
 
 function AnalizerForm({ onSubmit }) {
   const t = useTrads();
   const contentTypes = useContextTypeCtx();
 
   const [importSource, setImportSource] = useState("upload");
-  const importSourcesOptions = useMemo(
-    () => [
-      { label: t("import.source.upload"), value: "upload" },
-      { label: t("import.source.raw"), value: "raw" },
-    ],
-    []
-  );
+  const importSourcesOptions = [
+    { label: t("import.source.upload"), value: "upload" },
+    { label: t("import.source.raw"), value: "raw" },
+  ];
 
   const [importDest, setImportDest] = useState("");
-  const importDestOptions = useMemo(
-    () =>
-      [{ label: "Select Destination", value: "" }].concat(
-        contentTypes.map(({ uid, info, apiID }) => ({
-          label: info.label || apiID,
-          value: uid,
-        }))
-      ),
-    [contentTypes]
+  const importDestOptions = MapContentTypes(
+    t("import.destination.select"),
+    contentTypes
   );
 
   const [destEmpty, setDestEmpty] = useState(false);

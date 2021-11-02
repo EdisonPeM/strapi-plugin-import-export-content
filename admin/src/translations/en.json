@@ -10,6 +10,7 @@
   "import.source.raw": "Raw Text",
   "import.source.unsaved": "Are you sure you want to leave this page? The data entered will de deleted",
   "import.destination": "Import Destination",
+  "import.destination.select": "Select Destination",
   "import.destination.empty": "You have not selected an import destination",
   "import.file.remove": "Remove File",
   "import.file.content.error": "An error occurred while reading the file",
