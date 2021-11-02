@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { Prompt } from "react-router-dom";
 
 import { Button } from "@buffetjs/core";
-import { Row } from "../../common";
+import { Loader, Row } from "../../common";
 import DropFileZone from "../DropFileZone";
 import DataViewer from "../../DataViewer";
 
@@ -16,15 +16,19 @@ function UploadFileForm({ onSubmit }) {
   const t = useTrads();
   const [file, setFile] = useState(null);
   const [data, setData] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleFileUpload = async (file) => {
     try {
+      setIsLoading(true);
       const content = await readFileContent(file);
       setData(content);
       setFile(file);
     } catch (err) {
       warningNotify(t("import.file.content.error"));
     }
+
+    setIsLoading(false);
   };
 
   const removeFile = () => {
@@ -39,8 +43,9 @@ function UploadFileForm({ onSubmit }) {
   };
 
   return (
-    <form className="col-12" onSubmit={handleSubmit}>
-      <Prompt when={data} message={t("import.source.unsaved")} />
+    <form className="col-12 position-static" onSubmit={handleSubmit}>
+      {isLoading && <Loader />}
+      <Prompt when={!!data} message={t("import.source.unsaved")} />
       <Row>
         {file ? (
           <DataViewer data={data} type={file.type} />

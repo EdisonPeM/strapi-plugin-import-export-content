@@ -1,20 +1,33 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { Code } from "./styles";
 
 import formatFileContent from "../../utils/formatFileContent";
 import highlight from "../../utils/highlight";
+import { Loader } from "../common";
 
 function DataViewer({ data, type }) {
-  const content = formatFileContent({
-    content: data,
-    mimeType: type,
-  });
+  const [innerHTML, setInnerHTML] = useState("");
 
-  const __html = highlight(content, type);
+  useEffect(() => {
+    if (!data) return;
+    setTimeout(() => {
+      const content = formatFileContent({
+        content: data,
+        mimeType: type,
+      });
+
+      const __html = highlight(content, type);
+      setInnerHTML(__html);
+
+      // Set time to show the loader
+    }, 50);
+  }, [data, type]);
+
   return (
     <Code>
-      <div dangerouslySetInnerHTML={{ __html }} />
+      {!innerHTML && <Loader />}
+      <div dangerouslySetInnerHTML={{ __html: innerHTML }} />
     </Code>
   );
 }
