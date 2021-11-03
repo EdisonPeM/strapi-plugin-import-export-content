@@ -8,6 +8,7 @@ import TableBody from "./TableBody";
 function MappingTable({
   mappingHeaders,
   mappingRows,
+  mappingRowsHeaders,
   headersMappingOptions,
   onChangeMapping,
   onDeleteRow,
@@ -23,7 +24,7 @@ function MappingTable({
         />
         <TableBody
           rows={mappingRows}
-          headers={mappingHeaders}
+          headers={mappingRowsHeaders}
           onDeleteItem={onDeleteRow}
           onlyFistRow={onlyFistRow}
         />
@@ -35,6 +36,7 @@ function MappingTable({
 MappingTable.defaultProps = {
   mappingHeaders: [],
   mappingRows: [],
+  mappingRowsHeaders: [],
   headersMappingOptions: [],
   onChangeMapping: () => {},
   onDeleteRow: () => {},
@@ -44,6 +46,7 @@ MappingTable.defaultProps = {
 MappingTable.propTypes = {
   mappingHeaders: PropTypes.array,
   mappingRows: PropTypes.array,
+  mappingRowsHeaders: PropTypes.array,
   headersMappingOptions: PropTypes.array,
   onChangeMapping: PropTypes.func,
   onDeleteRow: PropTypes.func,

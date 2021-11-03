@@ -41,6 +41,7 @@ const TableWrapper = styled.div`
         cursor: pointer;
 
         &:hover {
+          color: red;
           opacity: 1;
         }
       }

@@ -12,7 +12,7 @@ function TableBody({ rows, headers, onDeleteItem, onlyFistRow }) {
     <tbody className={onlyFistRow ? "fist-row-selected" : ""}>
       {rows.map((row, i) => (
         <tr key={i}>
-          {headers.map(({ name }, j) => {
+          {headers.map((name, j) => {
             const cell = row[name];
 
             if (cell === undefined || cell === null) return <td key={j}>-</td>;

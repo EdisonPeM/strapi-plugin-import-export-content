@@ -76,7 +76,7 @@ function ImportPage() {
           analysis={analysis}
           target={target}
           onSubmit={uploadData}
-          onFail={removeTarget}
+          onCancel={removeTarget}
         />
       )}
     </Block>

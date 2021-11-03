@@ -33,7 +33,7 @@ function RawInputForm({ onSubmit }) {
 
   return (
     <form className="col-12" onSubmit={handleSubmit}>
-      <Prompt when={rawText} message={t("import.source.unsaved")} />
+      <Prompt when={!!rawText} message={t("import.source.unsaved")} />
       <Row>
         <Label message={t("import.raw.format")} htmlFor="dataFormats" />
         <Select

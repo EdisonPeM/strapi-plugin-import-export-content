@@ -17,17 +17,14 @@ import { SINGLE_TYPE } from "../../../constants/contentTypes";
 
 function DataMapper({ analysis, target, onSubmit, onCancel }) {
   const t = useTrads();
-  const hasDraftAndPublish = useMemo(
-    () => !!target?.options?.draftAndPublish,
-    [target]
-  );
-
+  const hasDraftAndPublish = !!target?.options?.draftAndPublish;
   const isSingleType = useMemo(() => target?.kind === SINGLE_TYPE, [target]);
   const initialState = useMemo(
     () => getInitialState(analysis, target),
     [analysis, target]
   );
 
+  // Complex-Multiple State
   const [{ asDraft, items, fields, mapFields, fieldsMapping }, dispatch] =
     useReducer(reducer, initialState);
 
