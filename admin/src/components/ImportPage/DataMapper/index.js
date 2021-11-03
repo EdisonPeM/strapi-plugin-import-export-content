@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from "react";
+import React, { useReducer, useMemo, useCallback } from "react";
 import PropTypes from "prop-types";
 import { Prompt } from "react-router-dom";
 
@@ -7,96 +7,56 @@ import { Row } from "../../common";
 import MappingTable from "../MappingTable";
 
 import useTrads from "../../../hooks/useTrads";
+import reducer from "./reducer";
+import { getInitialState } from "./state";
+import { changeFieldTarget, removeItem, toggleAsDraft } from "./actions";
 
+import { MapHeaders, MapOptions } from "./utils";
 import { warningNotify } from "../../../utils/notifications";
+import { SINGLE_TYPE } from "../../../constants/contentTypes";
 
-const filterIgnoreFields = (fieldName) =>
-  !["id", "created_by", "updated_by"].includes(fieldName);
-
-function DataMapper({ analysis, target, onSubmit, onFail }) {
+function DataMapper({ analysis, target, onSubmit, onCancel }) {
   const t = useTrads();
-
-  const { fieldsInfo, parsedData } = analysis;
-  const { kind, attributes, options } = target;
-
-  const isSingleType = kind === "singleType";
-  const [uploadAsDraft, setUploadAsDraft] = useState(options.draftAndPublish);
-
-  const filteredAttributes = useMemo(
-    () => Object.keys(attributes).filter(filterIgnoreFields),
-    [attributes]
+  const hasDraftAndPublish = useMemo(
+    () => !!target?.options?.draftAndPublish,
+    [target]
   );
 
-  const [mappedFields, setMappedFields] = useState(() => {
-    const fields = {};
-    Object.keys(fieldsInfo).forEach((field) => {
-      const formats = fieldsInfo[field];
-      const targetField = filteredAttributes.includes(field) ? field : "none";
-      const targetFormat = attributes[targetField]
-        ? attributes[targetField].type
-        : null;
-
-      fields[field] = { formats, targetField, targetFormat };
-    });
-    return fields;
-  });
-
-  // Mapping Table Headers
-  const headers = useMemo(
-    () =>
-      Object.keys(mappedFields).map((field) => ({
-        name: field,
-        formats: mappedFields[field].formats,
-        value: mappedFields[field].targetField,
-      })),
-    [mappedFields]
+  const isSingleType = useMemo(() => target?.kind === SINGLE_TYPE, [target]);
+  const initialState = useMemo(
+    () => getInitialState(analysis, target),
+    [analysis, target]
   );
 
-  // Options to Map
-  const destinationOptions = useMemo(
-    () =>
-      [{ label: "None", value: "none" }].concat(
-        filteredAttributes.map((field) => ({ label: field, value: field }))
-      ),
-    [filteredAttributes]
-  );
+  const [{ asDraft, items, fields, mapFields, fieldsMapping }, dispatch] =
+    useReducer(reducer, initialState);
 
-  // Handler Mapping
-  const selectDestinationField = useCallback(
-    (source) =>
-      ({ target: { value } }) => {
-        setMappedFields((fields) => ({
-          ...fields,
-          [source]: {
-            ...fields[source],
-            targetField: value,
-            targetFormat: value !== "none" ? attributes[value].type : undefined,
-          },
-        }));
-      },
-    [attributes]
-  );
-
-  // Mapping Table Rows
-  const [importItems, setImportItems] = useState(parsedData);
+  // Mapping Table Handlers
+  const handleToggleAsDraft = () => dispatch(toggleAsDraft());
   const deleteItem = useCallback(
-    (deleteItem) => () =>
-      setImportItems((items) => items.filter((item) => item !== deleteItem))
+    (deletedItem) => () => dispatch(removeItem(deletedItem)),
+    []
   );
+  const selectDestinationField = useCallback(
+    (field) =>
+      ({ target: { value } }) =>
+        dispatch(changeFieldTarget(field, value)),
+    []
+  );
+
+  // Mapping Table Constants
+  const headers = useMemo(() => MapHeaders(fieldsMapping), [fieldsMapping]);
+  const options = useMemo(() => MapOptions(fields), [fields]);
 
   // Upload Data
   const uploadData = async () => {
     // Prevent Upload Empty Data;
-    if (importItems.length === 0) {
+    if (items.length === 0) {
       warningNotify(t("import.items.empty"));
-      return onFail();
+      return onCancel();
     }
 
-    onSubmit({
-      fields: mappedFields,
-      items: importItems,
-      asDraft: uploadAsDraft,
-    });
+    onSubmit({ items, fields: fieldsMapping, asDraft });
   };
 
   return (
@@ -106,9 +66,9 @@ function DataMapper({ analysis, target, onSubmit, onFail }) {
         <h3>{t("import.mapper.title")}</h3>
         <MappingTable
           mappingHeaders={headers}
-          mappingRows={importItems}
-          mappingRowsHeaders={importItems}
-          headersMappingOptions={destinationOptions}
+          mappingRows={items}
+          mappingRowsHeaders={mapFields}
+          headersMappingOptions={options}
           onChangeMapping={selectDestinationField}
           onDeleteRow={deleteItem}
           onlyFistRow={isSingleType}
@@ -116,16 +76,15 @@ function DataMapper({ analysis, target, onSubmit, onFail }) {
       </Row>
       <Row>
         <span className="mr-3">{t("import.mapper.count")}:</span>
-        <strong>{kind === "singleType" ? 1 : importItems.length}</strong>
+        <strong>{isSingleType ? 1 : items.length}</strong>
       </Row>
-      {options.draftAndPublish && (
+      {hasDraftAndPublish && (
         <Row>
           <Checkbox
-            // Change the message from "upload as draft" to "upload and publish"
             message={t("import.mapper.publish")}
             name="uploadAsDraft"
-            value={!uploadAsDraft}
-            onChange={() => setUploadAsDraft(!uploadAsDraft)}
+            value={!asDraft}
+            onChange={handleToggleAsDraft}
           />
         </Row>
       )}
@@ -135,7 +94,7 @@ function DataMapper({ analysis, target, onSubmit, onFail }) {
           className="ml-3"
           label={t("import.mapper.cancel")}
           color="delete"
-          onClick={() => onFail()}
+          onClick={onCancel}
         />
       </Row>
     </div>
@@ -146,14 +105,14 @@ DataMapper.defaultProps = {
   analysis: {},
   target: {},
   onSubmit: () => {},
-  onFail: () => {},
+  onCancel: () => {},
 };
 
 DataMapper.propTypes = {
   analysis: PropTypes.any,
   target: PropTypes.any,
   onSubmit: PropTypes.func,
-  onFail: PropTypes.func,
+  onCancel: PropTypes.func,
 };
 
 export default DataMapper;
