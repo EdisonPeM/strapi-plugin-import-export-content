@@ -49,11 +49,11 @@ function ImportPage() {
     loading: isImportingLoading,
     sendData: sendToImport,
   } = usePluginRequest();
-  const uploadData = async ({ fields, items, asDraft }) => {
+  const uploadData = async ({ items, fieldsMapping, asDraft }) => {
     try {
       const { message, succesfully } = await sendToImport({
         url: "import",
-        body: { target, fields, items, asDraft },
+        body: { target, items, fieldsMapping, asDraft },
       });
 
       // TODO: Use internationalization messages t('key.subkey')

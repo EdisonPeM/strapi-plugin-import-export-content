@@ -53,7 +53,7 @@ function DataMapper({ analysis, target, onSubmit, onCancel }) {
       return onCancel();
     }
 
-    onSubmit({ items, fields: fieldsMapping, asDraft });
+    onSubmit({ items, fieldsMapping, asDraft });
   };
 
   return (
