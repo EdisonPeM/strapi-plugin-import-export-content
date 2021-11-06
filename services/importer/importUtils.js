@@ -1,3 +1,5 @@
+const { ATTRIBUTES } = require("../../constants/contentTypes");
+
 const importToCollectionType = async (uid, item) => {
   try {
     await strapi.entityService.create({ data: item }, { model: uid });
@@ -13,7 +15,7 @@ const importToSingleType = async (uid, item) => {
     const existing = await strapi.query(uid).find({});
     if (existing.length > 0) {
       const { id } = existing[0];
-      delete item.created_by;
+      delete item[ATTRIBUTES.CREATED_BY];
       await strapi.query(uid).update({ id }, item);
     } else {
       strapi.query(uid).create(item);

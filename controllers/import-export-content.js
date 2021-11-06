@@ -52,8 +52,8 @@ module.exports = {
 
     const { userAbility } = ctx.state;
     if (
-      userAbility.cannot(PERMISSIONS.create, target.uid) &&
-      userAbility.cannot(PERMISSIONS.update, target.uid)
+      userAbility.cannot(PERMISSIONS.CREATE, target.uid) &&
+      userAbility.cannot(PERMISSIONS.UPDATE, target.uid)
     ) {
       return ctx.forbidden();
     }
@@ -84,7 +84,7 @@ module.exports = {
     }
 
     const { userAbility } = ctx.state;
-    if (userAbility.cannot(PERMISSIONS.read, target.uid)) {
+    if (userAbility.cannot(PERMISSIONS.READ, target.uid)) {
       return ctx.forbidden();
     }
 
