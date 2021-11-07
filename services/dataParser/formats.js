@@ -1,3 +1,4 @@
+const { BOOLEAN_VALUES } = require("./constants");
 const types = require("./types");
 
 // formats
@@ -14,17 +15,12 @@ function isNumber(value) {
   return false;
 }
 
-const booleanValues = {
-  trueValues: ["true", "t"],
-  falseValues: ["false", "f"],
-};
-
 function isBoolean(value) {
   if (typeof value === "boolean") return true;
   if (typeof value === "string") {
     return (
-      booleanValues.trueValues.includes(value.toLowerCase()) ||
-      booleanValues.falseValues.includes(value.toLowerCase())
+      BOOLEAN_VALUES.trueValues.includes(value.toLowerCase()) ||
+      BOOLEAN_VALUES.falseValues.includes(value.toLowerCase())
     );
   }
 
@@ -35,8 +31,8 @@ function isObject(value) {
   if (typeof value === "object") return true;
   if (typeof value === "string") {
     try {
-      JSON.parse(value);
-      return true;
+      const obj = JSON.parse(value);
+      return typeof obj === "object";
     } catch {
       return false;
     }
@@ -61,6 +57,7 @@ function isArray(value) {
 
 function isDate(value) {
   if (value instanceof Date) return isNumber(value);
+  if (typeof value === "number") return true; // Case of Miliseconds??
   if (typeof value === "string") {
     return types.isDate(value);
   }
