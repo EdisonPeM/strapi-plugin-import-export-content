@@ -14,15 +14,6 @@ function csvToJson(text) {
     delimiter: CSV.detect(text),
     columns: true,
     trim: true,
-
-    // Try to convert the format of the values
-    cast: (value) => {
-      if (value === "") return null;
-      else if (textIsNumber(value)) return textToNumber(value);
-      else if (textIsBoolean(value)) return textToBoolean(value);
-      else if (textIsObject(value)) return textToObject(value);
-      else return value;
-    },
   });
 }
 
