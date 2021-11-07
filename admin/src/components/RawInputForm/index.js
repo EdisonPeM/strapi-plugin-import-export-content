@@ -10,12 +10,17 @@ import { Row } from "../../components/common";
 import FORMATS from "../../constants/formats";
 import highlight from "../../utils/highlight";
 
+import { useGlobalContext } from "strapi-helper-plugin";
+import getTrad from '../../utils/getTrad';
+
 const fortmatsOptions = FORMATS.map(({ name, mimeType }) => ({
   label: name,
   value: mimeType,
 }));
 
 function RawInputForm({ onSubmit }) {
+  const { formatMessage } = useGlobalContext();
+
   const [rawText, setRawText] = useState("");
   const [rawFormat, setRawFormat] = useState(FORMATS[0].mimeType || "");
 
@@ -30,7 +35,7 @@ function RawInputForm({ onSubmit }) {
   return (
     <form className="col-12" onSubmit={handleSubmit}>
       <Row>
-        <Label message="Data Format" htmlFor="dataFormats" />
+        <Label message={formatMessage({ id: getTrad('import.raw.label.dataFormat')})} htmlFor="dataFormats" />
         <Select
           name="dataFormats"
           options={fortmatsOptions}
@@ -50,7 +55,7 @@ function RawInputForm({ onSubmit }) {
         </EditorWrapper>
       </Row>
       <Row>
-        <Button type="submit" label={"Analyze"} disabled={rawText === ""} />
+        <Button type="submit" label={formatMessage({ id: getTrad('import.raw.label.analyze')})} disabled={rawText === ""} />
       </Row>
     </form>
   );

@@ -19,10 +19,10 @@ async function copyClipboard(content) {
       await navigator.clipboard.writeText(content);
     } catch (err) {
       console.error("Failed to copy!", err);
-      return strapi.notification.toggle({
+      return {
         type: "warning",
-        message: "Copy to Clipboard Error",
-      });
+        id: "export.copy.error",
+      }
     }
   } else {
     const el = document.createElement("textarea");
@@ -31,10 +31,10 @@ async function copyClipboard(content) {
     document.execCommand("copy");
   }
 
-  strapi.notification.toggle({
+  return {
     type: "success",
-    message: "Content Copy to Clipboard",
-  });
+    id: "export.copy.success",
+  }
 }
 
 export { downloadFile, copyClipboard };

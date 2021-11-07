@@ -1,6 +1,6 @@
 const ignoreFields = {
   ids: ["id"],
-  timestamp: ["created_at", "updated_at", "published_at"],
+  timestamp: ["createdAt", "updatedAt", "publishedAt"],
   user: ["created_by", "updated_by"],
 };
 
@@ -58,6 +58,7 @@ function cleanFields(item, options, attributes) {
   if (item === null || item === undefined) return;
 
   const mappedItem = { ...item };
+  
   if (options.ids) {
     ignoreFields.ids.forEach((key) => {
       delete mappedItem[key];

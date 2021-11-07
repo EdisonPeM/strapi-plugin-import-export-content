@@ -2,26 +2,26 @@ const BASE_OPTIONS = [
   {
     name: "medias",
     type: "select",
-    label: "Select how medias will be exported.",
+    label: "export.options.medias",
     optionalValues: ["none", "ids", "url", "without-formats", "full"],
-    defaultValue: "full",
+    defaultValue: "none",
   },
   {
     name: "relations",
     type: "select",
-    label: "Select how relation will be exported.",
+    label: "export.options.relations",
     optionalValues: ["none", "ids", "full"],
-    defaultValue: "full",
+    defaultValue: "none",
   },
   {
     name: "ids",
-    label: "Remove Ids",
+    label: "export.options.ids",
     type: "boolean",
     defaultValue: false,
   },
   {
     name: "timestamp",
-    label: "Remove TimeStamps",
+    label: "export.options.timestamps",
     type: "boolean",
     defaultValue: false,
   }
