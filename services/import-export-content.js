@@ -9,13 +9,8 @@
 const { getItemsFromContent, getContentFromItems } = require("./contentParser");
 const { analyze } = require("./analyzer");
 
-const { mapFieldsToTargetFields } = require("./utils/fieldUtils");
-const { importContent } = require("./importer");
-const {
-  CREATED_BY_ATTRIBUTE,
-  UPDATED_BY_ATTRIBUTE,
-  PUBLISHED_AT_ATTRIBUTE,
-} = require("../constants/contentTypes");
+const { ATTRIBUTES } = require("../constants/contentTypes");
+const { mapAndImport } = require("./importer");
 
 const { getData } = require("./exporter");
 
@@ -29,23 +24,25 @@ module.exports = {
 
   importItems: async (ctx) => {
     const { user } = ctx.state;
-    const { target, fields, items, asDraft } = ctx.request.body;
+    const { target, items, fieldsMapping, asDraft } = ctx.request.body;
 
     const {
-      attributes,
       options: { draftAndPublish },
     } = target;
 
-    const mappedItems = await mapFieldsToTargetFields({
-      items,
-      fields,
-      attributes,
+    const PUBLISHED_AT = draftAndPublish && asDraft ? null : Date.now();
+    const otherFields = {
+      [ATTRIBUTES.CREATED_BY]: user.id,
+      [ATTRIBUTES.UPDATED_BY]: user.id,
+      [ATTRIBUTES.PUBLISHED_AT]: PUBLISHED_AT,
+    };
+
+    return mapAndImport({
       user,
-    });
-    return importContent(target, mappedItems, {
-      [CREATED_BY_ATTRIBUTE]: user,
-      [UPDATED_BY_ATTRIBUTE]: user,
-      [PUBLISHED_AT_ATTRIBUTE]: draftAndPublish && asDraft ? null : Date.now(),
+      target,
+      items,
+      fieldsMapping,
+      otherFields,
     });
   },
 

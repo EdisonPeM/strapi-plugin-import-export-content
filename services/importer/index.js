@@ -1,33 +1,33 @@
-const {
-  COLLECTION_TYPE,
-  SINGLE_TYPE,
-} = require("../../constants/contentTypes");
-const { importToCollectionType, importToSingleType } = require("./importUtils");
+const { getImporter } = require("./importUtils");
 
-function importContent(target, items, options) {
-  const { uid, kind } = target;
-  switch (kind) {
-    case COLLECTION_TYPE:
-      return Promise.all(
-        items.map((item) =>
-          importToCollectionType(uid, {
-            ...item,
-            ...options,
-          })
-        )
-      );
+function mapAndImport({
+  user,
+  target,
+  items,
+  fieldsMapping,
+  otherFields = {},
+}) {
+  const { uid, kind, attributes } = target;
+  const importItem = getImporter(kind);
 
-    case SINGLE_TYPE:
-      return importToSingleType(uid, {
-        ...items[0],
-        ...options,
+  return Promise.all(
+    items.map(async (item) => {
+      const mappedItem = { ...otherFields };
+      Object.entries(item).forEach(([key, value]) => {
+        const { targetField } = fieldsMapping[key];
+        if (targetField === "none") return;
+
+        const attribute = attributes[targetField];
+        const mappedValue = value;
+
+        console.log(`Map ${targetField}, from: ${value} to`, attribute);
+
+        mappedItem[targetField] = mappedValue;
       });
 
-    default:
-      throw new Error("Tipe is not supported");
-  }
+      return importItem(uid, mappedItem);
+    })
+  );
 }
 
-module.exports = {
-  importContent,
-};
+module.exports = { mapAndImport };

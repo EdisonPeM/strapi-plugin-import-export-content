@@ -1,4 +1,4 @@
-const { ATTRIBUTES } = require("../../constants/contentTypes");
+const { ATTRIBUTES, TYPES } = require("../../constants/contentTypes");
 
 const importToCollectionType = async (uid, item) => {
   try {
@@ -26,7 +26,24 @@ const importToSingleType = async (uid, item) => {
   }
 };
 
+function getImporter(kind) {
+  switch (kind) {
+    case TYPES.COLLECTION: {
+      return importToCollectionType;
+    }
+
+    case TYPES.SINGLE: {
+      return importToSingleType;
+    }
+
+    default: {
+      throw new Error("Target kind is not supported");
+    }
+  }
+}
+
 module.exports = {
   importToCollectionType,
   importToSingleType,
+  getImporter,
 };
