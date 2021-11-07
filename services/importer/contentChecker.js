@@ -1,10 +1,10 @@
 const { MANY_RELATIONS } = require("../../constants/relations");
-const { urlIsMedia } = require("./formatsValidator");
-const { importMediaFromUrl } = require("../importer/importMediaFiles");
+const { importMediaFromUrl } = require("./importMediaFiles");
+const { formats, types } = require("../lib/parser");
 
 function getId(value) {
-  if (typeof value === "number") return value;
-  if (typeof value === "object" && value.id) return value.id;
+  if (formats.isNumber(value)) return value;
+  if (formats.isObject(value) && value && value.id) return value.id;
   return null;
 }
 
@@ -27,7 +27,7 @@ async function getValidMedia(value, attribute, user) {
   const { multiple } = attribute;
   if (multiple) {
     const medias = Array.isArray(value) ? value : [value];
-    const urls = medias.filter((v) => urlIsMedia(v));
+    const urls = medias.filter((v) => types.isMediaUrl(v));
     const uploadedFiles = await Promise.all(
       urls.map((url) => importMediaFromUrl(url, user))
     );
@@ -40,7 +40,7 @@ async function getValidMedia(value, attribute, user) {
     const media = Array.isArray(value) ? value[0] : value;
 
     // Upload url to plugin upload
-    if (urlIsMedia(media)) {
+    if (types.isMediaUrl(media)) {
       return importMediaFromUrl(media, user);
     }
 

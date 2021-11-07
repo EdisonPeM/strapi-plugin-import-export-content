@@ -26,14 +26,14 @@ const importToSingleType = async (uid, item) => {
   }
 };
 
-function getImporter(kind) {
-  switch (kind) {
+function importItem(type, uid, item) {
+  switch (type) {
     case TYPES.COLLECTION: {
-      return importToCollectionType;
+      return importToCollectionType(uid, item);
     }
 
     case TYPES.SINGLE: {
-      return importToSingleType;
+      return importToSingleType(uid, item);
     }
 
     default: {
@@ -43,7 +43,7 @@ function getImporter(kind) {
 }
 
 module.exports = {
+  importItem,
   importToCollectionType,
   importToSingleType,
-  getImporter,
 };

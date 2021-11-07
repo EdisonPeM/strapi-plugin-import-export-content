@@ -1,5 +1,5 @@
-const { urlIsMedia } = require("../utils/formatsValidator");
 const request = require("request");
+const { types } = require("../dataParser");
 
 const fetchFiles = (url) =>
   new Promise((resolve, reject) => {
@@ -23,7 +23,7 @@ const fetchFiles = (url) =>
   });
 
 async function importMediaFromUrl(url, user) {
-  if (!urlIsMedia(url)) return null;
+  if (!types.isMediaUrl(url)) return null;
 
   try {
     const mediaInfo = await fetchFiles(url);

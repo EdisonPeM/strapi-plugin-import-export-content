@@ -1,5 +1,17 @@
 const { csvToJson, jsonToCsv } = require("./csvParser");
-const { getFieldsFromItems } = require("../utils/fieldUtils");
+
+function getFieldsFromItems(items) {
+  const fieldNames = new Set();
+  items.forEach((item) => {
+    try {
+      Object.keys(item).forEach((fieldName) => fieldNames.add(fieldName));
+    } catch (err) {
+      console.error(err);
+    }
+  });
+
+  return Array.from(fieldNames);
+}
 
 const toArray = (arr) => (Array.isArray(arr) ? arr : [arr]);
 
