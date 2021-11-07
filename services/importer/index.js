@@ -1,31 +1,30 @@
-const { getImporter } = require("./importUtils");
+const { importItem } = require("./importTypes");
+const { cast } = require("../dataParser");
 
-function mapAndImport({
-  user,
-  target,
-  items,
-  fieldsMapping,
-  otherFields = {},
-}) {
+const contentFieldsTypes = require("../../constants/contentFieldsTypes");
+
+function mapAndImport({ user, target, items, fieldsMapping, otherFields }) {
   const { uid, kind, attributes } = target;
-  const importItem = getImporter(kind);
 
   return Promise.all(
     items.map(async (item) => {
       const mappedItem = { ...otherFields };
-      Object.entries(item).forEach(([key, value]) => {
-        const { targetField } = fieldsMapping[key];
-        if (targetField === "none") return;
+      const itemEntries = Object.entries(item);
 
-        const attribute = attributes[targetField];
-        const mappedValue = value;
+      await Promise.all(
+        itemEntries.map(async ([key, value]) => {
+          const { targetField } = fieldsMapping[key];
+          if (targetField === "none") return;
 
-        console.log(`Map ${targetField}, from: ${value} to`, attribute);
+          const attribute = attributes[targetField];
+          const { type } = attribute;
 
-        mappedItem[targetField] = mappedValue;
-      });
+          const format = contentFieldsTypes[type];
+          mappedItem[targetField] = cast(value, format);
+        })
+      );
 
-      return importItem(uid, mappedItem);
+      return importItem(kind, uid, mappedItem);
     })
   );
 }

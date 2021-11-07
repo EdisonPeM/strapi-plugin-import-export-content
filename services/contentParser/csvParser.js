@@ -1,11 +1,3 @@
-const {
-  textIsNumber,
-  textToNumber,
-  textIsBoolean,
-  textToBoolean,
-  textIsObject,
-  textToObject,
-} = require("./textFormats");
 const CsvParser = require("csv-parse/lib/sync");
 const CSV = require("csv-string");
 

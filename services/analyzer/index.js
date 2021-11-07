@@ -1,4 +1,4 @@
-const { formats, types } = require("../parser");
+const { formats, types } = require("../dataParser");
 
 function analizeFormat(value) {
   // Formats
