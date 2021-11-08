@@ -53,7 +53,8 @@ function DataMapper({ analysis, target, onSubmit, onCancel }) {
       return onCancel();
     }
 
-    onSubmit({ items, fieldsMapping, asDraft });
+    const itemsToImport = isSingleType ? [items[0]] : items;
+    onSubmit({ items: itemsToImport, fieldsMapping, asDraft });
   };
 
   return (

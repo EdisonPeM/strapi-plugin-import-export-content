@@ -1,5 +1,5 @@
 const { BOOLEAN_VALUES } = require("./constants");
-const { isNumber, isObject, isDate } = require("./formats");
+const { isNumber, isObject, isDate, isArray, isString } = require("./formats");
 
 function cast(value, format) {
   if (typeof value === format) return value;
@@ -36,6 +36,15 @@ function cast(value, format) {
     case "date": {
       if (isDate(value)) return new Date(value);
       return value;
+    }
+
+    case "array": {
+      if (isArray(value)) {
+        if (isString(value)) return JSON.parse(value);
+        return value;
+      }
+
+      return [];
     }
 
     default: {

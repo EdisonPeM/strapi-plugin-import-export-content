@@ -1,5 +1,6 @@
 const request = require("request");
 const { types } = require("../dataParser");
+const { validateEntity } = require("../utils/entities");
 
 const fetchFiles = (url) =>
   new Promise((resolve, reject) => {
@@ -49,8 +50,7 @@ async function importMediaFromUrl(url, user) {
       user,
     });
 
-    if (uploadedFile && uploadedFile.id) return uploadedFile.id;
-    return null;
+    return validateEntity(uploadedFile);
   } catch (err) {
     console.error(err);
     return null;

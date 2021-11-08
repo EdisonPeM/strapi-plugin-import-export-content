@@ -59,8 +59,9 @@ module.exports = {
     }
 
     try {
-      const service = getService();
-      const results = await service.importItems(ctx);
+      const { importItems } = getService();
+      const results = await importItems(ctx);
+
       const succesfully = results.every((res) => res);
       ctx.send({
         succesfully,

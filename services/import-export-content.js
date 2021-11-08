@@ -30,7 +30,7 @@ module.exports = {
       options: { draftAndPublish },
     } = target;
 
-    const PUBLISHED_AT = draftAndPublish && asDraft ? null : Date.now();
+    const PUBLISHED_AT = draftAndPublish && asDraft ? null : new Date();
     const otherFields = {
       [ATTRIBUTES.CREATED_BY]: user.id,
       [ATTRIBUTES.UPDATED_BY]: user.id,
