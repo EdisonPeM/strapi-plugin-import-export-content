@@ -1,3 +1,4 @@
+const contentFieldsTypes = require("../../../constants/contentFieldsTypes");
 const { cast } = require("../../dataParser");
 const { toArray, toSingle } = require("../../utils/arrays");
 
@@ -62,7 +63,9 @@ async function getValidComponent(component, compUid) {
         return;
       }
 
-      mappedComponent[attr] = value;
+      const { type } = attribute;
+      const format = contentFieldsTypes[type];
+      mappedComponent[attr] = cast(value, format);
     })
   );
 
