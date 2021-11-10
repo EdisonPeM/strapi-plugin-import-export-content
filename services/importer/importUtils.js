@@ -1,9 +1,31 @@
-const importToCollectionType = async (uid, item) => {
+const {
+  CREATED_BY_ATTRIBUTE,
+  UPDATED_BY_ATTRIBUTE,
+  PUBLISHED_AT_ATTRIBUTE,
+  ID_ATTRIBUTE,
+} = require("../../constants/contentTypes");
+
+const importToCollectionType = async (uid, item, allowUpdateDelete) => {
   try {
+    const id = item[ID_ATTRIBUTE];
+    if (allowUpdateDelete && id) {
+      const existing = await strapi.query(uid).find({ [ID_ATTRIBUTE]: id });
+      if (existing.length > 0) {
+        const params = { [ID_ATTRIBUTE]: id };
+        if (item.operation_delete) {
+          await strapi.entityService.delete({ data: item, params }, { model: uid });
+          return true;
+        } else {
+          await strapi.entityService.update({ data: item, params }, { model: uid });
+          return true;
+        }
+      }
+    }
     await strapi.entityService.create({ data: item }, { model: uid });
     // await strapi.query(uid).create(item);
     return true;
   } catch (error) {
+    console.error(error);
     return false;
   }
 };

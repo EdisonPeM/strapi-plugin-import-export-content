@@ -8,7 +8,6 @@ import MappingTable from "../../components/MappingTable";
 
 import { request } from "strapi-helper-plugin";
 import pluginId from "../../pluginId";
-import useTrads from "../../hooks/useTrads";
 
 const filterIgnoreFields = (fieldName) =>
   ![
@@ -21,13 +20,12 @@ const filterIgnoreFields = (fieldName) =>
   ].includes(fieldName);
 
 function DataMapper({ analysis, target, onImport }) {
-  const formatMessage = useTrads();
-
   const { fieldsInfo, parsedData } = analysis;
   const { kind, attributes, options } = target;
 
   const isSingleType = kind === "singleType";
   const [uploadAsDraft, setUploadAsDraft] = useState(options.draftAndPublish);
+  const [allowUpdateDelete, setAllowUpdateDelete] = useState(false);
 
   const filteredAttributes = useMemo(
     () => Object.keys(attributes).filter(filterIgnoreFields),
@@ -70,25 +68,23 @@ function DataMapper({ analysis, target, onImport }) {
 
   // Handler Mapping
   const selectDestinationField = useCallback(
-    (source) =>
-      ({ target: { value } }) => {
-        setMappedFields((fields) => ({
-          ...fields,
-          [source]: {
-            ...fields[source],
-            targetField: value,
-            targetFormat: value !== "none" ? attributes[value].type : undefined,
-          },
-        }));
-      },
+    (source) => ({ target: { value } }) => {
+      setMappedFields((fields) => ({
+        ...fields,
+        [source]: {
+          ...fields[source],
+          targetField: value,
+          targetFormat: value !== "none" ? attributes[value].type : undefined,
+        },
+      }));
+    },
     [attributes]
   );
 
   // Mapping Table Rows
   const [importItems, setImportItems] = useState(parsedData);
-  const deleteItem = useCallback(
-    (deleteItem) => () =>
-      setImportItems((items) => items.filter((item) => item !== deleteItem))
+  const deleteItem = useCallback((deleteItem) => () =>
+    setImportItems((items) => items.filter((item) => item !== deleteItem))
   );
 
   // Upload Data
@@ -98,7 +94,7 @@ function DataMapper({ analysis, target, onImport }) {
     if (importItems.length === 0) {
       strapi.notification.toggle({
         type: "warning",
-        message: formatMessage("import.items.empty"),
+        message: "import.items.empty",
       });
 
       // Finish with the import
@@ -114,15 +110,16 @@ function DataMapper({ analysis, target, onImport }) {
           fields: mappedFields,
           items: importItems,
           asDraft: uploadAsDraft,
+          allowUpdateDelete,
         },
       });
 
       strapi.notification.toggle({ type: "info", message });
     } catch (error) {
-      console.error(error);
+      console.log(error);
       strapi.notification.toggle({
         type: "warning",
-        message: formatMessage(`import.items.error`),
+        message: `import.items.error`,
       });
     }
 
@@ -134,9 +131,9 @@ function DataMapper({ analysis, target, onImport }) {
     <>
       {isLoading && <Loader />}
       <div className="pt-3 col-12">
-        <Prompt message={formatMessage("import.mapper.unsaved")} />
+        <Prompt message="import.mapper.unsaved" />
         <Row>
-          <h3>{formatMessage("import.mapper.title")}</h3>
+          <h2>Map the Import Data to Destination Field</h2>
           <MappingTable
             mappingHeaders={headers}
             mappingRows={importItems}
@@ -148,28 +145,30 @@ function DataMapper({ analysis, target, onImport }) {
           />
         </Row>
         <Row>
-          <span className="mr-3">{formatMessage("import.mapper.count")}:</span>
+          <span className="mr-3">Count of Items to Import:</span>
           <strong>{kind === "singleType" ? 1 : importItems.length}</strong>
         </Row>
-        {options.draftAndPublish && (
-          <Row>
-            <Checkbox
-              // Change the message from "upload as draft" to "upload and publish"
-              message={formatMessage("import.mapper.publish")}
-              name="uploadAsDraft"
-              value={!uploadAsDraft}
-              onChange={() => setUploadAsDraft(!uploadAsDraft)}
-            />
-          </Row>
-        )}
         <Row>
-          <Button
-            label={formatMessage("import.mapper.import")}
-            onClick={uploadData}
+          {options.draftAndPublish && (
+              <Checkbox
+                message="Upload as Draft"
+                name="uploadAsDraft"
+                value={uploadAsDraft}
+                onChange={() => setUploadAsDraft(!uploadAsDraft)}
+              />
+          )}
+          <Checkbox
+            message="Allow Update and Delete"
+            name="allowUpdateDelete"
+            value={allowUpdateDelete}
+            onChange={() => setAllowUpdateDelete(!allowUpdateDelete)}
           />
+        </Row>
+        <Row>
+          <Button label="Import Data" onClick={uploadData} />
           <Button
             className="ml-3"
-            label={formatMessage("import.mapper.cancel")}
+            label="Cancel"
             color="delete"
             onClick={() => onImport()}
           />

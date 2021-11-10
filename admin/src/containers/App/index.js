@@ -21,17 +21,18 @@ import "../../assets/prismjs.css";
 const pathTo = (uri = "") => `/plugins/${pluginId}/${uri}`;
 const navLinks = [
   {
-    name: `${pluginId}.navlink.import`,
+    name: "Import Data",
     to: pathTo("import"),
   },
   {
-    name: `${pluginId}.navlink.export`,
+    name: "Export Data",
     to: pathTo("export"),
   },
 ];
 
 function App() {
   const userContentTypes = useContentTypes();
+
   return (
     <Layout navLinks={navLinks}>
       <Switch>
@@ -42,7 +43,7 @@ function App() {
           <ExportPage contentTypes={userContentTypes} />
         </Route>
         <Route>
-          {/* Default Route Return to Import Page */}
+          {/* Default Route Retur to Import Page */}
           <Redirect to={pathTo("import")} />
         </Route>
       </Switch>

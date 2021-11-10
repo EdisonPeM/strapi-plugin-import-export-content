@@ -7,7 +7,7 @@
 import React, { memo, useState, useMemo } from "react";
 import PropTypes from "prop-types";
 
-import { Loader, Block, Row, SelectWarning } from "../../components/common";
+import { Loader, Block, Row } from "../../components/common";
 import { Select, Label, Button } from "@buffetjs/core";
 import DataViewer from "../../components/DataViewer";
 
@@ -21,7 +21,6 @@ import { Collapse } from "reactstrap";
 import { FilterIcon } from "strapi-helper-plugin";
 import BASE_OPTIONS from "../../constants/options";
 import OptionsExport from "../../components/OptionsExport";
-import useTrads from "../../hooks/useTrads";
 
 const exportFormatsOptions = FORMATS.map(({ name, mimeType }) => ({
   label: name,
@@ -29,7 +28,6 @@ const exportFormatsOptions = FORMATS.map(({ name, mimeType }) => ({
 }));
 
 function ImportPage({ contentTypes }) {
-  const formatMessage = useTrads();
   const [target, setTarget] = useState(null);
   const [sourceExports, setSourceExports] = useState("");
   const [exportFormat, setExportFormat] = useState("application/json");
@@ -37,7 +35,7 @@ function ImportPage({ contentTypes }) {
 
   const sourceOptions = useMemo(
     () =>
-      [{ label: "Select Source", value: "" }].concat(
+      [{ label: "Select Export Source", value: "" }].concat(
         contentTypes.map(({ uid, info, apiID }) => ({
           label: info.label || apiID,
           value: uid,
@@ -77,15 +75,12 @@ function ImportPage({ contentTypes }) {
 
   // Request to Get Available Content
   const [isLoading, setIsLoadig] = useState(false);
-  const [sourceEmpty, setSourceEmpty] = useState(false);
   const getContent = async () => {
-    if (sourceExports === "") {
-      setSourceEmpty(true);
+    if (sourceExports === "")
       return strapi.notification.toggle({
         type: "warning",
-        message: formatMessage("export.source.empty"),
+        message: "export.source.empty",
       });
-    }
 
     try {
       setIsLoadig(true);
@@ -98,7 +93,7 @@ function ImportPage({ contentTypes }) {
     } catch (error) {
       strapi.notification.toggle({
         type: "warning",
-        message: formatMessage("export.items.error"),
+        message: `export.items.error`,
       });
     }
 
@@ -109,28 +104,27 @@ function ImportPage({ contentTypes }) {
   const handleDownload = () => {
     downloadFile(target.info.name, contentToExport, exportFormat);
   };
-  const handleCopy = () => copyClipboard(contentToExport, formatMessage);
+  const handleCopy = () => copyClipboard(contentToExport);
 
   return (
     <Block
-      title={formatMessage("export.title")}
-      description={formatMessage("export.description")}
+      title="Export"
+      description="Configure the Export Source & Format"
       style={{ marginBottom: 12 }}
     >
       {isLoading && <Loader />}
       <Row>
         <div className="pt-3 col-sm-6 col-md-5">
-          <Label htmlFor="exportSource">{formatMessage("export.source")}</Label>
-          <SelectWarning
+          <Label htmlFor="exportSource">Export Source</Label>
+          <Select
             name="exportSource"
             options={sourceOptions}
             value={sourceExports}
             onChange={handleSelectSourceExports}
-            showWarning={sourceEmpty}
           />
         </div>
         <div className="pt-3 col-sm-6 col-md-5">
-          <Label htmlFor="exportFormat">{formatMessage("export.format")}</Label>
+          <Label htmlFor="exportFormat">Export Format</Label>
           <Select
             name="exportFormat"
             options={exportFormatsOptions}
@@ -143,7 +137,7 @@ function ImportPage({ contentTypes }) {
             onClick={() => setIsOptionsOpen((v) => !v)}
             className="w-100"
             icon={<FilterIcon />}
-            label={formatMessage("export.options")}
+            label="Options"
             color="cancel"
           />
         </div>
@@ -163,23 +157,23 @@ function ImportPage({ contentTypes }) {
           <Button
             onClick={getContent}
             className="w-100"
-            label={formatMessage("export.getData")}
+            label="Get Data"
             color="primary"
           />
         </div>
-        <div className="mt-3 col-md-3">
+        <div className="mt-3 col-md-3 col-lg-2">
           <Button
-            label={formatMessage("export.download")}
+            label="Download"
             className="w-100"
             color="success"
             disabled={!contentToExport}
             onClick={handleDownload}
           />
         </div>
-        <div className="mt-3 col-md-3">
+        <div className="mt-3  col-md-3 col-lg-2">
           <Button
             className="w-100"
-            label={formatMessage("export.copy")}
+            label="Copy to Clipboard"
             color="secondary"
             disabled={!contentToExport}
             onClick={handleCopy}

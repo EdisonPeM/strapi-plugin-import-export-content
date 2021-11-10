@@ -6,14 +6,14 @@ function downloadFile(name, content, type) {
   const file = new Blob([content], { type });
   const fileURL = window.URL.createObjectURL(file);
 
-  const dateTime = new Date().toISOString();
+  const dateTime = new Date().toLocaleDateString();
   const el = document.createElement("a");
   el.href = fileURL;
   el.download = `${name}_${dateTime}${format.ext}` || "file.txt";
   el.click();
 }
 
-async function copyClipboard(content, formatMessage) {
+async function copyClipboard(content) {
   if (navigator.clipboard) {
     try {
       await navigator.clipboard.writeText(content);
@@ -21,7 +21,7 @@ async function copyClipboard(content, formatMessage) {
       console.error("Failed to copy!", err);
       return strapi.notification.toggle({
         type: "warning",
-        message: formatMessage("export.copy.error"),
+        message: "Copy to Clipboard Error",
       });
     }
   } else {
@@ -33,7 +33,7 @@ async function copyClipboard(content, formatMessage) {
 
   strapi.notification.toggle({
     type: "success",
-    message: formatMessage("export.copy.success"),
+    message: "Content Copy to Clipboard",
   });
 }
 

@@ -3,6 +3,7 @@ const { urlIsMedia } = require("./formatsValidator");
 const { importMediaFromUrl } = require("../importer/importMediaFiles");
 
 function getId(value) {
+  if( value === null ) return null;
   if (typeof value === "number") return value;
   if (typeof value === "object" && value.id) return value.id;
   return null;

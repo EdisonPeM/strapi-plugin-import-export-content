@@ -19,6 +19,13 @@ const TableWrapper = styled.div`
       font-weight: bold;
       padding: 10px;
       white-space: nowrap;
+
+      select.unselected {
+        color: #ccc;
+        option {
+          color: #333740;
+        }
+      }
     }
 
     th:last-child {

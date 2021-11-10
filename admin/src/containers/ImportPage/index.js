@@ -10,30 +10,24 @@ import UploadFileForm from "../../components/UploadFileForm";
 import RawInputForm from "../../components/RawInputForm";
 import DataMapper from "../DataMapper";
 
-import { Loader, Block, Row, SelectWarning } from "../../components/common";
+import { Loader, Block, Row } from "../../components/common";
 import { Select, Label } from "@buffetjs/core";
 
 import { request } from "strapi-helper-plugin";
 import pluginId from "../../pluginId";
-import useTrads from "../../hooks/useTrads";
+
+const importSourcesOptions = [
+  { label: "Upload file", value: "upload" },
+  { label: "Raw text", value: "raw" },
+];
 
 function ImportPage({ contentTypes }) {
-  const formatMessage = useTrads();
-
   // Import Source and Import Destination States
   const [importSource, setImportSource] = useState("upload");
-  const importSourcesOptions = useMemo(
-    () => [
-      { label: formatMessage("import.source.upload"), value: "upload" },
-      { label: formatMessage("import.source.raw"), value: "raw" },
-    ],
-    []
-  );
-
   const [importDest, setImportDest] = useState("");
   const importDestOptions = useMemo(
     () =>
-      [{ label: "Select Destination", value: "" }].concat(
+      [{ label: "Select Import Destination", value: "" }].concat(
         contentTypes.map(({ uid, info, apiID }) => ({
           label: info.label || apiID,
           value: uid,
@@ -46,16 +40,14 @@ function ImportPage({ contentTypes }) {
   const [analysis, setAnalysis] = useState(null);
   const [target, setTarget] = useState(null);
   const [isLoading, setIsLoadig] = useState(false);
-  const [destEmpty, setDestEmpty] = useState(false);
   const analizeImports = async ({ data, type }) => {
     // Prevent Empty Destination
-    if (importDest === "") {
-      setDestEmpty(true);
+    if (importDest === "")
       return strapi.notification.toggle({
         type: "warning",
-        message: formatMessage("import.destination.empty"),
+        message: "import.destination.empty",
       });
-    }
+
     // Send Request
     try {
       setIsLoadig(true);
@@ -71,13 +63,13 @@ function ImportPage({ contentTypes }) {
       // Notifications
       strapi.notification.toggle({
         type: "success",
-        message: formatMessage("import.analyze.success"),
+        message: "import.analyze.success",
       });
     } catch (error) {
       console.error(error);
       strapi.notification.toggle({
         type: "warning",
-        message: formatMessage("import.analyze.error"),
+        message: "import.analyze.error",
       });
     }
 
@@ -92,8 +84,8 @@ function ImportPage({ contentTypes }) {
 
   return (
     <Block
-      title={formatMessage("import.title")}
-      description={formatMessage("import.description")}
+      title="General"
+      description="Configure the Import Source & Destination"
       style={{ marginBottom: 12 }}
     >
       {analysis === null ? (
@@ -101,9 +93,7 @@ function ImportPage({ contentTypes }) {
           {isLoading && <Loader />}
           <Row>
             <div className="pt-3 col-sm-6">
-              <Label htmlFor="importSource">
-                {formatMessage("import.source")}
-              </Label>
+              <Label htmlFor="importSource">Import Source</Label>
               <Select
                 name="importSource"
                 value={importSource}
@@ -112,15 +102,12 @@ function ImportPage({ contentTypes }) {
               />
             </div>
             <div className="pt-3 col-sm-6">
-              <Label htmlFor="importDest">
-                {formatMessage("import.destination")}
-              </Label>
-              <SelectWarning
+              <Label htmlFor="importDest">Import Destination</Label>
+              <Select
                 name="importDest"
                 value={importDest}
                 options={importDestOptions}
                 onChange={({ target: { value } }) => setImportDest(value)}
-                showWarning={destEmpty}
               />
             </div>
           </Row>

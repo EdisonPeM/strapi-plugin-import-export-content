@@ -11,6 +11,9 @@ const {
   getValidComponent,
   getValidDynamic,
 } = require("./contentChecker");
+const {
+  ID_ATTRIBUTE,
+} = require("../../constants/contentTypes");
 
 function getFormatFromField(field) {
   switch (typeof field) {
@@ -49,10 +52,11 @@ function getFieldsFromItems(items) {
 
 function mapFieldsToTargetFields({ items, fields, attributes, user }) {
   const fieldNames = getFieldsFromItems(items);
+  console.log('mapFieldsToTargetFields fieldNames', fieldNames);
+  console.log('mapFieldsToTargetFields fields', fields);
   return Promise.all(
     items.map(async (item) => {
       const mappedItem = {};
-
       for (const fieldname of fieldNames) {
         const { targetField } = fields[fieldname];
         if (targetField && targetField !== "none") {
@@ -69,11 +73,12 @@ function mapFieldsToTargetFields({ items, fields, attributes, user }) {
           } else if (attribute.type === "dynamiczone") {
             targetItem = await getValidDynamic(targetItem, attribute, user);
           }
-
           mappedItem[targetField] = targetItem;
         }
       }
-
+      mappedItem[ID_ATTRIBUTE] = item[ID_ATTRIBUTE];
+      mappedItem.operation_delete = item.operation_delete;
+      console.log('mapFieldsToTargetFields mappedItems', mappedItem);
       return mappedItem;
     })
   );

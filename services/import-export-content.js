@@ -29,8 +29,7 @@ module.exports = {
 
   importItems: async (ctx) => {
     const { user } = ctx.state;
-    const { target, fields, items, asDraft } = ctx.request.body;
-
+    const { target, fields, items, asDraft, allowUpdateDelete } = ctx.request.body;
     const {
       attributes,
       options: { draftAndPublish },
@@ -41,12 +40,13 @@ module.exports = {
       fields,
       attributes,
       user,
+      allowUpdateDelete,
     });
     return importContent(target, mappedItems, {
       [CREATED_BY_ATTRIBUTE]: user,
       [UPDATED_BY_ATTRIBUTE]: user,
       [PUBLISHED_AT_ATTRIBUTE]: draftAndPublish && asDraft ? null : Date.now(),
-    });
+    }, allowUpdateDelete);
   },
 
   exportItems: async (ctx) => {

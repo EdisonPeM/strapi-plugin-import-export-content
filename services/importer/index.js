@@ -4,7 +4,7 @@ const {
 } = require("../../constants/contentTypes");
 const { importToCollectionType, importToSingleType } = require("./importUtils");
 
-function importContent(target, items, options) {
+function importContent(target, items, options, allowUpdateDelete) {
   const { uid, kind } = target;
   switch (kind) {
     case COLLECTION_TYPE:
@@ -13,7 +13,7 @@ function importContent(target, items, options) {
           importToCollectionType(uid, {
             ...item,
             ...options,
-          })
+          }, allowUpdateDelete)
         )
       );
 
