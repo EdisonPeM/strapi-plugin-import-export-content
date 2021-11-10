@@ -4,21 +4,19 @@ const {
 } = require("../../constants/contentTypes");
 const { importToCollectionType, importToSingleType } = require("./importUtils");
 
-function importContent(target, items, options, allowUpdateDelete) {
+async function importContent(target, items, options, allowUpdateDelete) {
   const { uid, kind } = target;
   switch (kind) {
     case COLLECTION_TYPE:
-      return Promise.all(
-        items.map((item) =>
-          importToCollectionType(uid, {
-            ...item,
-            ...options,
-          }, allowUpdateDelete)
-        )
-      );
+      for (let i = 0; i < items.length; i++) {
+        await importToCollectionType(uid, {
+          ...items[i],
+          ...options,
+        }, allowUpdateDelete);
+      }
 
     case SINGLE_TYPE:
-      return importToSingleType(uid, {
+      return await importToSingleType(uid, {
         ...items[0],
         ...options,
       });
