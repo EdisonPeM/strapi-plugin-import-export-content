@@ -5,6 +5,16 @@ const {
   ID_ATTRIBUTE,
 } = require("../../constants/contentTypes");
 
+const getErrorMessages = (error) => {
+  const errorMessages = [];
+  for (const key in error.data.errors){
+    if (error.data.errors.hasOwnProperty(key)) {
+      errorMessages.push(error.data.errors[key]);
+    }
+  }
+  return errorMessages;
+};
+
 const importToCollectionType = async (uid, item, allowUpdateDelete) => {
   try {
     const id = item[ID_ATTRIBUTE];
@@ -26,7 +36,7 @@ const importToCollectionType = async (uid, item, allowUpdateDelete) => {
     return true;
   } catch (error) {
     console.error(error);
-    return false;
+    return getErrorMessages(error);
   }
 };
 
@@ -42,7 +52,7 @@ const importToSingleType = async (uid, item) => {
     }
     return [true];
   } catch (error) {
-    return [false];
+    return getErrorMessages(error);
   }
 };
 
