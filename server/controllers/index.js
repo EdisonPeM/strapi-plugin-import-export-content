@@ -3,5 +3,5 @@
 const importExportContent = require("./import-export-content");
 
 module.exports = {
-  importExportContent
+  'import-export-content': importExportContent
 };

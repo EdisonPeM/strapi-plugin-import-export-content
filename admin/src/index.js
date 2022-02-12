@@ -27,11 +27,14 @@ export default {
         return component;
       },
       permissions: [
-        // Uncomment to set the permissions of the plugin here
-        // {
-        //   action: '', // the action name should be plugin::plugin-name.actionType
-        //   subject: null,
-        // },
+        {
+          action: 'plugin::import-export-content.export',
+          subject: null,
+        },
+        {
+          action: 'plugin::import-export-content.import',
+          subject: null,
+        }
       ],
     });
     app.registerPlugin({

@@ -10,32 +10,28 @@ const HOUR_REGEXP = /^((?:(?:0|1)\d|2[0-3])):([0-5]\d):([0-5]\d)(\.\d{0,3})?$/;
 const URL_REGEXP =
   /^[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?$/;
 
-module.exports = (
-  {
-    strapi
-  }
-) => {
-  function stringIsDate(data) {
+const functions = () => ({
+  stringIsDate: (data) => {
     DATE_ISO_REGEXP.lastIndex = 0;
     return DATE_ISO_REGEXP.test(data);
-  }
+  },
 
-  function stringIsEmail(data) {
+  stringIsEmail: (data) => {
     EMAIL_REGEXP.lastIndex = 0;
     return EMAIL_REGEXP.test(data);
-  }
+  },
 
-  function stringIsHour(data) {
+  stringIsHour: (data) => {
     HOUR_REGEXP.lastIndex = 0;
     return HOUR_REGEXP.test(data);
-  }
+  },
 
-  function stringIsUrl(data) {
+  stringIsUrl: (data) => {
     URL_REGEXP.lastIndex = 0;
     return URL_REGEXP.test(data);
-  }
+  },
 
-  function urlIsMedia(url) {
+  urlIsMedia: (url) => {
     try {
       const parsed = new URL(url);
       const extension = parsed.pathname.split(".").pop().toLowerCase();
@@ -64,11 +60,6 @@ module.exports = (
     }
   }
 
-  return {
-    stringIsEmail,
-    stringIsDate,
-    stringIsHour,
-    stringIsUrl,
-    urlIsMedia
-  };
-};
+})
+
+module.exports = functions()

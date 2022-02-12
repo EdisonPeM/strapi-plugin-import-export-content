@@ -1,7 +1,7 @@
 "use strict";
 
 const pluginPkg = require("../../package.json");
-const PLUGIN_ID = pluginPkg.name.replace(/^strapi-plugin-/i, "");
+const PLUGIN_ID = pluginPkg.name.replace(/^@strapi\//i, "");
 
 function getService(service = PLUGIN_ID) {
   const SERVICES = strapi.plugins[PLUGIN_ID].services;
@@ -84,6 +84,7 @@ module.exports = {
     }
 
     const { userAbility } = ctx.state;
+    // console.log(PERMISSIONS.read, target.uid)
     if (userAbility.cannot(PERMISSIONS.read, target.uid)) {
       return ctx.forbidden();
     }

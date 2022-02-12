@@ -3,12 +3,8 @@ const {
   getFormatFromField,
 } = require("./utils/fieldUtils");
 
-module.exports = (
-  {
-    strapi
-  }
-) => {
-  function analyze(items) {
+const functions = () => ({
+  analyze: (items) => {
     const fieldsFormats = {};
     const fieldNames = getFieldsFromItems(items);
     fieldNames.forEach((fieldName) => (fieldsFormats[fieldName] = []));
@@ -41,8 +37,6 @@ module.exports = (
 
     return fieldsInfo;
   }
+})
 
-  return {
-    analyze
-  };
-};
+module.exports = functions()

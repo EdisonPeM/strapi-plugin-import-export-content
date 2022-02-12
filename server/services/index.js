@@ -5,5 +5,5 @@ const analyzer = require("./analyzer");
 
 module.exports = {
   analyzer,
-  importExportContent
+  'import-export-content': importExportContent
 };

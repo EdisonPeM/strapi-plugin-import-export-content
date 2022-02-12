@@ -27,6 +27,7 @@ const exportFormatsOptions = FORMATS.map(({ name, mimeType }) => ({
 }));
 
 function ExportPage({ contentTypes }) {
+  console.log("contentTypesExport", contentTypes)
   const [target, setTarget] = useState(null);
   const [sourceExports, setSourceExports] = useState("");
   const [exportFormat, setExportFormat] = useState("application/json");
@@ -46,6 +47,7 @@ function ExportPage({ contentTypes }) {
   // Source Options Handler
   const handleSelectSourceExports = ({ target: { value } }) => {
     setSourceExports(value);
+    console.log("WERERERE", contentTypes.find(({ uid }) => uid === value));
     setTarget(contentTypes.find(({ uid }) => uid === value));
     setContentToExport("");
   };
@@ -101,7 +103,9 @@ function ExportPage({ contentTypes }) {
 
   // Export Options
   const handleDownload = () => {
-    downloadFile(target.info.name, contentToExport, exportFormat);
+
+    console.log(target.apiID, contentToExport, exportFormat);
+    downloadFile(target.apiID, contentToExport, exportFormat);
   };
   const handleCopy = () => copyClipboard(contentToExport);
 

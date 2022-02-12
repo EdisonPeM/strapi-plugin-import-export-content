@@ -12,12 +12,8 @@ const {
   getValidDynamic,
 } = require("./contentChecker");
 
-module.exports = (
-  {
-    strapi
-  }
-) => {
-  function getFormatFromField(field) {
+const functions = () => ({
+  getFormatFromField: (field) => {
     switch (typeof field) {
       case "number":
         return "number";
@@ -37,9 +33,9 @@ module.exports = (
         if (field.length > 255) return "text";
         return "string";
     }
-  }
+  },
 
-  function getFieldsFromItems(items) {
+  getFieldsFromItems: (items) => {
     const fieldNames = new Set();
     items.forEach((item) => {
       try {
@@ -50,9 +46,9 @@ module.exports = (
     });
 
     return Array.from(fieldNames);
-  }
+  },
 
-  function mapFieldsToTargetFields({ items, fields, attributes, user }) {
+  mapFieldsToTargetFields: ({ items, fields, attributes, user }) => {
     const fieldNames = getFieldsFromItems(items);
     return Promise.all(
       items.map(async (item) => {
@@ -83,10 +79,6 @@ module.exports = (
       })
     );
   }
+});
 
-  return {
-    getFormatFromField,
-    getFieldsFromItems,
-    mapFieldsToTargetFields
-  };
-};
+module.exports = functions()

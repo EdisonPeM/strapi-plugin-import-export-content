@@ -2,18 +2,14 @@ const { MANY_RELATIONS } = require("../../constants/relations");
 const { urlIsMedia } = require("./formatsValidator");
 const { importMediaFromUrl } = require("../importer/importMediaFiles");
 
-module.exports = (
-  {
-    strapi
-  }
-) => {
-  function getId(value) {
+const functions = () => ({
+  getId: (value) => {
     if (typeof value === "number") return value;
     if (typeof value === "object" && value.id) return value.id;
     return null;
-  }
+  },
 
-  async function getValidRelations(value, attribute) {
+  getValidRelations: async (value, attribute) => {
     const { relationType, targetModel } = attribute;
     if (MANY_RELATIONS.includes(relationType)) {
       const relations = Array.isArray(value) ? value : [value];
@@ -26,9 +22,9 @@ module.exports = (
       const entity = await strapi.query(targetModel).findOne({ id });
       return entity ? entity.id : null;
     }
-  }
+  },
 
-  async function getValidMedia(value, attribute, user) {
+  getValidMedia: async (value, attribute, user) => {
     const { multiple } = attribute;
     if (multiple) {
       const medias = Array.isArray(value) ? value : [value];
@@ -53,9 +49,9 @@ module.exports = (
       const entity = await strapi.query("file", "upload").findOne({ id });
       return entity ? entity.id : null;
     }
-  }
+  },
 
-  async function getValidSingleComponent(value, attributes, user) {
+  getValidSingleComponent: async (value, attributes, user) => {
     const mappedComponent = {};
     for (const attr in attributes) {
       const element = value[attr];
@@ -85,8 +81,9 @@ module.exports = (
     }
 
     return mappedComponent;
-  }
-  async function getValidComponent(value, attribute, user) {
+  },
+
+  getValidComponent: async (value, attribute, user) => {
     const { repeatable, component } = attribute;
     const { attributes } = strapi.components[component];
 
@@ -101,9 +98,9 @@ module.exports = (
       const componentValue = Array.isArray(value) ? value[0] : value;
       return getValidSingleComponent(componentValue, attributes, user);
     }
-  }
+  },
 
-  async function getValidDynamic(value, attribute, user) {
+  getValidDynamic: async (value, attribute, user) => {
     const { components } = attribute;
     const dynamicValues = Array.isArray(value) ? value : [];
 
@@ -128,11 +125,6 @@ module.exports = (
       })
     );
   }
+})
 
-  return {
-    getValidRelations,
-    getValidMedia,
-    getValidComponent,
-    getValidDynamic
-  };
-};
+module.exports = functions()

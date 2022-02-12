@@ -9,12 +9,8 @@ const {
 const CsvParser = require("csv-parse/lib/sync");
 const CSV = require("csv-string");
 
-module.exports = (
-  {
-    strapi
-  }
-) => {
-  function csvToJson(text) {
+const functions = () => ({
+  csvToJson: (text) => {
     return CsvParser(text, {
       delimiter: CSV.detect(text),
       columns: true,
@@ -29,9 +25,9 @@ module.exports = (
         else return value;
       },
     });
-  }
+  },
 
-  function jsonToCsv(data, headers) {
+  jsonToCsv: (data, headers) => {
     const escapeQuote = (text) => text.replace(/\"/g, '""');
     return headers
       .map((header) => {
@@ -56,9 +52,6 @@ module.exports = (
       })
       .join();
   }
+});
 
-  return {
-    csvToJson,
-    jsonToCsv
-  };
-};
+module.exports = functions()

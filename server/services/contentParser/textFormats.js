@@ -9,59 +9,49 @@ const booleanStringPossibleValues = {
 // --------------------------- //
 //           Exports           //
 // --------------------------- //
-module.exports = (
-  {
-    strapi
-  }
-) => {
+const functions = () => ({
   // ------------------------------------- //
   //           Number Validation           //
   // ------------------------------------- //
-  function textIsNumber(value) {
+  textIsNumber: (value) => {
     if (typeof value === "string" && value.trim() !== "") {
       return !isNaN(value);
     }
 
     return false;
-  }
+  },
 
-  function textToNumber(value) {
+  textToNumber: (value) => {
     return parseFloat(value);
-  }
+  },
 
-  function textIsBoolean(value) {
+  textIsBoolean: (value) => {
     return (
       booleanStringPossibleValues.trueValues.includes(value.toLowerCase()) ||
       booleanStringPossibleValues.falseValues.includes(value.toLowerCase())
     );
-  }
+  },
 
-  function textToBoolean(value) {
+  textToBoolean: (value) => {
     return booleanStringPossibleValues.trueValues.includes(value);
-  }
+  },
 
   // ------------------------------------- //
   //           Object Validation           //
   // ------------------------------------- //
-  function textIsObject(value) {
+  textIsObject: (value) => {
     try {
       JSON.parse(value);
       return true;
     } catch {
       return false;
     }
-  }
+  },
 
-  function textToObject(value) {
+  textToObject(value) {
     return JSON.parse(value);
   }
 
-  return {
-    textIsNumber,
-    textToNumber,
-    textIsBoolean,
-    textToBoolean,
-    textIsObject,
-    textToObject
-  };
-};
+})
+
+module.exports = functions()
