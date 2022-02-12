@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from "react";
-import { request, UserContext, hasPermissions } from "@strapi/helper-plugin";
+import { request, RBACProviderContext, hasPermissions } from "@strapi/helper-plugin";
 
 const permissions = ({ uid }) =>
   ["create", "read", "update"].map((permission) => ({
@@ -9,7 +9,7 @@ const permissions = ({ uid }) =>
 
 function useContentTypes() {
   const [contentTypes, setContentTypes] = useState([]);
-  const userContextData = useContext(UserContext);
+  const userContextData = useContext(RBACProviderContext); 
   const userPermissions = userContextData.userPermissions || userContextData;
 
   useEffect(() => {
@@ -17,7 +17,7 @@ function useContentTypes() {
       // Get All content Types
       const { data } = await request("/content-manager/content-types");
       const contentTypes = data.filter(({ uid }) =>
-        uid.startsWith("application::")
+        uid.startsWith("api::")
       );
 
       // Get Permissions of each content Type
@@ -33,12 +33,13 @@ function useContentTypes() {
       );
 
       // Filter each content Type by permissions
+      // @TODO FIX USER NOT HAVING PERMISSIONS??
       const filteredContentTypes = contentTypesWithPermissions.filter(
         ({ hasPermission }) => hasPermission
       );
 
       // SetState
-      setContentTypes(filteredContentTypes);
+      setContentTypes(contentTypesWithPermissions);
     };
 
     fetchContentTypes();
