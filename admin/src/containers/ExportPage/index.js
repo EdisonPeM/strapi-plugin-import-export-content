@@ -14,11 +14,11 @@ import DataViewer from "../../components/DataViewer";
 import FORMATS from "../../constants/formats";
 
 import pluginId from "../../pluginId";
-import { request } from "strapi-helper-plugin";
+import { request } from "@strapi/helper-plugin";
 import { downloadFile, copyClipboard } from "../../utils/exportUtils";
 
 import { Collapse } from "reactstrap";
-import { FilterIcon } from "strapi-helper-plugin";
+import { FilterIcon } from "@strapi/helper-plugin";
 import BASE_OPTIONS from "../../constants/options";
 import OptionsExport from "../../components/OptionsExport";
 

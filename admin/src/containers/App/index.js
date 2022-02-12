@@ -31,16 +31,17 @@ const navLinks = [
 ];
 
 function App() {
-  const userContentTypes = useContentTypes();
+  // const userContentTypes = useContentTypes();
 
   return (
     <Layout navLinks={navLinks}>
       <Switch>
         <Route path={pathTo("import")}>
-          <ImportPage contentTypes={userContentTypes} />
+          {/* <div>IMPORT</div> */}
+          <ImportPage  />
         </Route>
         <Route path={pathTo("export")}>
-          <ExportPage contentTypes={userContentTypes} />
+          <ExportPage />
         </Route>
         <Route>
           {/* Default Route Retur to Import Page */}

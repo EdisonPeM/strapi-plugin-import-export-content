@@ -1,4 +1,4 @@
-const { contentTypes } = require("strapi-utils");
+const { contentTypes } = require("@strapi/utils");
 const { constants } = contentTypes;
 const {
   ID_ATTRIBUTE,

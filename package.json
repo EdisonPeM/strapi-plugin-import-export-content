@@ -1,5 +1,5 @@
 {
-  "name": "strapi-plugin-import-export-content",
+  "name": "@strapi/import-export-content",
   "version": "0.4.2",
   "description": "This is a plugin for import and export content of collection types.",
   "license": "MIT",
@@ -12,10 +12,19 @@
     "test": "echo \"No test specified\""
   },
   "dependencies": {
+    "@buffetjs/core": "^3.3.8",
+    "@buffetjs/icons": "^3.3.8",
+    "@fortawesome/free-solid-svg-icons": "^5.15.4",
+    "@fortawesome/react-fontawesome": "^0.1.16",
+    "@strapi/helper-plugin": "4.0.7",
+    "@strapi/utils": "4.0.7",
+    "commonjs": "^0.0.1",
     "csv-parse": "^4.15.3",
     "csv-string": "^4.0.1",
     "prismjs": "^1.23.0",
-    "react-simple-code-editor": "^0.11.0"
+    "react": "^17.0.2",
+    "react-simple-code-editor": "^0.11.0",
+    "reactstrap": "^9.0.1"
   },
   "author": "Edison Peñuela <edisonpe961206@hotmail.com>",
   "maintainers": [
@@ -27,7 +36,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/EdisonPeM/strapi-plugin-import-export-content.git"
+    "url": "git+https://github.com/EdisonPeM/@strapi/import-export-content.git"
   },
   "keywords": [
     "strapi",
@@ -39,7 +48,7 @@
     "content"
   ],
   "bugs": {
-    "url": "https://github.com/EdisonPeM/strapi-plugin-import-export-content/issues"
+    "url": "https://github.com/EdisonPeM/@strapi/import-export-content/issues"
   },
-  "homepage": "https://github.com/EdisonPeM/strapi-plugin-import-export-content#readme"
+  "homepage": "https://github.com/EdisonPeM/@strapi/import-export-content#readme"
 }

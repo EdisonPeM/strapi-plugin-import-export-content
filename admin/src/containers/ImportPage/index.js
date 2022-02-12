@@ -13,7 +13,7 @@ import DataMapper from "../DataMapper";
 import { Loader, Block, Row } from "../../components/common";
 import { Select, Label } from "@buffetjs/core";
 
-import { request } from "strapi-helper-plugin";
+import { request } from "@strapi/helper-plugin";
 import pluginId from "../../pluginId";
 
 const importSourcesOptions = [

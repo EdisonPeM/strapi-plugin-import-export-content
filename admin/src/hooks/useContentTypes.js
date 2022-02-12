@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from "react";
-import { request, UserContext, hasPermissions } from "strapi-helper-plugin";
+import { request, UserContext, hasPermissions } from "@strapi/helper-plugin";
 
 const permissions = ({ uid }) =>
   ["create", "read", "update"].map((permission) => ({

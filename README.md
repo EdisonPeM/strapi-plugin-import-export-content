@@ -5,13 +5,13 @@ Plugin to import and export content according to user permissions in json or csv
 ## Installation
 
 ```bash
-yarn add strapi-plugin-import-export-content
+yarn add @strapi/import-export-content
 ```
 
 or
 
 ```bash
-npm i strapi-plugin-import-export-content
+npm i @strapi/import-export-content
 ```
 
 ## Rebuild your administration panel

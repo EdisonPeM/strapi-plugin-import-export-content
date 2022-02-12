@@ -1,6 +1,6 @@
 "use strict";
 
-const pluginPkg = require("../package.json");
+const pluginPkg = require("../../package.json");
 const PLUGIN_ID = pluginPkg.name.replace(/^strapi-plugin-/i, "");
 
 function getService(service = PLUGIN_ID) {
