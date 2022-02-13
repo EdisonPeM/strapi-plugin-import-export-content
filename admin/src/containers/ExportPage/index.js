@@ -14,11 +14,10 @@ import DataViewer from "../../components/DataViewer";
 import FORMATS from "../../constants/formats";
 
 import pluginId from "../../pluginId";
-import { request } from "strapi-helper-plugin";
+import { request } from "@strapi/helper-plugin";
 import { downloadFile, copyClipboard } from "../../utils/exportUtils";
 
 import { Collapse } from "reactstrap";
-import { FilterIcon } from "strapi-helper-plugin";
 import BASE_OPTIONS from "../../constants/options";
 import OptionsExport from "../../components/OptionsExport";
 
@@ -27,7 +26,7 @@ const exportFormatsOptions = FORMATS.map(({ name, mimeType }) => ({
   value: mimeType,
 }));
 
-function ImportPage({ contentTypes }) {
+function ExportPage({ contentTypes }) {
   const [target, setTarget] = useState(null);
   const [sourceExports, setSourceExports] = useState("");
   const [exportFormat, setExportFormat] = useState("application/json");
@@ -102,7 +101,7 @@ function ImportPage({ contentTypes }) {
 
   // Export Options
   const handleDownload = () => {
-    downloadFile(target.info.name, contentToExport, exportFormat);
+    downloadFile(target.apiID, contentToExport, exportFormat);
   };
   const handleCopy = () => copyClipboard(contentToExport);
 
@@ -136,7 +135,6 @@ function ImportPage({ contentTypes }) {
           <Button
             onClick={() => setIsOptionsOpen((v) => !v)}
             className="w-100"
-            icon={<FilterIcon />}
             label="Options"
             color="cancel"
           />
@@ -184,12 +182,12 @@ function ImportPage({ contentTypes }) {
   );
 }
 
-ImportPage.defaultProps = {
+ExportPage.defaultProps = {
   contentTypes: [],
 };
 
-ImportPage.propTypes = {
+ExportPage.propTypes = {
   contentTypes: PropTypes.array,
 };
 
-export default memo(ImportPage);
+export default memo(ExportPage);

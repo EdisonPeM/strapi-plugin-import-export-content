@@ -1,15 +1,15 @@
 import React, { memo } from "react";
 import PropTypes from "prop-types";
-import { HeaderNav, PluginHeader } from "strapi-helper-plugin";
+import { HeaderNav, PluginHeader } from "@strapi/helper-plugin";
 
 function Layout({ navLinks, children }) {
   return (
     <div className="container-fluid" style={{ padding: "18px 30px" }}>
-      <PluginHeader
+      {/* <PluginHeader
         title="Import Content"
         description="Import CSV and JSON into your Content Types"
       />
-      <HeaderNav links={navLinks} style={{ marginTop: "4.4rem" }} />
+      <HeaderNav links={navLinks} style={{ marginTop: "4.4rem" }} /> */}
       <div className="row">{children}</div>
     </div>
   );

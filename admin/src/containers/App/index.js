@@ -32,6 +32,7 @@ const navLinks = [
 
 function App() {
   const userContentTypes = useContentTypes();
+  console.log(userContentTypes)
 
   return (
     <Layout navLinks={navLinks}>

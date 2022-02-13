@@ -6,7 +6,7 @@ import { Button, Checkbox } from "@buffetjs/core";
 import { Loader, Row } from "../../components/common";
 import MappingTable from "../../components/MappingTable";
 
-import { request } from "strapi-helper-plugin";
+import { request } from "@strapi/helper-plugin";
 import pluginId from "../../pluginId";
 
 const filterIgnoreFields = (fieldName) =>

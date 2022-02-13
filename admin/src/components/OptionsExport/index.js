@@ -7,12 +7,12 @@ function OptionsExport({ values, onChange }) {
   return (
     <div>
       <hr />
-      {BASE_OPTIONS.map(({ name, label, type, optionalValues }) => {
+      {BASE_OPTIONS.map(({ name, label, type, optionalValues }, k) => {
         const handleChange = ({ target: { value } }) => onChange(name, value);
 
         if (type === "select") {
           return (
-            <div className="mt-3">
+            <div className="mt-3" key={k}>
               <span>{label}:</span>
               <Select
                 key={name}
@@ -25,7 +25,7 @@ function OptionsExport({ values, onChange }) {
           );
         } else if (type === "boolean") {
           return (
-            <div className="mt-3">
+            <div className="mt-3" key={k}>
               <Checkbox
                 key={name}
                 message={label}
