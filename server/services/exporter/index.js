@@ -12,7 +12,8 @@ const functions = () => ({
 
     // Filter content by permissions
     const query = permissionsManager.getQuery({ _limit: -1 }, PERMISSIONS.read);
-    const items = await strapi.entityService.findMany(uid, { params: query });
+    const items = await strapi.entityService.findMany(uid, { populate: '*' });
+    console.log(items)
 
     return Array.isArray(items)
       ? items.map((item) => cleanFields(item, options, attributes))

@@ -18,8 +18,6 @@ const {
 } = require("../constants/contentTypes");
 
 const { getData } = require("./exporter");
-const oterh = require("./exporter")
-console.log("GET DATA", getData, oterh)
 
 const functions = () => ({
   preAnalyzeContent: (ctx) => {

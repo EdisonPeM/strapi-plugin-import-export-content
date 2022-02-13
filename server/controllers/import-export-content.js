@@ -84,7 +84,6 @@ module.exports = {
     }
 
     const { userAbility } = ctx.state;
-    // console.log(PERMISSIONS.read, target.uid)
     if (userAbility.cannot(PERMISSIONS.read, target.uid)) {
       return ctx.forbidden();
     }

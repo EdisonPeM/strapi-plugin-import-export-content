@@ -33,7 +33,6 @@ function useContentTypes() {
       );
 
       // Filter each content Type by permissions
-      // @TODO FIX USER NOT HAVING PERMISSIONS??
       const filteredContentTypes = contentTypesWithPermissions.filter(
         ({ hasPermission }) => hasPermission
       );
