@@ -1,6 +1,6 @@
 {
   "name": "strapi-plugin-import-export-content",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "description": "This is a plugin for import and export content of collection types.",
   "license": "MIT",
   "strapi": {
@@ -14,6 +14,7 @@
   "dependencies": {
     "csv-parse": "^4.15.3",
     "csv-string": "^4.0.1",
+    "jszip": "^3.7.1",
     "prismjs": "^1.23.0",
     "react-simple-code-editor": "^0.11.0"
   },
