@@ -1,6 +1,6 @@
 {
-  "name": "strapi-plugin-import-export-content-fogldn",
-  "version": "0.4.2",
+  "name": "strapi-plugin-import-export-content",
+  "version": "0.4.3",
   "description": "This is a plugin for import and export content of collection types.",
   "license": "MIT",
   "strapi": {

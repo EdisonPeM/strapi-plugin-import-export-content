@@ -115,10 +115,9 @@ module.exports = {
 
     try {
       const zip = new JSZip();
-      const service = getService();
 
       const createOperation = async (target) => {
-        const data = await service.exportItems({
+        const data = await getService().exportItems({
           target,
           options,
           type,
