@@ -17,12 +17,11 @@ import { downloadFile, copyClipboard } from "../../utils/exportUtils";
 
 import { Collapse } from "reactstrap";
 import { FilterIcon } from "strapi-helper-plugin";
-import BASE_OPTIONS from "../../constants/options";
 import OptionsExport from "../../components/OptionsExport";
 import useExportFormats from "../../hooks/useExportFormat";
 import useExportOptions from "../../hooks/useExportOptions";
 
-function ImportPage({ contentTypes }) {
+function ImportPage({ contentTypes, setIsLoading }) {
   const [target, setTarget] = useState(null);
 
   const {
@@ -65,8 +64,6 @@ function ImportPage({ contentTypes }) {
     setContentToExport("");
   };
 
-  // Request to Get Available Content
-  const [isLoading, setIsLoadig] = useState(false);
   const getContent = async () => {
     if (sourceExports === "")
       return strapi.notification.toggle({
@@ -75,7 +72,7 @@ function ImportPage({ contentTypes }) {
       });
 
     try {
-      setIsLoadig(true);
+      setIsLoading(true);
       const { data } = await request(`/${pluginId}/export`, {
         method: "POST",
         body: { target, type: exportFormat, options },
@@ -89,7 +86,7 @@ function ImportPage({ contentTypes }) {
       });
     }
 
-    setIsLoadig(false);
+    setIsLoading(false);
   };
 
   // Export Options
@@ -99,12 +96,7 @@ function ImportPage({ contentTypes }) {
   const handleCopy = () => copyClipboard(contentToExport);
 
   return (
-    <Block
-      title="Export"
-      description="Configure the Export Source & Format"
-      style={{ marginBottom: 12 }}
-    >
-      {isLoading && <Loader />}
+    <>
       <Row>
         <div className="pt-3 col-sm-6 col-md-5">
           <Label htmlFor="exportSource">Export Source</Label>
@@ -172,7 +164,7 @@ function ImportPage({ contentTypes }) {
           />
         </div>
       </Row>
-    </Block>
+    </>
   );
 }
 
@@ -182,6 +174,7 @@ ImportPage.defaultProps = {
 
 ImportPage.propTypes = {
   contentTypes: PropTypes.array,
+  setIsLoading: PropTypes.func,
 };
 
 export default memo(ImportPage);

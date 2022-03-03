@@ -64,7 +64,7 @@ function GroupExport({ contentTypes, setIsLoading }) {
           Authorization: `Bearer ${token}`,
         },
         body: {
-          targets: Object.keys(targets).filter(uid => targets[uid].enabled),
+          targets: contentTypes.filter(({ uid }) => !!targets[uid]),
           type: exportFormat,
           options
         },
@@ -163,12 +163,10 @@ function GroupExport({ contentTypes, setIsLoading }) {
 
 GroupExport.defaultProps = {
   contentTypes: [],
-  isLoading: false,
 };
 
 GroupExport.propTypes = {
   contentTypes: PropTypes.array,
-  isLoading: PropTypes.bool,
   setIsLoading: PropTypes.func,
 };
 

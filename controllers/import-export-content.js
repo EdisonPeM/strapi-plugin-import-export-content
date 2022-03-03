@@ -1,14 +1,16 @@
 "use strict";
 
 const pluginPkg = require("../package.json");
+const PERMISSIONS = require("../constants/permissions");
+const JSZip = require("jszip");
+const mimeExtension = require("../services/utils/mimeExtension");
 const PLUGIN_ID = pluginPkg.name.replace(/^strapi-plugin-/i, "");
+
 
 function getService(service = PLUGIN_ID) {
   const SERVICES = strapi.plugins[PLUGIN_ID].services;
   return SERVICES[service];
 }
-
-const PERMISSIONS = require("../constants/permissions");
 
 /**
  * import-export-content.js controller
@@ -67,8 +69,8 @@ module.exports = {
         message: succesfully
           ? "All Data Imported"
           : results.some((res) => res)
-          ? "Some Items Imported"
-          : "No Items Imported",
+            ? "Some Items Imported"
+            : "No Items Imported",
       });
     } catch (error) {
       console.error(error);
@@ -90,8 +92,59 @@ module.exports = {
 
     try {
       const service = getService();
-      const data = await service.exportItems(ctx);
+      const data = await service.exportItems({
+        target,
+        type,
+        options,
+      }, ctx);
       ctx.send({ data, message: "ok" });
+    } catch (error) {
+      console.error(error);
+      ctx.throw(406, `could not parse: ${error}`);
+    }
+  },
+
+  exportItemsMulti: async (ctx) => {
+    const { targets, type, options } = ctx.request.body;
+
+    if (!targets || !type || !options) {
+      return ctx.throw(400, "Required parameters missing");
+    }
+
+    const { userAbility } = ctx.state;
+
+    const zip = new JSZip();
+    const service = getService();
+
+    const operations = [];
+    const createOperation = async (target) => {
+      const data = await service.exportItem({
+        target,
+        options,
+        type,
+      }, ctx);
+
+      zip.file(`${target.uid}.${mimeExtension(type)}`, data);
+    }
+
+    for (const target of targets) {
+      if (userAbility.cannot(PERMISSIONS.read, target)) {
+        return ctx.forbidden();
+      }
+      this.operations.push(createOperation(target));
+    }
+
+    try {
+      await Promise.all(operations);
+
+      const blob = await zip.generateAsync({ type: 'blob' })
+      const buffer = Buffer.from(blob.arrayBuffer());
+
+      ctx.writeHead(200, {
+        "Content-Type": "application/zip",
+      });
+
+      ctx.send(buffer);
     } catch (error) {
       console.error(error);
       ctx.throw(406, `could not parse: ${error}`);
