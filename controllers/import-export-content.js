@@ -105,7 +105,7 @@ module.exports = {
   },
 
   exportItemsMulti: async (ctx) => {
-    const { targets, type, options } = ctx.request.body;
+    const { targets, type, options } = JSON.parse(ctx.request.body);
 
     if (!targets || !type || !options) {
       return ctx.throw(400, "Required parameters missing");
@@ -113,39 +113,29 @@ module.exports = {
 
     const { userAbility } = ctx.state;
 
-    const zip = new JSZip();
-    const service = getService();
-
-    const operations = [];
-    const createOperation = async (target) => {
-      const data = await service.exportItem({
-        target,
-        options,
-        type,
-      }, ctx);
-
-      zip.file(`${target.uid}.${mimeExtension(type)}`, data);
-    }
-
-    for (const target of targets) {
-      if (userAbility.cannot(PERMISSIONS.read, target)) {
-        return ctx.forbidden();
-      }
-    }
-
-    for (const target of targets) {
-      this.operations.push(createOperation(target));
-    }
-
     try {
-      await Promise.all(operations);
+      const zip = new JSZip();
+      const service = getService();
 
-      const blob = await zip.generateAsync({ type: 'blob' })
-      const buffer = Buffer.from(blob.arrayBuffer());
+      const createOperation = async (target) => {
+        const data = await service.exportItems({
+          target,
+          options,
+          type,
+        }, ctx);
 
-      ctx.writeHead(200, {
-        "Content-Type": "application/zip",
-      });
+        zip.file(`${target.info.name}.${mimeExtension(type)}`, data);
+      }
+
+      for (const target of targets) {
+        if (userAbility.cannot(PERMISSIONS.read, target.uid)) {
+          return ctx.forbidden();
+        }
+      }
+
+      await Promise.all(targets.map(createOperation));
+
+      const buffer = await zip.generateAsync({ type: 'nodebuffer' });
 
       ctx.send(buffer);
     } catch (error) {

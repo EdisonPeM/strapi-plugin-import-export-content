@@ -13,7 +13,6 @@ function useExportFormats(defaultFormat = "application/json") {
     exportFormat,
     setExportFormat,
     exportFormatsOptions,
-    getExtension
   }
 }
 

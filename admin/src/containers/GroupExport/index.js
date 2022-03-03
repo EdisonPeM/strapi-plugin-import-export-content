@@ -8,7 +8,7 @@ import React, { memo, useState, useMemo } from "react";
 import PropTypes from "prop-types";
 
 import { Row } from "../../components/common";
-import { Select, Label, Button } from "@buffetjs/core";
+import { Select, Label, Button, Checkbox } from "@buffetjs/core";
 
 import pluginId from "../../pluginId";
 import { request, auth } from "strapi-helper-plugin";
@@ -24,7 +24,7 @@ function GroupExport({ contentTypes, setIsLoading }) {
     contentTypes.reduce((acc, type) => ({
       ...acc, [type.uid]: {
         enabled: true,
-        label: info.label || apiID,
+        label: type.info.label || apiID,
       }
     }), {})
   );
@@ -47,7 +47,7 @@ function GroupExport({ contentTypes, setIsLoading }) {
   };
 
   const getContent = async () => {
-    if (sourceExports === "")
+    if (Object.keys(targets).every(uid => !targets[uid].enabled))
       return strapi.notification.toggle({
         type: "warning",
         message: "export.source.empty",
@@ -63,24 +63,24 @@ function GroupExport({ contentTypes, setIsLoading }) {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-        body: {
-          targets: contentTypes.filter(({ uid }) => !!targets[uid]),
+        body: JSON.stringify({
+          targets: contentTypes.filter(({ uid }) => !!targets[uid].enabled),
           type: exportFormat,
           options
-        },
+        }),
       });
 
-      const blob = await response.blob();
+      if (response.status === 200) {
+        const blob = await response.blob();
 
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `export.zip`;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-
-      setContentToExport(data);
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `export.zip`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+      }
     } catch (error) {
       strapi.notification.toggle({
         type: "warning",
@@ -96,28 +96,26 @@ function GroupExport({ contentTypes, setIsLoading }) {
       <Row>
         <div className="pt-3 col-sm-12 col-md-12">
           <Label htmlFor="exportSource">Export Source</Label>
-          <ul>
-            {Object.keys(targets).map(current => {
-              return (
-                <li key={current} style={{ padding: 15 }}>
-                  <Checkbox
-                    name={current}
-                    message={targets[current].label}
-                    value={targets[current].enabled}
-                    onChange={({ target: { name, value } }) => {
-                      setTargets(prevState => ({
-                        ...prevState,
-                        [name]: {
-                          enabled: value,
-                          ...targets[current]
-                        },
-                      }));
-                    }}
-                  />
-                </li>
-              );
-            })}
-          </ul>
+          {Object.keys(targets).map(current => {
+            return (
+              <div key={current} style={{ padding: "8px 8px 0px 8px" }}>
+                <Checkbox
+                  name={current}
+                  message={targets[current].label}
+                  value={targets[current].enabled}
+                  onChange={({ target: { value } }) => {
+                    setTargets(prevState => ({
+                      ...prevState,
+                      [current]: {
+                        ...targets[current],
+                        enabled: value,
+                      },
+                    }));
+                  }}
+                />
+              </div>
+            );
+          })}
         </div>
       </Row>
       <Row>

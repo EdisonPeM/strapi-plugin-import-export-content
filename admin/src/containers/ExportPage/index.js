@@ -12,7 +12,7 @@ import { Select, Label } from "@buffetjs/core";
 import SingleExport from "../SingleExport";
 import GroupExport from "../GroupExport";
 
-function ExportPage(...props) {
+function ExportPage({ contentTypes }) {
   const [isLoading, setIsLoading] = useState(false);
   const [exportType, setExportType] = useState("single");
 
@@ -24,8 +24,6 @@ function ExportPage(...props) {
       description="Configure the Export Source & Format"
       style={{ marginBottom: 12 }}
     >
-      {content}
-
       {isLoading && <Loader />}
 
       <Row>
@@ -34,7 +32,7 @@ function ExportPage(...props) {
           <Select
             name="exportSource"
             options={[
-              { label: "Single Type", value: 'single' },
+              { label: "Single", value: 'single' },
               { label: "Group", value: 'group' },
             ]}
             value={exportType}
@@ -44,11 +42,10 @@ function ExportPage(...props) {
       </Row>
 
       {exportType === 'single' && (
-        <SingleExport {...props} setIsLoading={setIsLoading} />
+        <SingleExport contentTypes={contentTypes} setIsLoading={setIsLoading} />
       )}
-      c
       {exportType === 'group' && (
-        <GroupExport {...props} setIsLoading={setIsLoading} />
+        <GroupExport contentTypes={contentTypes} setIsLoading={setIsLoading} />
       )}
     </Block>
   )
