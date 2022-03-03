@@ -131,6 +131,9 @@ module.exports = {
       if (userAbility.cannot(PERMISSIONS.read, target)) {
         return ctx.forbidden();
       }
+    }
+
+    for (const target of targets) {
       this.operations.push(createOperation(target));
     }
 
