@@ -49,8 +49,8 @@ module.exports = {
     });
   },
 
-  exportItems: async (ctx) => {
-    const { target, type, options } = ctx.request.body;
+  exportItems: async (data, ctx) => {
+    const { target, type, options } = data;
     const { userAbility } = ctx.state;
     const exportItems = await getData(target, options, userAbility);
 

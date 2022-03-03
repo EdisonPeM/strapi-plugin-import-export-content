@@ -14,6 +14,7 @@
   "dependencies": {
     "csv-parse": "^4.15.3",
     "csv-string": "^4.0.1",
+    "jszip": "^3.7.1",
     "prismjs": "^1.23.0",
     "react-simple-code-editor": "^0.11.0"
   },

@@ -31,6 +31,14 @@
       "config": {
         "policies": []
       }
+    },
+    {
+      "method": "POST",
+      "path": "/export-multi",
+      "handler": "import-export-content.exportItemsMulti",
+      "config": {
+        "policies": []
+      }
     }
   ]
 }

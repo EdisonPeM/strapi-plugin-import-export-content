@@ -3,108 +3,20 @@
  * ExportPage
  *
  */
-
-import React, { memo, useState, useMemo } from "react";
+import React, { memo, useState } from "react";
 import PropTypes from "prop-types";
 
 import { Loader, Block, Row } from "../../components/common";
-import { Select, Label, Button } from "@buffetjs/core";
-import DataViewer from "../../components/DataViewer";
+import { Select, Label } from "@buffetjs/core";
 
-import FORMATS from "../../constants/formats";
+import SingleExport from "../SingleExport";
+import GroupExport from "../GroupExport";
 
-import pluginId from "../../pluginId";
-import { request } from "strapi-helper-plugin";
-import { downloadFile, copyClipboard } from "../../utils/exportUtils";
+function ExportPage({ contentTypes }) {
+  const [isLoading, setIsLoading] = useState(false);
+  const [exportType, setExportType] = useState("single");
 
-import { Collapse } from "reactstrap";
-import { FilterIcon } from "strapi-helper-plugin";
-import BASE_OPTIONS from "../../constants/options";
-import OptionsExport from "../../components/OptionsExport";
-
-const exportFormatsOptions = FORMATS.map(({ name, mimeType }) => ({
-  label: name,
-  value: mimeType,
-}));
-
-function ImportPage({ contentTypes }) {
-  const [target, setTarget] = useState(null);
-  const [sourceExports, setSourceExports] = useState("");
-  const [exportFormat, setExportFormat] = useState("application/json");
-  const [contentToExport, setContentToExport] = useState("");
-
-  const sourceOptions = useMemo(
-    () =>
-      [{ label: "Select Export Source", value: "" }].concat(
-        contentTypes.map(({ uid, info, apiID }) => ({
-          label: info.label || apiID,
-          value: uid,
-        }))
-      ),
-    [contentTypes]
-  );
-
-  // Source Options Handler
-  const handleSelectSourceExports = ({ target: { value } }) => {
-    setSourceExports(value);
-    setTarget(contentTypes.find(({ uid }) => uid === value));
-    setContentToExport("");
-  };
-
-  // Source Options Handler
-  const handleSelectExportFormat = ({ target: { value } }) => {
-    setExportFormat(value);
-    setContentToExport("");
-  };
-
-  // Options to exporting
-  const [isOptionsOpen, setIsOptionsOpen] = useState(false);
-  const [options, setOptions] = useState(
-    BASE_OPTIONS.reduce((acc, { name, defaultValue }) => {
-      acc[name] = defaultValue;
-      return acc;
-    }, {})
-  );
-
-  const handleChangeOptions = (option, value) => {
-    setOptions({
-      ...options,
-      [option]: value,
-    });
-  };
-
-  // Request to Get Available Content
-  const [isLoading, setIsLoadig] = useState(false);
-  const getContent = async () => {
-    if (sourceExports === "")
-      return strapi.notification.toggle({
-        type: "warning",
-        message: "export.source.empty",
-      });
-
-    try {
-      setIsLoadig(true);
-      const { data } = await request(`/${pluginId}/export`, {
-        method: "POST",
-        body: { target, type: exportFormat, options },
-      });
-
-      setContentToExport(data);
-    } catch (error) {
-      strapi.notification.toggle({
-        type: "warning",
-        message: `export.items.error`,
-      });
-    }
-
-    setIsLoadig(false);
-  };
-
-  // Export Options
-  const handleDownload = () => {
-    downloadFile(target.info.name, contentToExport, exportFormat);
-  };
-  const handleCopy = () => copyClipboard(contentToExport);
+  const handleSelectExportType = ({ target: { value } }) => setExportType(value);
 
   return (
     <Block
@@ -113,83 +25,38 @@ function ImportPage({ contentTypes }) {
       style={{ marginBottom: 12 }}
     >
       {isLoading && <Loader />}
+
       <Row>
         <div className="pt-3 col-sm-6 col-md-5">
-          <Label htmlFor="exportSource">Export Source</Label>
+          <Label htmlFor="exportSource">Export Type</Label>
           <Select
             name="exportSource"
-            options={sourceOptions}
-            value={sourceExports}
-            onChange={handleSelectSourceExports}
-          />
-        </div>
-        <div className="pt-3 col-sm-6 col-md-5">
-          <Label htmlFor="exportFormat">Export Format</Label>
-          <Select
-            name="exportFormat"
-            options={exportFormatsOptions}
-            value={exportFormat}
-            onChange={handleSelectExportFormat}
-          />
-        </div>
-        <div className="pt-3 col-md-2 d-flex flex-column-reverse">
-          <Button
-            onClick={() => setIsOptionsOpen((v) => !v)}
-            className="w-100"
-            icon={<FilterIcon />}
-            label="Options"
-            color="cancel"
+            options={[
+              { label: "Single", value: 'single' },
+              { label: "Group", value: 'group' },
+            ]}
+            value={exportType}
+            onChange={handleSelectExportType}
           />
         </div>
       </Row>
-      <Row>
-        <div className="col-12">
-          <Collapse isOpen={isOptionsOpen}>
-            <OptionsExport values={options} onChange={handleChangeOptions} />
-          </Collapse>
-        </div>
-      </Row>
-      <Row>
-        <div className="col-12">
-          <DataViewer data={contentToExport} type={exportFormat} />
-        </div>
-        <div className="mt-3 col-md-4">
-          <Button
-            onClick={getContent}
-            className="w-100"
-            label="Get Data"
-            color="primary"
-          />
-        </div>
-        <div className="mt-3 col-md-3 col-lg-2">
-          <Button
-            label="Download"
-            className="w-100"
-            color="success"
-            disabled={!contentToExport}
-            onClick={handleDownload}
-          />
-        </div>
-        <div className="mt-3  col-md-3 col-lg-2">
-          <Button
-            className="w-100"
-            label="Copy to Clipboard"
-            color="secondary"
-            disabled={!contentToExport}
-            onClick={handleCopy}
-          />
-        </div>
-      </Row>
+
+      {exportType === 'single' && (
+        <SingleExport contentTypes={contentTypes} setIsLoading={setIsLoading} />
+      )}
+      {exportType === 'group' && (
+        <GroupExport contentTypes={contentTypes} setIsLoading={setIsLoading} />
+      )}
     </Block>
-  );
+  )
 }
 
-ImportPage.defaultProps = {
+ExportPage.defaultProps = {
   contentTypes: [],
 };
 
-ImportPage.propTypes = {
+ExportPage.propTypes = {
   contentTypes: PropTypes.array,
 };
 
-export default memo(ImportPage);
+export default memo(ExportPage);
